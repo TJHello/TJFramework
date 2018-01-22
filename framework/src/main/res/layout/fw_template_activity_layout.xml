@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/fw_theme_color"
+              android:fitsSystemWindows="true"
+              android:clipToPadding="true"
+    >
+    <com.tjbaobao.framework.ui.BaseTitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+    </com.tjbaobao.framework.ui.BaseTitleBar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/fw_white"
+        >
+
+    </LinearLayout>
+</LinearLayout>

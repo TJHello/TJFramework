@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="fw_colorPrimary">#3F51B5</color>
+    <color name="fw_colorPrimaryDark">#303F9F</color>
+    <color name="fw_colorAccent">#FF4081</color>
+
+    <color name="fw_transparent">#00ffffff</color>
+    <color name="fw_transparent_55">#55ffffff</color>
+    <color name="fw_transparent_33">#33ffffff</color>
+    <color name="fw_transparent_88">#88ffffff</color>
+    <color name="fw_theme_color">#01b1dd</color>
+
+    <color name="fw_window_bg">#aa000000</color>
+    <color name="fw_window_title_bg">#258fd9</color>
+
+
+    <!--常用颜色-->
+    <color name="fw_white">#ffffff</color>
+    <color name="fw_black">#000000</color>
+    <color name="fw_black_left">#454545</color>
+    <color name="fw_gray_left">#efefef</color>
+    <color name="fw_gray_bg">#f9f9f9</color>
+    <color name="fw_gray">#e6e6e6</color>
+    <color name="fw_gray_right">#636363</color>
+    <color name="fw_blue_off">#0976dc</color>
+    <color name="fw_blue_on">#0b89ff</color>
+    <color name="fw_red_off">#e26161</color>
+    <color name="fw_red_on">#ef7f7f</color>
+</resources>

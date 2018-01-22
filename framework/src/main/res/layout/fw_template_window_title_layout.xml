@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/fw_white"
+    >
+    <TextView
+        android:id="@+id/tv_help_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/app_text_size_x"
+        android:textColor="@color/fw_black_left"
+        android:layout_centerInParent="true"
+        android:text="Title"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/fw_gray_left"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

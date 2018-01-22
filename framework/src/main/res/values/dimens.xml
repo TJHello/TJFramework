@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fw_radius">2dp</dimen>
+
+    <dimen name="fw_window_width">335dp</dimen>
+    <dimen name="fw_window_title_size">20sp</dimen>
+
+    <dimen name="fw_button_width_s">180dp</dimen>
+    <dimen name="fw_button_width">280dp</dimen>
+    <dimen name="fw_button_height">45dp</dimen>
+
+    <dimen name="fw_margin_small">8dp</dimen>
+    <dimen name="fw_margin">16dp</dimen>
+    <dimen name="fw_margin_big">20dp</dimen>
+
+    <dimen name="app_text_size_s">14sp</dimen>
+    <dimen name="app_text_size_m">16sp</dimen>
+    <dimen name="app_text_size_l">18sp</dimen>
+    <dimen name="app_text_size_x">22sp</dimen>
+
+</resources>
