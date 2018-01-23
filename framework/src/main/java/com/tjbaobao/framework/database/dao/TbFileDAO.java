@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.tjbaobao.framework.database.obj.TbFileObj;
-import com.tjbaobao.framework.util.DateTimeUtil;
+import com.tjbaobao.framework.utils.DateTimeUtil;
 
 import java.util.ArrayList;
 import java.util.UUID;

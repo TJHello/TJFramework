@@ -1,4 +1,4 @@
-package com.tjbaobao.framework.util;
+package com.tjbaobao.framework.utils;
 
 import android.app.Activity;
 import android.content.Intent;

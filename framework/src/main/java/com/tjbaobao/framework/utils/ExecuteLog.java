@@ -1,4 +1,4 @@
-package com.tjbaobao.framework.util;
+package com.tjbaobao.framework.utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

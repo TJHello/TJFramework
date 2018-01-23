@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TJFramework.iml" filepath="$PROJECT_DIR$/TJFramework.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\Android\WorkSpace\TJFramework\app\app.iml" filepath="D:\Android\WorkSpace\TJFramework\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/framework/framework.iml" filepath="$PROJECT_DIR$/framework/framework.iml" />
+      <module fileurl="file://D:\Android\WorkSpace\TJFramework\framework\framework.iml" filepath="D:\Android\WorkSpace\TJFramework\framework\framework.iml" />
     </modules>
   </component>
 </project>

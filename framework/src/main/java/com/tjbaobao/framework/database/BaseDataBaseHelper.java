@@ -9,7 +9,7 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.tjbaobao.framework.util.DeviceUtil;
+import com.tjbaobao.framework.utils.DeviceUtil;
 
 /**
  * Created by TJbaobao on 2017/9/12.

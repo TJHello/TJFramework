@@ -8,7 +8,7 @@ import com.tjbaobao.framework.R;
 import com.tjbaobao.framework.base.BaseFragmentActivity;
 import com.tjbaobao.framework.entity.ui.TitleBarInfo;
 import com.tjbaobao.framework.ui.BaseTitleBar;
-import com.tjbaobao.framework.util.Tools;
+import com.tjbaobao.framework.utils.Tools;
 
 /**
  * Created by TJbaobao on 2018/1/10.

@@ -1,4 +1,4 @@
-package com.tjbaobao.framework.util;
+package com.tjbaobao.framework.utils;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -20,7 +20,6 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import com.tjbaobao.framework.R;
-import com.tjbaobao.framework.base.BaseActivity;
 import com.tjbaobao.framework.base.BaseApplication;
 
 import java.io.BufferedReader;

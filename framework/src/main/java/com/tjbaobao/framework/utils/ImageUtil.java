@@ -1,4 +1,4 @@
-package com.tjbaobao.framework.util;
+package com.tjbaobao.framework.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;

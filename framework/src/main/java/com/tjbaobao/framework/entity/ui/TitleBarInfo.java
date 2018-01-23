@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tjbaobao.framework.R;
-import com.tjbaobao.framework.util.Tools;
+import com.tjbaobao.framework.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;

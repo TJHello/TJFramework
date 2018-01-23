@@ -5,7 +5,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.tjbaobao.framework.util.Tools;
+import com.tjbaobao.framework.utils.Tools;
 
 /**
  * Created by TJbaobao on 2018/1/6.

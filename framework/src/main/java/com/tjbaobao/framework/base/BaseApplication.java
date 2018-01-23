@@ -5,8 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.tjbaobao.framework.util.ExecuteLog;
-import com.tjbaobao.framework.util.Tools;
+import com.tjbaobao.framework.utils.ExecuteLog;
+import com.tjbaobao.framework.utils.Tools;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
