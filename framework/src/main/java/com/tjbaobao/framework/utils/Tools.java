@@ -350,14 +350,12 @@ public class Tools {
 		return  bitmap;
 	}
 
-	public static boolean feedback(Context context){
+	public static boolean feedback(Context context,String email,String content){
 		Intent intent=new Intent(Intent.ACTION_SENDTO);
-		intent.setData(Uri.parse("mailto:incolor.feedback@hotmail.com"));
+		intent.setData(Uri.parse("mailto:"+email));
 		List<ResolveInfo> resInfos = context.getPackageManager().queryIntentActivities(intent, 0);
 		if(!resInfos.isEmpty()){
-			intent.putExtra(Intent.EXTRA_SUBJECT, "(App name:"+context.getResources().getString(R.string.app_name)+" "+ DeviceUtil.getAppVersion()+"),Hardware: "
-			+DeviceUtil.getManufacturer()+",System version:"+DeviceUtil.getSDKVersion()
-			);
+			intent.putExtra(Intent.EXTRA_SUBJECT, content);
 			context.startActivity(intent);
 			return true;
 		}else {
