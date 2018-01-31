@@ -8,6 +8,8 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.ColorRes;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -31,7 +33,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	 * @param id
 	 * @return
 	 */
-	protected int getColorById(int id)
+	protected int getColorById(@ColorRes int id)
 	{
 		return this.getResources().getColor(id);
 	}
@@ -40,7 +42,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	 * @param id
 	 * @return
 	 */
-	protected String getStringById(int id)
+	protected String getStringById(@StringRes int id)
 	{
 		return this.getResources().getString(id);
 	}

@@ -1,6 +1,7 @@
 package com.tjbaobao.framework.utils;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,6 +19,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
 import com.tjbaobao.framework.entity.BitmapConfig;
@@ -54,9 +58,13 @@ public class ImageUtil {
 	}
 	public static BitmapConfig getBitmapConfig(String path)
 	{
+		if(path==null)
+		{
+			return null;
+		}
 		File bmpFile = new File(path);
 		if (!bmpFile.exists()) {
-			return null;
+			return getBitmapConfigByAssets(path);
 		}
 		BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
 		bmpFactoryOptions.inJustDecodeBounds = false;
@@ -119,6 +127,20 @@ public class ImageUtil {
 	}
 	public static Bitmap compressImage(String path,int showWidth,int showHeight)
 	{
+		return compressImage(path,showWidth,showHeight,Config.ARGB_8888);
+	}
+
+	public static Bitmap compressImageRGB(String path,int showWidth,int showHeight)
+	{
+		return compressImage(path,showWidth,showHeight,Config.RGB_565);
+	}
+
+	public static Bitmap compressImage(String path,int showWidth,int showHeight,Config config)
+	{
+		if(path==null)
+		{
+			return null;
+		}
 		File bmpFile = new File(path);
 		BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
 		bmpFactoryOptions.inJustDecodeBounds = true;
@@ -137,9 +159,9 @@ public class ImageUtil {
 		{
 			BitmapFactory.decodeFile(path, bmpFactoryOptions);
 		}
-		bmpFactoryOptions.inPreferredConfig = Config.ARGB_8888;
 		int bmpPotionWidth = bmpFactoryOptions.outWidth;
 		int bmpPotionHeight = bmpFactoryOptions.outHeight;
+		bmpFactoryOptions.inPreferredConfig =config;
 		float outWidthRatio = (float)bmpPotionWidth / (float)showWidth;
 		float outHeightRatio = (float)bmpPotionHeight / (float)showHeight;
 		float outRatio =0.5f+(outWidthRatio > outHeightRatio ? outWidthRatio : outHeightRatio);
@@ -164,7 +186,7 @@ public class ImageUtil {
 		{
 			bitmap =BitmapFactory.decodeFile(path, bmpFactoryOptions);
 		}
-		return compressImage(bitmap,showWidth,showHeight);
+		return bitmap;
 	}
 	
 	public static boolean compressAndSave(String path)
@@ -242,7 +264,7 @@ public class ImageUtil {
 		{
 			return null;
 		}
-		String path = ConstantUtil.getFileCachePath()+UUID.randomUUID().toString()+"."+prefix;
+		String path = ConstantUtil.getImageCachePath()+UUID.randomUUID().toString()+"."+prefix;
 		File file = new File(path);
 		FileOutputStream out;
 		try {
@@ -374,7 +396,7 @@ public class ImageUtil {
 	 * @return
 	 */
 	public static Bitmap tintBitmap(Bitmap inBitmap , int tintColor) {
-		if (inBitmap == null) {
+		if (inBitmap == null&&inBitmap.isRecycled()) {
 			return null;
 		}
 		Bitmap outBitmap = Bitmap.createBitmap (inBitmap.getWidth(), inBitmap.getHeight() , inBitmap.getConfig());
@@ -384,7 +406,28 @@ public class ImageUtil {
 		paint.setColor(tintColor );
 		paint.setColorFilter( new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN)) ;
 		canvas.drawBitmap(inBitmap , 0, 0, paint) ;
+		inBitmap.recycle();
 		return outBitmap ;
+	}
+
+	public static final Bitmap createRGBImage(Bitmap bitmap,int color)
+	{
+		int bitmapWidth=bitmap.getWidth();
+		int bitmapHeight=bitmap.getHeight();
+		int[] arrayColor=new int[bitmapWidth*bitmapHeight];
+		int count=0;
+		for(int i=0;i<bitmapHeight;i++){
+			for(int j=0;j<bitmapWidth;j++){
+				int color1=bitmap.getPixel(j,i);
+				if(color1!=0){
+					color1=color;
+				}
+				arrayColor[count]=color1;
+				count++;
+			}
+		}
+		bitmap = Bitmap.createBitmap( arrayColor, bitmapWidth, bitmapHeight, Config.ARGB_8888 );
+		return bitmap;
 	}
 
 	/**
@@ -396,12 +439,22 @@ public class ImageUtil {
 	 */
 	public static Bitmap matrixBitmap(Bitmap bitmap,float toWidth,float toHeight)
 	{
-		if(bitmap==null)
+		return matrixBitmap(bitmap,toWidth,toHeight,Config.ARGB_8888);
+	}
+
+	public static Bitmap matrixBitmapRGB(Bitmap bitmap,float toWidth,float toHeight)
+	{
+		return matrixBitmap(bitmap,toWidth,toHeight,Config.RGB_565);
+	}
+
+	public static Bitmap matrixBitmap(Bitmap bitmap,float toWidth,float toHeight,Config config)
+	{
+		if(bitmap==null||toWidth<=0||toHeight<=0)
 		{
 			return  null;
 		}
-		float scale_y = toWidth / bitmap.getWidth();
-		float scale_x = toHeight / bitmap.getHeight();
+		float scale_y = toWidth / (float)bitmap.getWidth();
+		float scale_x = toHeight / (float)bitmap.getHeight();
 		if(bitmap.getWidth()>0&&bitmap.getHeight()>0)
 		{
 			Matrix matrix = new Matrix();
@@ -410,7 +463,7 @@ public class ImageUtil {
 		}
 		final Paint paint = new Paint();
 		paint.setAntiAlias(true);
-		Bitmap target = Bitmap.createBitmap((int)toWidth,(int)toHeight, Config.ARGB_8888);
+		Bitmap target = Bitmap.createBitmap((int)toWidth,(int)toHeight, config);
 		Canvas canvas = new Canvas(target);
 		canvas.setDrawFilter( new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 		canvas.drawBitmap(bitmap, 0, 0, paint);
@@ -498,5 +551,100 @@ public class ImageUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static void recycled(Bitmap bitmap)
+	{
+		if(bitmap!=null&&!bitmap.isRecycled())
+		{
+			bitmap.recycle();
+		}
+	}
+
+	/**
+	 * 从图片uri获取path
+	 *
+	 * @param context 上下文
+	 * @param uri     图片uri
+	 */
+	public static String getPathFromUri(Context context, Uri uri) {
+		String outPath = "";
+		Cursor cursor = context.getContentResolver()
+				.query(uri, null, null, null, null);
+		if (cursor == null) {
+			// miui 2.3 有可能为null
+			return uri.getPath();
+		} else {
+			if (uri.toString().contains("content://com.android.providers.media.documents/document/image")) { // htc 某些手机
+				// 获取图片地址
+				String _id = null;
+				String uridecode = uri.decode(uri.toString());
+				int id_index = uridecode.lastIndexOf(":");
+				_id = uridecode.substring(id_index + 1);
+				Cursor mcursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, " _id = " + _id,
+						null, null);
+				mcursor.moveToFirst();
+				int column_index = mcursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				outPath = mcursor.getString(column_index);
+				if (!mcursor.isClosed()) {
+					mcursor.close();
+				}
+				if (!cursor.isClosed()) {
+					cursor.close();
+				}
+				return outPath;
+			} else {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+					if (DocumentsContract.isDocumentUri(context, uri)) {
+						String docId = DocumentsContract.getDocumentId(uri);
+						if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+							//Log.d(TAG, uri.toString());
+							String id = docId.split(":")[1];
+							String selection = MediaStore.Images.Media._ID + "=" + id;
+							outPath = getImagePath(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+						} else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+							//Log.d(TAG, uri.toString());
+							Uri contentUri = ContentUris.withAppendedId(
+									Uri.parse("content://downloads/public_downloads"),
+									Long.valueOf(docId));
+							outPath = getImagePath(context, contentUri, null);
+						}
+						return outPath;
+					}
+				}
+				if ("content".equalsIgnoreCase(uri.getScheme())) {
+					String auth = uri.getAuthority();
+					if (auth.equals("media")) {
+						outPath = getImagePath(context, uri, null);
+					} else if (auth.equals("com.pcb.mall.fileprovider")) {
+						//参看file_paths_public配置
+						outPath = Environment.getExternalStorageDirectory() + "/Pictures/" + uri.getLastPathSegment();
+					}
+					return outPath;
+				}
+			}
+			return outPath;
+		}
+
+	}
+
+
+	/**
+	 * 从uri中取查询path路径
+	 *
+	 * @param context   上下文
+	 * @param uri
+	 * @param selection
+	 */
+	private static String getImagePath(Context context, Uri uri, String selection) {
+		String path = null;
+		Cursor cursor = context.getContentResolver().query(uri, null, selection, null, null);
+		if (cursor != null) {
+			if (cursor.moveToFirst()) {
+				path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+			}
+			cursor.close();
+		}
+		return path;
 	}
 }

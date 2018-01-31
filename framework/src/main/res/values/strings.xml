@@ -3,4 +3,5 @@
 
     <string name="fb_titlebar_text_title">标题</string>
 
+    <string name="fb_click_two_exit_tip">再次点击退出程序</string>
 </resources>

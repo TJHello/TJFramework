@@ -92,6 +92,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
     
     public void show()
     {
+        isDismiss = false;
         if(ll_windows_index!=null)
         {
             Animation animation = AnimationUtils.loadAnimation(context,contentAnimEnterId);
@@ -165,38 +166,41 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
     {
 
     }
-
+    private boolean isDismiss = false;
     @Override
     public void dismiss() {
-        final Animation animation = AnimationUtils.loadAnimation(context,contentAnimExitId);
-        if(ll_windows_index!=null)
+        if(!isDismiss)
         {
+            final Animation animation = AnimationUtils.loadAnimation(context,contentAnimExitId);
+            if(ll_windows_index!=null)
+            {
 
-            ll_windows_index.setAnimation(animation);
-            ll_windows_index.startAnimation(animation);
+                ll_windows_index.setAnimation(animation);
+                ll_windows_index.startAnimation(animation);
+            }
+            final Animation animationView = AnimationUtils.loadAnimation(context,windowAnimExitId);
+            animationView.setFillAfter(true);
+
+            baseView.setAnimation(animationView);
+            baseView.startAnimation(animationView);
+            animationView.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    sendMessage(Handler_What_Anim_Stop,null);
+                    baseView.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
-        final Animation animationView = AnimationUtils.loadAnimation(context,windowAnimExitId);
-        animationView.setFillAfter(true);
-
-        baseView.setAnimation(animationView);
-        baseView.startAnimation(animationView);
-        animationView.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                sendMessage(Handler_What_Anim_Stop,null);
-                baseView.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
     }
 
     private Handler handler = new Handler(){

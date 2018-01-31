@@ -1,6 +1,6 @@
 package com.tjbaobao.framework.utils;
 
-import android.os.Environment;
+import com.tjbaobao.framework.base.BaseApplication;
 
 import java.io.File;
 
@@ -10,146 +10,66 @@ import java.io.File;
  */
 public class ConstantUtil
 {
-	
-	/**
-	 * MAC地址
-	 */
-	public static String MAC="";
-	
-	public static int IMAGE_CACHE_TIME = 60*60*24*7;
-	public static int VIDEO_CACHE_TIME = 60*60*24*3;
-	public static int FILE_CACHE_TIME = 60*60*24*3 ;
-	
-	private static String APP_EXCEPTION_LOG_PATH="";
-	/**
-	 * 获取应用异常日志文件目录
-	 * @return 应用异常日志文件目录
-	 */
-	public static String getAppExcepitionLogPath( )
-	{
-		if(APP_EXCEPTION_LOG_PATH.equals(""))
-		{
-			APP_EXCEPTION_LOG_PATH=getAppHomePath()+"log/";
-		}
+
+	private static final String SEPARATOR = File.separator;
+	private static final String FILES_PATH = getFilesPath();
+	private static final String CACHE_PATH = getCachePath();
+
+	private static final String IMAGE_PATH = "image"+SEPARATOR;
+	private static final String VIDEO_PATH = "video"+SEPARATOR;
+	private static final String CONFIG_PATH = "config"+SEPARATOR;
+
+	private static final String IMAGE_FILES_PATH = FILES_PATH +IMAGE_PATH ;
+	private static final String VIDEO_FILES_PATH = FILES_PATH+VIDEO_PATH;
+	private static final String CONFIG_FILES_PATH = FILES_PATH+CONFIG_PATH;
+	private static final String IMAGE_CACHE_PATH = CACHE_PATH +IMAGE_PATH ;
+	private static final String VIDEO_CACHE_PATH = CACHE_PATH+VIDEO_PATH;
+	private static final String CONFIG_CACHE_PATH = CACHE_PATH+CONFIG_PATH;
+
+
+	static {
+		FileUtil.createFolder(IMAGE_FILES_PATH);
+		FileUtil.createFolder(VIDEO_FILES_PATH);
+		FileUtil.createFolder(CONFIG_FILES_PATH);
 		FileUtil.createFolder(IMAGE_CACHE_PATH);
-		return APP_EXCEPTION_LOG_PATH;
+		FileUtil.createFolder(VIDEO_CACHE_PATH);
+		FileUtil.createFolder(CONFIG_CACHE_PATH);
 	}
 
-	public static String getMyAppPath()
+	private static String getFilesPath()
 	{
-		String homePath = Environment.getExternalStorageDirectory().getPath()+"/"+DeviceUtil.getAppName()+"/";
-		return homePath;
+		return BaseApplication.getContext().getFilesDir().getPath()+SEPARATOR;
 	}
 
-	public static String getImageAppPath()
+	private static String getCachePath()
 	{
-		String path = getMyAppPath()+"Image/";
-		FileUtil.createFolder(path);
-		return path;
+		return BaseApplication.getContext().getCacheDir().getPath()+SEPARATOR;
 	}
 
-	private static String getAppHomePath()
+	public static String getImageFilesPath()
 	{
-		String homePath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/";
-		File file = new File(homePath);
-		if(file.exists())
-		{
-			return homePath +DeviceUtil.getPackageName()+"/";
-		}
-		else
-		{
-			return "/data/data/"+DeviceUtil.getPackageName()+"/";
-		}
+		return IMAGE_FILES_PATH ;
 	}
-	private static String getAppCachePath()
+
+	public static String getVideoFilesPath()
 	{
-		return getAppHomePath()+"cache/";
+		return VIDEO_FILES_PATH;
 	}
-	//图片缓存目录
-	private static String IMAGE_CACHE_PATH="";
-	public static String getImageCachePath()
-	{
-		if(IMAGE_CACHE_PATH.equals(""))
-		{
-			IMAGE_CACHE_PATH = getAppCachePath()+"image/";
-		}
-		FileUtil.createFolder(IMAGE_CACHE_PATH);
+
+	public static String getConfigFilesPath() {
+		return CONFIG_FILES_PATH;
+	}
+
+	public static String getImageCachePath() {
 		return IMAGE_CACHE_PATH;
 	}
-	//视频缓存目录
-	private static String VIDEO_CACHE_PATH = "";
-	public static String getVideoCachePath()
-	{
-		if(VIDEO_CACHE_PATH.equals(""))
-		{
-			VIDEO_CACHE_PATH = getAppCachePath()+"video/";
-		}
-		FileUtil.createFolder(VIDEO_CACHE_PATH);
+
+	public static String getVideoCachePath() {
 		return VIDEO_CACHE_PATH;
 	}
-	//文件缓存目录
-	private static String FILE_CACHE_PATH="";
-	public static String getFileCachePath()
-	{
-		if(FILE_CACHE_PATH.equals(""))
-		{
-			FILE_CACHE_PATH = getAppCachePath()+"file/";
-		}
-		FileUtil.createFolder(FILE_CACHE_PATH);
-		return FILE_CACHE_PATH;
-	}
-	private static String FILE_PATH = "";
-	public static String getFilePath()
-	{
-		if(FILE_PATH.equals(""))
-		{
-			FILE_PATH = getAppHomePath()+"file/";
-		}
-		FileUtil.createFolder(FILE_PATH);
-		return FILE_PATH;
-	}
-	private static String FILE_IMAGE_PATH = "";
-	public static String getFileImagePath()
-	{
-		if(FILE_IMAGE_PATH.equals(""))
-		{
-			FILE_IMAGE_PATH = getFilePath()+"image/";
-		}
-		FileUtil.createFolder(FILE_IMAGE_PATH);
-		return FILE_IMAGE_PATH;
-	}
 
-	private static String FILE_TEMP_IMAGE_PATH = "";
-	public static String getFileTempImagePath()
-	{
-		if(FILE_TEMP_IMAGE_PATH.equals(""))
-		{
-			FILE_TEMP_IMAGE_PATH = getFilePath()+"tempImage/";
-		}
-		FileUtil.createFolder(FILE_TEMP_IMAGE_PATH);
-		return FILE_TEMP_IMAGE_PATH;
-	}
-
-
-	//音频缓存目录
-	private static String REC_CACHE_PATH="";
-	public static String getRecCachePath(String username)
-	{
-		if(REC_CACHE_PATH.equals(""))
-		{
-			REC_CACHE_PATH = getFileCachePath()+"voice/"+username+"/";
-		}
-		FileUtil.createFolder(IMAGE_CACHE_PATH);
-		return REC_CACHE_PATH;
-	}
-	
-	private static final String Voice_Home_Path = getFileCachePath()+"voice/";
-	
-	public static String getVoiceHomePathByAccountNumber(String accountNumber)
-	{
-		String path = Voice_Home_Path+accountNumber+"/";
-		FileUtil.createFolder(path);
-		return path;
+	public static String getConfigCachePath() {
+		return CONFIG_CACHE_PATH;
 	}
 }
 

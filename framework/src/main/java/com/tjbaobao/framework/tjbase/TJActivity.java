@@ -81,6 +81,7 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
     private long startTime = 0;
     private boolean isOnclickTwoExit = false;
     private int exitTime = 2000;
+    private String exitTip = getStringById(R.string.fb_click_two_exit_tip);
     /**
      * 双击两次退出应用
      */
@@ -96,6 +97,10 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
             setOnclickTwoExit(exitTime);
         }
     }
+    public void setOnclickTwoExitTip(String exitTip) {
+        this.exitTip = exitTip;
+    }
+
     public void setOnclickTwoExit(int time)
     {
         isOnclickTwoExit = true ;
@@ -116,9 +121,9 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
         }
     }
 
-    public boolean onClickTwoExit()
+    protected boolean onClickTwoExit()
     {
-        Tools.showToast("再次点击退出程序");
+        Tools.showToast(exitTip);
         return true;
     }
     //endregion ***************双击退出应用结束*************
