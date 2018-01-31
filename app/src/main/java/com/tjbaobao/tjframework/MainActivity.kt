@@ -9,7 +9,7 @@ class MainActivity : TJActivity() {
 
 
     override fun onInitValues(savedInstanceState: Bundle?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onInitView() {
@@ -19,11 +19,11 @@ class MainActivity : TJActivity() {
     }
 
     override fun onInitTitleBar(titleBar: BaseTitleBar?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onLoadData() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     /**

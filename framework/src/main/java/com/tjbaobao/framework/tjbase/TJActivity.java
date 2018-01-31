@@ -81,7 +81,7 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
     private long startTime = 0;
     private boolean isOnclickTwoExit = false;
     private int exitTime = 2000;
-    private String exitTip = getStringById(R.string.fb_click_two_exit_tip);
+    private String exitTip = Tools.getResString(R.string.fb_click_two_exit_tip);
     /**
      * 双击两次退出应用
      */
