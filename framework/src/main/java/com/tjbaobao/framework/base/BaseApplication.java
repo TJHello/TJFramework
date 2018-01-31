@@ -13,7 +13,7 @@ import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 public class BaseApplication extends Application {
-	private static Context context ;
+	public static Context context ;
 	private static int foregroundActivities =0;
 	private MyUncaughtExceptionHandler handler;
 	private UncaughtExceptionHandler defaultHandler;
