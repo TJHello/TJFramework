@@ -18,14 +18,15 @@ public class ConstantUtil
 	private static final String IMAGE_PATH = "image"+SEPARATOR;
 	private static final String VIDEO_PATH = "video"+SEPARATOR;
 	private static final String CONFIG_PATH = "config"+SEPARATOR;
+	private static final String LOG_PATH = "log"+SEPARATOR;
 
 	private static final String IMAGE_FILES_PATH = FILES_PATH +IMAGE_PATH ;
 	private static final String VIDEO_FILES_PATH = FILES_PATH+VIDEO_PATH;
 	private static final String CONFIG_FILES_PATH = FILES_PATH+CONFIG_PATH;
+	private static final String LOG_FILES_PATH = FILES_PATH+LOG_PATH;
 	private static final String IMAGE_CACHE_PATH = CACHE_PATH +IMAGE_PATH ;
 	private static final String VIDEO_CACHE_PATH = CACHE_PATH+VIDEO_PATH;
 	private static final String CONFIG_CACHE_PATH = CACHE_PATH+CONFIG_PATH;
-
 
 	static {
 		FileUtil.createFolder(IMAGE_FILES_PATH);
@@ -70,6 +71,10 @@ public class ConstantUtil
 
 	public static String getConfigCachePath() {
 		return CONFIG_CACHE_PATH;
+	}
+
+	public static String getLogFilesPath() {
+		return LOG_FILES_PATH;
 	}
 }
 

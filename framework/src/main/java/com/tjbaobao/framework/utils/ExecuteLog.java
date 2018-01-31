@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ExecuteLog {
-	private static final String logPath = ConstantUtil.getAppExcepitionLogPath();
+	private static final String logPath = ConstantUtil.getLogFilesPath();
 	private static final String TYPE_NET = "network";
 	private static final String TYPE_NULL = "null";
 	private static final String TYPE_ERROR = "error";
