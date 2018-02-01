@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 日期时间组件
@@ -49,6 +50,7 @@ public class DateTimeUtil
 	{
 		Date dt=new Date(milliseconds);
 		SimpleDateFormat sdf=(SimpleDateFormat)DateFormat.getInstance();
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT+0"));
 		sdf.applyPattern(format);
 		return sdf.format(dt);
 	}
