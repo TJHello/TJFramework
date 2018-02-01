@@ -38,6 +38,20 @@ public class DateTimeUtil
 		sdf.applyPattern("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(dt);
 	}
+
+	/**
+	 * 通过毫秒获取想要的格式的字符
+	 * @param milliseconds
+	 * @param format
+	 * @return
+	 */
+	public static String getTimeFormat(long milliseconds,String format)
+	{
+		Date dt=new Date(milliseconds);
+		SimpleDateFormat sdf=(SimpleDateFormat)DateFormat.getInstance();
+		sdf.applyPattern(format);
+		return sdf.format(dt);
+	}
 	
 	/**
 	 * 获取当前时间，包含毫秒
