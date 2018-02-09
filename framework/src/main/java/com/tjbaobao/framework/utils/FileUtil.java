@@ -164,13 +164,14 @@ public class FileUtil {
 			createFolder(path);
 			byte[] byteBuff = new byte[DEF_SIZE_SUFF];
 			try {
+				FileUtil.delFileIfExists(path);
 				FileOutputStream fileOutputStream = new FileOutputStream(new File(path));
 				long fileLength = inputStream.available();
 				long readSize = 0;
 				int len ;
 				while ((len=inputStream.read(byteBuff))>0)
 				{
-					fileOutputStream.write(byteBuff);
+					fileOutputStream.write(byteBuff,0,len);
 					readSize+=len;
 					if(onProgressListener!=null)
 					{

@@ -5,17 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.tjbaobao.tjframework.activity.MainActivity">
-    <com.tjbaobao.framework.ui.BaseTitleBar
+    tools:context="com.tjbaobao.tjframework.activity.MainActivity"
+    android:background="@color/fw_theme_color"
+    >
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/fw_white"
+        >
+        <com.tjbaobao.framework.ui.BaseTitleBar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
 
-    </com.tjbaobao.framework.ui.BaseTitleBar>
-    <com.tjbaobao.framework.ui.BaseRecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        </com.tjbaobao.framework.ui.BaseTitleBar>
+        <com.tjbaobao.framework.ui.BaseRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </com.tjbaobao.framework.ui.BaseRecyclerView>
+        </com.tjbaobao.framework.ui.BaseRecyclerView>
 
+    </LinearLayout>
 </LinearLayout>

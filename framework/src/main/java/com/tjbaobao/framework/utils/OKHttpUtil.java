@@ -94,8 +94,7 @@ public class OKHttpUtil {
         if(response!=null&&response.isSuccessful())
         {
             InputStream inputStream = response.body().byteStream();
-            boolean isOk =  FileUtil.Writer.writeFile(inputStream,path,onProgressListener);
-            return isOk;
+            return  FileUtil.Writer.writeFile(inputStream,path,onProgressListener);
         }
         return false;
     }
