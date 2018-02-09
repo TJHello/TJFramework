@@ -26,8 +26,8 @@ allprojects {
 }
 
 ext {
-    supportVersion = "26.+"
-    firebaseVersion = "11.4.0"
+    compileSdkVersion = 27
+    supportVersion ="${compileSdkVersion}.+"
 }
 
 task clean(type: Delete) {

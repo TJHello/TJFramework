@@ -1,5 +1,7 @@
 package com.tjbaobao.framework.utils;
 
+import com.tjbaobao.framework.listener.OnProgressListener;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -163,6 +165,7 @@ public class FileUtil {
 			byte[] byteBuff = new byte[DEF_SIZE_SUFF];
 			try {
 				FileOutputStream fileOutputStream = new FileOutputStream(new File(path));
+				long fileLength = inputStream.available();
 				long readSize = 0;
 				int len ;
 				while ((len=inputStream.read(byteBuff))>0)
@@ -171,7 +174,7 @@ public class FileUtil {
 					readSize+=len;
 					if(onProgressListener!=null)
 					{
-						onProgressListener.progress(readSize);
+						onProgressListener.onProgress(readSize,fileLength);
 					}
 				}
 				fileOutputStream.flush();
@@ -616,19 +619,5 @@ public class FileUtil {
 		return false;
 	}
 
-	public static abstract class OnProgressListener
-	{
-		private long size ;
 
-		public OnProgressListener(long size) {
-			this.size = size;
-		}
-
-		public void progress(long readSize)
-		{
-			onProgress((float)readSize/(float)size,readSize==size);
-		}
-
-		public abstract void onProgress(float progress,boolean isFinish);
-	}
 }

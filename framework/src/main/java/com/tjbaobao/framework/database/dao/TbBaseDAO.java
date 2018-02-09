@@ -17,7 +17,11 @@ public class TbBaseDAO {
     {
         if(mDataBaseHelper==null)
         {
-            mDataBaseHelper = BaseDataBaseHelper.create(BaseApplication.getContext());
+            try {
+                mDataBaseHelper = BaseDataBaseHelper.create(BaseApplication.getContext());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return mDataBaseHelper;
     }

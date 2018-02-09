@@ -17,8 +17,7 @@ import com.tjbaobao.framework.utils.DeviceUtil;
 
 public class BaseDataBaseHelper extends SQLiteOpenHelper {
     private static BaseDataBaseHelper mDataBaseHelper = null ;
-    public static BaseDataBaseHelper create(Context context)
-    {
+    public static BaseDataBaseHelper create(Context context) throws Exception {
         if(mDataBaseHelper==null)
         {
             ApplicationInfo appInfo = null;
@@ -26,9 +25,16 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
                 appInfo = context.getPackageManager()
                         .getApplicationInfo(DeviceUtil.getPackageName(),
                                 PackageManager.GET_META_DATA);
-                String dbName=appInfo.metaData.getString("database_name");
-                int dbVersion = appInfo.metaData.getInt("database_version",1);
-                mDataBaseHelper = new BaseDataBaseHelper(context,dbName,null,dbVersion);
+                if(appInfo.metaData!=null)
+                {
+                    String dbName=appInfo.metaData.getString("database_name");
+                    int dbVersion = appInfo.metaData.getInt("database_version",1);
+                    mDataBaseHelper = new BaseDataBaseHelper(context,dbName,null,dbVersion);
+                }
+                else
+                {
+                    throw new Exception("未配置database_name和database_version");
+                }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }

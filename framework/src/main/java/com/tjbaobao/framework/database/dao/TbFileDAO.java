@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.tjbaobao.framework.database.obj.TbFileObj;
 import com.tjbaobao.framework.utils.DateTimeUtil;
+import com.tjbaobao.framework.utils.FileUtil;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -37,6 +38,13 @@ public class TbFileDAO extends TbBaseDAO {
         }
         return files;
     }
+
+    public static void delFile(String code)
+    {
+        String sql = "Delete From "+tbName+ " Where `code`='"+code+"'";
+        execSQL(sql);
+    }
+
     public static ArrayList<TbFileObj> getFiles()
     {
         String sql = "Select * From "+tbName;
@@ -47,7 +55,6 @@ public class TbFileDAO extends TbBaseDAO {
     {
         if(getFileByUrl(obj.getUrl())!=null)
         {
-
             return -1;
         }
         ContentValues values = new ContentValues();
@@ -85,7 +92,13 @@ public class TbFileDAO extends TbBaseDAO {
                 filesObj.setCreateTime(getStringByColumn(cursor,"create_time"));
                 filesObj.setChangeTime(getStringByColumn(cursor,"change_time"));
                 cursor.close();
-                return filesObj;
+                if(FileUtil.exists(filesObj.getPath()))
+                {
+                    return filesObj;
+                }
+                else {
+                    delFile(filesObj.getCode());
+                }
             }
             cursor.close();
         }

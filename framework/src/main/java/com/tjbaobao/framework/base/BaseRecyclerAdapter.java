@@ -1,5 +1,6 @@
 package com.tjbaobao.framework.base;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     }
 
     @Override
-    public void onBindViewHolder(Holder holder, int position) {
+    public void onBindViewHolder(@Nullable Holder holder, int position) {
         Info info = infoList.get(position);
         onBindViewHolder(holder,info,position);
         Object tag = onGetItemTag(info,position);
@@ -52,7 +53,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
     }
 
-    public abstract void onBindViewHolder(Holder holder,Info info,int position);
+    public abstract void onBindViewHolder(@Nullable Holder holder,@Nullable Info info, int position);
 
     public Object onGetItemTag(Info info,int position)
     {

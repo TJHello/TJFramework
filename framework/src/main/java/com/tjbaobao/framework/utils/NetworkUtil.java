@@ -2,6 +2,8 @@ package com.tjbaobao.framework.utils;
 
 import android.util.Log;
 
+import com.tjbaobao.framework.listener.OnProgressListener;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -423,9 +425,9 @@ public class NetworkUtil
 			{
 				fos.write(buffer, 0, nLength);
 				readLength +=nLength ;
-				if(onProgressLinstener!=null)
+				if(onProgressListener!=null)
 				{
-					onProgressLinstener.onProgress(downloadUrl,fileLength,readLength);
+					onProgressListener.onProgress(downloadUrl,fileLength,readLength);
 				}
 			}
 			fos.close();
@@ -487,9 +489,9 @@ public class NetworkUtil
 			{
 				dos.write(buffBytes,0,len);
 				sendLength +=len;
-				if(onProgressLinstener!=null)
+				if(onProgressListener!=null)
 				{
-					onProgressLinstener.onProgress(uploadUrl,fileLength,sendLength);
+					onProgressListener.onProgress(uploadUrl,fileLength,sendLength);
 				}
 			}
 			fileInput.close();
@@ -537,15 +539,8 @@ public class NetworkUtil
 		bUploadRun = bRun;
 	}
 	
-	private OnProgressLinstener onProgressLinstener ;
-	public interface OnProgressLinstener
-	{
-		public void onProgress(String url, int length, int index);
-	}
-	public void setOnProgressLinstener(OnProgressLinstener onProgressLinstener )
-	{
-		this.onProgressLinstener = onProgressLinstener;
-	}
+	private OnProgressListener onProgressListener ;
+
 }
 
 

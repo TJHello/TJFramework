@@ -24,6 +24,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
+
+import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.entity.BitmapConfig;
 import com.tjbaobao.framework.entity.FileType;
 
@@ -66,16 +68,30 @@ public class ImageUtil {
 		if (!bmpFile.exists()) {
 			return getBitmapConfigByAssets(path);
 		}
-		BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-		bmpFactoryOptions.inJustDecodeBounds = false;
-		BitmapFactory.decodeFile(path,bmpFactoryOptions);
-		BitmapConfig bitmapConfig = new BitmapConfig();
-		bitmapConfig.setWidth(bmpFactoryOptions.outWidth);
-		bitmapConfig.setHeight(bmpFactoryOptions.outHeight);
-		return bitmapConfig;
+		try{
+			BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+			bmpFactoryOptions.inJustDecodeBounds = false;
+			BitmapFactory.decodeFile(path,bmpFactoryOptions);
+			BitmapConfig bitmapConfig = new BitmapConfig();
+			bitmapConfig.setWidth(bmpFactoryOptions.outWidth);
+			bitmapConfig.setHeight(bmpFactoryOptions.outHeight);
+			if(bitmapConfig.getWidth()<=0||bitmapConfig.getHeight()<=0)
+			{
+				return null;
+			}
+			return bitmapConfig;
+		}catch (Exception e)
+		{
+			return null;
+		}
+
 	}
 	public static Bitmap getBitmapByAssets(String path)
 	{
+		if(path==null)
+		{
+			return null;
+		}
 		InputStream is = Tools.getAssetsInputSteam(path);
 		if(is==null)
 		{
@@ -85,7 +101,8 @@ public class ImageUtil {
 				e.printStackTrace();
 			}
 		}
-		return decodeStream(is);
+		Bitmap bitmap = BitmapFactory.decodeStream(is);
+		return bitmap;
 	}
 	public static Bitmap getBitmap(String path,int width,int height)
 	{
@@ -107,6 +124,10 @@ public class ImageUtil {
 			BitmapFactory.decodeStream(is, null, bmpFactoryOptions);
 			int bmpPotionWidth = bmpFactoryOptions.outWidth;
 			int bmpPotionHeight = bmpFactoryOptions.outHeight;
+			if(bmpPotionWidth==0||bmpPotionHeight==0)
+			{
+				return null;
+			}
 			BitmapConfig config = new BitmapConfig();
 			config.setWidth(bmpPotionWidth);
 			config.setHeight(bmpPotionHeight);
@@ -559,6 +580,23 @@ public class ImageUtil {
 		{
 			bitmap.recycle();
 		}
+	}
+
+	public static boolean isOk(String path)
+	{
+		if(getBitmapConfig(path)!=null)
+		{
+			return true;
+		}
+		return false;
+	}
+	public static boolean isOk(Bitmap bitmap)
+	{
+		if(bitmap==null||bitmap.isRecycled()||bitmap.getWidth()==0||bitmap.getHeight()==0)
+		{
+			return false;
+		}
+		return true;
 	}
 
 	/**
