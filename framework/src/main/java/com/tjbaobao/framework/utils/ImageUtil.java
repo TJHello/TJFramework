@@ -92,17 +92,26 @@ public class ImageUtil {
 		{
 			return null;
 		}
-		InputStream is = Tools.getAssetsInputSteam(path);
-		if(is==null)
-		{
-			try {
+		try {
+			InputStream is ;
+			if(FileUtil.exists(path))
+			{
 				is = new FileInputStream(new File(path));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
 			}
+			else
+			{
+				is = Tools.getAssetsInputSteam(path);
+			}
+			if(is!=null)
+			{
+				return  BitmapFactory.decodeStream(is);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}catch (Exception e){
+			e.printStackTrace();
 		}
-		Bitmap bitmap = BitmapFactory.decodeStream(is);
-		return bitmap;
+		return null;
 	}
 	public static Bitmap getBitmap(String path,int width,int height)
 	{

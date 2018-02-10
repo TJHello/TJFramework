@@ -1,12 +1,13 @@
 package com.tjbaobao.framework.utils;
 
 
+import android.support.annotation.Nullable;
+
 import com.tjbaobao.framework.database.dao.TbFileDAO;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -32,27 +33,19 @@ public class FileDownloader {
 		download(url,path,null);
 	}
 
-	public void download(String url, String path, OnProgressListener onProgressListener)
+	public void download(String url, String path, @Nullable OnProgressListener onProgressListener)
 	{
 		if(url==null||url.equals(""))
 		{
 			return ;
 		}
-		String outPath = downLoadHosts.get(url);
-		if(!FileUtil.exists(outPath))
+		String outPath = getCache(url);
+		if(outPath==null)
 		{
-			outPath = TbFileDAO.getFilePathByUrl(url);
-			if(!FileUtil.exists(outPath))
+			//文件不存在
+			if(url.indexOf("http")==0)
 			{
-				//文件不存在
-				if(url.indexOf("http")==0)
-				{
-					startDownloadThread(url,path,onProgressListener);
-				}
-				else
-				{
-					onSuccess(url,outPath);
-				}
+				startDownloadThread(url,path,onProgressListener);
 			}
 			else
 			{
@@ -65,52 +58,62 @@ public class FileDownloader {
 		}
 	}
 
+	@Nullable
 	public String downloadExecute(String url, String path, OnProgressListener onProgressListener)
 	{
 		if(url==null||url.equals(""))
 		{
 			return null;
 		}
+		String outPath = getCache(url);
+		if(outPath==null)
+		{
+			if(url.indexOf("http")==0)
+			{
+				boolean isContains = downloadList.contains(url);
+				if(!isContains)
+				{
+					downloadList.add(url);
+					boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
+					downloadList.remove(url);
+					if(isOk)
+					{
+						TbFileDAO.addFile(url,path,FileUtil.getPrefix(path));
+						downLoadHosts.put(url,path);
+						onSuccess(url,path);
+						return path;
+					}
+				}
+			}
+			else
+			{
+				onSuccess(url,url);
+				return url;
+			}
+		}
+		else
+		{
+			onSuccess(url,outPath);
+			return outPath;
+		}
+		onFail(url);
+		return null;
+	}
+
+	private String getCache(String url)
+	{
 		String outPath = downLoadHosts.get(url);
 		if(!FileUtil.exists(outPath))
 		{
 			outPath = TbFileDAO.getFilePathByUrl(url);
 			if(!FileUtil.exists(outPath))
 			{
-				//文件不存在
-
-				if(url.indexOf("http")==0)
-				{
-					boolean isContains = downloadList.contains(url);
-					if(!isContains)
-					{
-						downloadList.add(url);
-						boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
-						downloadList.remove(url);
-						if(isOk)
-						{
-							TbFileDAO.addFile(url,path,FileUtil.getPrefix(path));
-							downLoadHosts.put(url,path);
-							return path;
-						}
-					}
-				}
-				else
-				{
-					return outPath;
-				}
-			}
-			else
-			{
-				return outPath;
+				return null;
 			}
 		}
-		else
-		{
-			return outPath;
-		}
-		return null;
+		return outPath;
 	}
+
 
 	private static final ExecutorService executorService = Executors.newFixedThreadPool(3);
 	private void startDownloadThread(String url,String path,OnProgressListener onProgressListener)

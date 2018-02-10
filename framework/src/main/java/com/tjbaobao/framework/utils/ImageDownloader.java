@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
@@ -17,7 +18,10 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +51,8 @@ public class ImageDownloader {
 	private static final ImageDownloader imageDownloader = new ImageDownloader();
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private static BaseHandler baseHandler ;
+    private static final List<Image> imageList = new ArrayList<>();
+
     private ImageDownloader(){
     }
 
@@ -56,55 +62,56 @@ public class ImageDownloader {
         return imageDownloader;
     }
 
-    public BitmapConfig load(String path,ImageView imageView)
+    public BitmapConfig load(String url,ImageView imageView)
     {
-        return load(path,imageView,null);
+        return load(url,imageView,null);
     }
 
-    public BitmapConfig load(String path, ImageView imageView, OnProgressListener onProgressListener)
+    public BitmapConfig load(String url, ImageView imageView, OnProgressListener onProgressListener)
     {
-        if(path==null)
+        if(url==null)
         {
             return null;
         }
-        if(path.indexOf("http")==0)
+        Image image = findImage(imageView);
+        image.setUrl(url);
+        image.setViewWeakReference(imageView);
+
+        if(url.indexOf("http")==0)
         {
-            return loadHttpImage(path,imageView,onProgressListener);
+            return loadHttpImage(url,onProgressListener);
         }
         else
         {
-            return loadLocalImage(path,imageView,onProgressListener);
+            return loadLocalImage(url,onProgressListener);
         }
     }
 
-    private BitmapConfig loadLocalImage(String path,ImageView imageView, OnProgressListener onProgressListener)
+    private BitmapConfig loadLocalImage(String path, OnProgressListener onProgressListener)
     {
         BitmapConfig bitmapConfig = ImageUtil.getBitmapConfig(path);
-        startLoadThread(path,imageView,onProgressListener);
+        startLoadThread(path,onProgressListener);
         return bitmapConfig;
     }
 
-    private BitmapConfig loadHttpImage(String url,ImageView imageView, OnProgressListener onProgressListener)
+    private BitmapConfig loadHttpImage(String url,OnProgressListener onProgressListener)
     {
-        startLoadThread(url,imageView,onProgressListener);
+        startLoadThread(url,onProgressListener);
         return null;
     }
 
-    private void startLoadThread(String url,ImageView imageView,OnProgressListener onImageLoaderListener)
+    private void startLoadThread(String url,OnProgressListener onImageLoaderListener)
     {
-        WeakReference<ImageView> viewWeakReference = new WeakReference<>(imageView);
-        cachedThreadPool.execute(new LoadRunnable(url,viewWeakReference,onImageLoaderListener));
+        cachedThreadPool.execute(new LoadRunnable(url,onImageLoaderListener));
     }
 
     private class LoadRunnable implements Runnable
     {
         private String url ;
-        private WeakReference<ImageView> viewWeakReference ;
         private OnProgressListener onProgressListener;
 
-        LoadRunnable(String url, WeakReference<ImageView> viewWeakReference,OnProgressListener onProgressListener) {
+        LoadRunnable(String url,OnProgressListener onProgressListener) {
             this.url = url;
-            this.viewWeakReference = viewWeakReference;
             this.onProgressListener = onProgressListener;
         }
         @Override
@@ -118,7 +125,7 @@ public class ImageDownloader {
                     String path = downloadImage(url,onProgressListener);
                     Bitmap bitmap = loadLocalImage(path);
                     if (ImageUtil.isOk(bitmap)) {
-                        onSuccess(url,path,bitmap,viewWeakReference);
+                        onSuccess(url,path,bitmap);
                     }
                     else
                     {
@@ -136,7 +143,7 @@ public class ImageDownloader {
                         Bitmap bitmapTry = loadLocalImage(path);
                         if (ImageUtil.isOk(bitmapTry))
                         {
-                            onSuccess(url,path,bitmapTry,viewWeakReference);
+                            onSuccess(url,path,bitmapTry);
                         }
                         else
                         {
@@ -145,14 +152,19 @@ public class ImageDownloader {
                     }
                     else
                     {
-                        onSuccess(url,url,bitmap,viewWeakReference);
+                        onSuccess(url,url,bitmap);
                     }
                 }
             }
             else
             {
-                onSuccess(url,url,bitmapCache,viewWeakReference);
+                onSuccess(url,url,bitmapCache);
             }
+        }
+
+        private Bitmap getCacheImage(String url)
+        {
+            return imageLruCache.get(url);
         }
 
         private String downloadImage(String url,OnProgressListener onProgressListener)
@@ -166,11 +178,6 @@ public class ImageDownloader {
             return fileDownloader.downloadExecute(url,path,onProgressListener);
         }
 
-        private Bitmap getCacheImage(String url)
-        {
-            return imageLruCache.get(url);
-        }
-
         private Bitmap loadLocalImage(String path)
         {
             Bitmap bitmap = ImageUtil.getBitmapByAssets(path);
@@ -182,6 +189,27 @@ public class ImageDownloader {
             return bitmap;
         }
 
+        private void onSuccess(String url,String path,Bitmap bitmap)
+        {
+            final List<Image> images = findImage(url);
+            for(Image image:images)
+            {
+                final ImageView imageView = image.getViewWeakReference().get();
+                if(imageView!=null)
+                {
+                    baseHandler.post(() ->
+                    {
+                        imageView.setImageBitmap(bitmap);
+                        if(onImageLoaderListener!=null)
+                        {
+                            onImageLoaderListener.onSuccess(url,path,bitmap);
+                        }
+                    });
+                }
+                imageList.remove(image);
+            }
+        }
+
         private void onFail(String url)
         {
             baseHandler.post(() -> {
@@ -191,21 +219,78 @@ public class ImageDownloader {
                 }
             });
         }
-        private void onSuccess(String url,String path,Bitmap bitmap,WeakReference<ImageView> viewWeakReference)
+
+    }
+
+    private class Image
+    {
+        String url;
+        WeakReference<ImageView> viewWeakReference ;
+
+        String getUrl() {
+            return url;
+        }
+
+        void setUrl(String url) {
+            this.url = url;
+        }
+
+        WeakReference<ImageView> getViewWeakReference() {
+            return viewWeakReference;
+        }
+
+        void setViewWeakReference(ImageView imageView) {
+            this.viewWeakReference = new WeakReference<>(imageView);
+        }
+    }
+
+    @NonNull
+    private static Image findImage(ImageView imageView)
+    {
+        synchronized (imageList)
         {
-            final ImageView imageView = viewWeakReference.get();
-            if(imageView!=null)
+            cleanNullImage();
+            for(Image image:imageList)
             {
-                baseHandler.post(() ->
+                if(image!=null)
                 {
-                    imageView.setImageBitmap(bitmap);
-                    if(onImageLoaderListener!=null)
+                    ImageView iv = image.getViewWeakReference().get();
+                    if(iv!=null&&iv.equals(imageView))
                     {
-                        onImageLoaderListener.onSuccess(url,path,bitmap);
+                        return image;
                     }
-                });
+                }
+            }
+            Image image = imageDownloader.new Image();
+            imageList.add(image);
+            return image;
+        }
+    }
+    private static void cleanNullImage()
+    {
+        for(int i=imageList.size()-1;i>=0;i--)
+        {
+            Image image = imageList.get(i);
+            if(image==null)
+            {
+                imageList.remove(i);
             }
         }
+    }
+
+    private static List<Image> findImage(String url)
+    {
+        List<Image> images = new ArrayList<>(imageList.size());
+        synchronized (imageList)
+        {
+            for (Image image : imageList) {
+                ImageView iv = image.getViewWeakReference().get();
+                if (iv != null && image.getUrl().equals(url)) {
+                    images.add(image);
+                }
+            }
+        }
+        return images;
     }
 
     public OnImageLoaderListener onImageLoaderListener ;
