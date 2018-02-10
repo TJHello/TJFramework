@@ -180,7 +180,7 @@ public class ImageDownloader {
 
         private Bitmap loadLocalImage(String path)
         {
-            Bitmap bitmap = ImageUtil.getBitmapByAssets(path);
+            Bitmap bitmap = ImageUtil.getBitmap(path);
             if(bitmap==null||bitmap.isRecycled()||!ImageUtil.isOk(path))
             {
                 FileUtil.delFileIfExists(path);

@@ -25,7 +25,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
 
-import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.entity.BitmapConfig;
 import com.tjbaobao.framework.entity.FileType;
 
@@ -44,56 +43,12 @@ public class ImageUtil {
 	private static final int defWidth =Tools.getScreenWidth();
 	private static final int defHeight= 480;
 	
-	//*********获取并且压缩图片
-	@SuppressWarnings("deprecation")
-	public static Drawable getDrawable(String path)
-	{
-		return new BitmapDrawable(compressImage(path));
-	}
-	public static Drawable getDrawable(String path,int width,int height)
-	{
-		return new BitmapDrawable(compressImage(path,width,height));
-	}
+
 	public static Bitmap getBitmap(String path)
 	{
-		return BitmapFactory.decodeFile(path);
-	}
-	public static BitmapConfig getBitmapConfig(String path)
-	{
-		if(path==null)
-		{
-			return null;
-		}
-		File bmpFile = new File(path);
-		if (!bmpFile.exists()) {
-			return getBitmapConfigByAssets(path);
-		}
-		try{
-			BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-			bmpFactoryOptions.inJustDecodeBounds = false;
-			BitmapFactory.decodeFile(path,bmpFactoryOptions);
-			BitmapConfig bitmapConfig = new BitmapConfig();
-			bitmapConfig.setWidth(bmpFactoryOptions.outWidth);
-			bitmapConfig.setHeight(bmpFactoryOptions.outHeight);
-			if(bitmapConfig.getWidth()<=0||bitmapConfig.getHeight()<=0)
-			{
-				return null;
-			}
-			return bitmapConfig;
-		}catch (Exception e)
-		{
-			return null;
-		}
-
-	}
-	public static Bitmap getBitmapByAssets(String path)
-	{
-		if(path==null)
-		{
-			return null;
-		}
+		Bitmap bitmap = null;
+		InputStream is = null ;
 		try {
-			InputStream is ;
 			if(FileUtil.exists(path))
 			{
 				is = new FileInputStream(new File(path));
@@ -104,48 +59,69 @@ public class ImageUtil {
 			}
 			if(is!=null)
 			{
-				return  BitmapFactory.decodeStream(is);
+				bitmap = BitmapFactory.decodeStream(is);
+
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}catch (Exception e){
 			e.printStackTrace();
-		}
-		return null;
-	}
-	public static Bitmap getBitmap(String path,int width,int height)
-	{
-		return compressImage(path,width,height);
-	}
-
-	public static BitmapConfig getBitmapConfigByAssets(String path) {
-		InputStream is = Tools.getAssetsInputSteam(path);
-		if (is == null) {
-			try {
-				is = new FileInputStream(new File(path));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		if (is != null) {
-			BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-			bmpFactoryOptions.inJustDecodeBounds = true;
-			BitmapFactory.decodeStream(is, null, bmpFactoryOptions);
-			int bmpPotionWidth = bmpFactoryOptions.outWidth;
-			int bmpPotionHeight = bmpFactoryOptions.outHeight;
-			if(bmpPotionWidth==0||bmpPotionHeight==0)
+		}finally {
+			if(is!=null)
 			{
-				return null;
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-			BitmapConfig config = new BitmapConfig();
-			config.setWidth(bmpPotionWidth);
-			config.setHeight(bmpPotionHeight);
-			return config;
+		}
+		return bitmap;
+	}
+
+	public static BitmapConfig getBitmapConfig(String path)
+	{
+
+		InputStream is = null ;
+		try {
+			if(FileUtil.exists(path))
+			{
+				is = new FileInputStream(new File(path));
+			}
+			else
+			{
+				is = Tools.getAssetsInputSteam(path);
+			}
+			if(is!=null)
+			{
+				BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+				bmpFactoryOptions.inJustDecodeBounds = false;
+				BitmapFactory.decodeStream(is,null,bmpFactoryOptions);
+				BitmapConfig bitmapConfig = new BitmapConfig();
+				bitmapConfig.setWidth(bmpFactoryOptions.outWidth);
+				bitmapConfig.setHeight(bmpFactoryOptions.outHeight);
+				if(bitmapConfig.getWidth()<=0||bitmapConfig.getHeight()<=0)
+				{
+					return null;
+				}
+				return bitmapConfig;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}catch (Exception e){
+			e.printStackTrace();
+		}finally {
+			if(is!=null)
+			{
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return null;
 	}
-
-
 
 	/**
 	 * 压缩图片
@@ -155,6 +131,7 @@ public class ImageUtil {
 	{
 		return compressImage(path,defWidth,defHeight);
 	}
+
 	public static Bitmap compressImage(String path,int showWidth,int showHeight)
 	{
 		return compressImage(path,showWidth,showHeight,Config.ARGB_8888);
@@ -426,7 +403,7 @@ public class ImageUtil {
 	 * @return
 	 */
 	public static Bitmap tintBitmap(Bitmap inBitmap , int tintColor) {
-		if (inBitmap == null&&inBitmap.isRecycled()) {
+		if (inBitmap == null||inBitmap.isRecycled()) {
 			return null;
 		}
 		Bitmap outBitmap = Bitmap.createBitmap (inBitmap.getWidth(), inBitmap.getHeight() , inBitmap.getConfig());
@@ -483,25 +460,17 @@ public class ImageUtil {
 		{
 			return  null;
 		}
-		float scale_y = toWidth / (float)bitmap.getWidth();
-		float scale_x = toHeight / (float)bitmap.getHeight();
+		Bitmap bitmapTarget = null;
 		if(bitmap.getWidth()>0&&bitmap.getHeight()>0)
 		{
+			float scale_y = toWidth / (float)bitmap.getWidth();
+			float scale_x = toHeight / (float)bitmap.getHeight();
 			Matrix matrix = new Matrix();
 			matrix.postScale(scale_x, scale_y);
-			bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+			bitmapTarget = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
 		}
-		final Paint paint = new Paint();
-		paint.setAntiAlias(true);
-		Bitmap target = Bitmap.createBitmap((int)toWidth,(int)toHeight, config);
-		Canvas canvas = new Canvas(target);
-		canvas.setDrawFilter( new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-		canvas.drawBitmap(bitmap, 0, 0, paint);
-
-		canvas = null;
 		bitmap.recycle();
-		bitmap = null;
-		return target;
+		return bitmapTarget;
 	}
 
 	/**
@@ -514,8 +483,9 @@ public class ImageUtil {
     {
         Matrix matrix = new Matrix();
         matrix.postRotate(rotate);
-		bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-		return bitmap;
+		Bitmap bitmapTarget = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+		bitmap.recycle();
+		return bitmapTarget;
     }
 
 	/**
@@ -599,6 +569,7 @@ public class ImageUtil {
 		}
 		return false;
 	}
+
 	public static boolean isOk(Bitmap bitmap)
 	{
 		if(bitmap==null||bitmap.isRecycled()||bitmap.getWidth()==0||bitmap.getHeight()==0)
