@@ -171,6 +171,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
     public void dismiss() {
         if(!isDismiss)
         {
+            isDismiss = true;
             final Animation animation = AnimationUtils.loadAnimation(context,contentAnimExitId);
             if(ll_windows_index!=null)
             {
