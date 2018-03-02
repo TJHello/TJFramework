@@ -588,7 +588,7 @@ public class FileUtil {
 			if(path.length()>indexDot+1)
 			{
 				String prefix = path.substring(indexDot+1);
-				if(prefix!=null&&prefix.indexOf("/")==-1)
+				if(!prefix.contains("/"))
 				{
 					if(prefix.contains("?"))
 					{

@@ -79,6 +79,11 @@ public class ImageUtil {
 		return bitmap;
 	}
 
+	public static Bitmap getBitmap(String path,int width,int height)
+	{
+		return compressImage(path,width,height);
+	}
+
 	public static BitmapConfig getBitmapConfig(String path)
 	{
 
@@ -121,6 +126,19 @@ public class ImageUtil {
 			}
 		}
 		return null;
+	}
+
+	public static BitmapConfig getBitmapConfig(Bitmap bitmap)
+	{
+		if(bitmap==null)
+		{
+			return null;
+		}
+		BitmapConfig bitmapConfig = new BitmapConfig();
+		bitmapConfig.setWidth(bitmap.getWidth());
+		bitmapConfig.setHeight(bitmap.getHeight());
+		bitmapConfig.setSize(bitmap.getByteCount());
+		return bitmapConfig;
 	}
 
 	/**

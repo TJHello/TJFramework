@@ -1,40 +1,41 @@
 package com.tjbaobao.framework.entity;
 
 /**
+ *
  * Created by TJbaobao on 2017/12/28.
  */
 
 public class PointF{
-    public float X ;
-    public float Y ;
+    public float x ;
+    public float y ;
 
     public PointF() {
     }
 
     public PointF(float x, float y) {
-        X = x;
-        Y = y;
+        this.x = x;
+        this.y = y;
     }
 
     public void set(float x,float y)
     {
-        X = x;
-        Y = y;
+        this.x = x;
+        this.y = y;
     }
 
     public float getX() {
-        return X;
+        return this.x;
     }
 
     public void setX(float x) {
-        X = x;
+        this.x = x;
     }
 
     public float getY() {
-        return Y;
+        return this.y;
     }
 
     public void setY(float y) {
-        Y = y;
+        this.y = y;
     }
 }

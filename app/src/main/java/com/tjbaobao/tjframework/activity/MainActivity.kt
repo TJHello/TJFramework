@@ -48,7 +48,7 @@ class MainActivity : TJActivity() {
 
     class MyAdapter(infoList: MutableList <MainActivityTestModel>?, itemLayoutRes: Int) : BaseRecyclerAdapter<MainActivity.Holder, MainActivityTestModel>(infoList, itemLayoutRes),ImageDownloader.OnImageLoaderListener
     {
-        var imageDownloader :ImageDownloader = ImageDownloader.getInstance()
+        private var imageDownloader :ImageDownloader = ImageDownloader.getInstance()
 
         init {
             imageDownloader.onImageLoaderListener = this

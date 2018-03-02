@@ -1,7 +1,7 @@
 package com.tjbaobao.framework.utils;
 
 
-import android.graphics.PointF;
+import com.tjbaobao.framework.entity.PointF;
 
 /**
  * 数学公式工具类
@@ -141,10 +141,8 @@ public class Equation {
 		PointF pointFMax2 = new PointF(pointF2.x+widthTop2,pointF2.y+widthLeft2);
 		float maxX = Math.min(pointFMax1.x,pointFMax2.x);
 		float maxY = Math.min(pointFMax1.y,pointFMax2.y);
-		//Tools.printLog("minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY+",pointF1.X"+pointF1.X+",pointF1.y"+pointF1.y+",pointF2.X"+pointF2.X+",pointF2.y="+pointF2.y);
 		if(minX   < maxX   &&  minY   <   maxY)
 		{
-			//Tools.printLog("minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY);
 			float centerX = (minX+maxX)/2f;
 			float centerY = (minY+maxY)/2f;
 			return new PointF(centerX,centerY);

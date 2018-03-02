@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Looper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
@@ -386,5 +387,9 @@ public class Tools {
 		}
 		lastClickTime = time;
 		return false;
+	}
+
+	public static boolean isMainThread() {
+		return Looper.getMainLooper() == Looper.myLooper();
 	}
 }

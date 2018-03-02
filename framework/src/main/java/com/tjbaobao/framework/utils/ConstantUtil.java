@@ -1,5 +1,7 @@
 package com.tjbaobao.framework.utils;
 
+import android.os.Environment;
+
 import com.tjbaobao.framework.base.BaseApplication;
 
 import java.io.File;
@@ -47,6 +49,12 @@ public class ConstantUtil
 		return BaseApplication.getContext().getCacheDir().getPath()+SEPARATOR;
 	}
 
+	public static String getMyAppPath()
+	{
+		String homePath = Environment.getExternalStorageDirectory().getPath()+"/"+DeviceUtil.getAppName()+"/";
+		return homePath;
+	}
+
 	public static String getImageFilesPath()
 	{
 		return IMAGE_FILES_PATH ;
@@ -75,6 +83,20 @@ public class ConstantUtil
 
 	public static String getLogFilesPath() {
 		return LOG_FILES_PATH;
+	}
+
+	public static String getImageAppPath()
+	{
+		String path = getMyAppPath()+"images/";
+		FileUtil.createFolder(path);
+		return path;
+	}
+
+	public static String getVideoAppPath()
+	{
+		String path = getMyAppPath()+"video/";
+		FileUtil.createFolder(path);
+		return path;
 	}
 }
 

@@ -1,28 +1,17 @@
 package com.tjbaobao.framework.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.util.LruCache;
+import android.util.LruCache;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.tjbaobao.framework.entity.BitmapConfig;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,17 +36,27 @@ public class ImageDownloader {
 		}
 	};
 	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(3);
-
 	private static final ImageDownloader imageDownloader = new ImageDownloader();
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private static BaseHandler baseHandler ;
     private static final List<Image> imageList = new ArrayList<>();
+    private volatile List<QueueInfo> queuePoolList = new ArrayList<>();
+    private volatile List<String> downloadList = new ArrayList<>();
+    private static boolean isStop = false;
+    private Bitmap defaultBitmap = null;
+    private static int imageWidth = 0,imageHeight = 0;
 
     private ImageDownloader(){
+        Bitmap bitmap = Bitmap.createBitmap(100, 100,Bitmap.Config.ARGB_8888);
+        bitmap.eraseColor(Color.parseColor("#FDFDFD"));//填充颜色
+        defaultBitmap = bitmap  ;
     }
 
     public static ImageDownloader getInstance()
     {
+        isStop = false;
+        imageWidth = 0 ;
+        imageHeight = 0;
         baseHandler = new BaseHandler();
         return imageDownloader;
     }
@@ -90,6 +89,19 @@ public class ImageDownloader {
     private BitmapConfig loadLocalImage(String path, OnProgressListener onProgressListener)
     {
         BitmapConfig bitmapConfig = ImageUtil.getBitmapConfig(path);
+        if(bitmapConfig==null)
+        {
+            if(defaultBitmap!=null)
+            {
+                bitmapConfig.setWidth(defaultBitmap.getWidth());
+                bitmapConfig.setHeight(defaultBitmap.getHeight());
+            }
+            else
+            {
+                bitmapConfig.setHeight(500);
+                bitmapConfig.setWidth(500);
+            }
+        }
         startLoadThread(path,onProgressListener);
         return bitmapConfig;
     }
@@ -97,12 +109,159 @@ public class ImageDownloader {
     private BitmapConfig loadHttpImage(String url,OnProgressListener onProgressListener)
     {
         startLoadThread(url,onProgressListener);
+        if(defaultBitmap!=null)
+        {
+            BitmapConfig bitmapConfig = new BitmapConfig();
+            bitmapConfig.setWidth(defaultBitmap.getWidth());
+            bitmapConfig.setHeight(defaultBitmap.getHeight());
+            return bitmapConfig;
+        }
         return null;
     }
 
     private void startLoadThread(String url,OnProgressListener onImageLoaderListener)
     {
-        cachedThreadPool.execute(new LoadRunnable(url,onImageLoaderListener));
+        QueueInfo queueInfo = new QueueInfo(url,null,onImageLoaderListener);
+        queuePoolList.add(queueInfo);
+        if(downloaderQueuePool==null)
+        {
+            downloaderQueuePool = new DownloaderQueuePool();
+        }
+        downloaderQueuePool.startTimer(0,500);
+    }
+
+    private DownloaderQueuePool downloaderQueuePool ;
+    private class DownloaderQueuePool extends BaseTimerTask
+    {
+        @Override
+        public BaseTimerTask startTimer(long delay, long period) {
+            if(isCancel)
+            {
+                return super.startTimer(delay, period);
+            }
+            return this;
+        }
+
+        @Override
+        public void run() {
+            int length = queuePoolList.size();
+            if(length>0)
+            {
+                for (int i = length-1; i >= 0; i--)
+                {
+                    if(downloadList.size()<3)
+                    {
+                        QueueInfo queueInfo = queuePoolList.get(i);
+                        if(!downloadList.contains(queueInfo.getUrl()))
+                        {
+                            cachedThreadPool.execute(new LoadRunnable(queueInfo));
+                            downloadList.add(queueInfo.getUrl());
+                            queuePoolList.remove(queueInfo);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                this.stopTimer();
+            }
+        }
+    }
+
+    public void stop()
+    {
+        isStop = true;
+        if(downloaderQueuePool!=null)
+        {
+            downloaderQueuePool.stopTimer();
+        }
+        queuePoolList.clear();
+        downloadList.clear();
+    }
+
+    public boolean isStop() {
+        return isStop;
+    }
+
+    public void setDefaultImgSize(int width,int height)
+    {
+        imageWidth = width ;
+        imageHeight  = height ;
+    }
+
+    public void setDefaultBitmap(Bitmap bitmap)
+    {
+        this.defaultBitmap = bitmap;
+    }
+
+    public void remove(String key)
+    {
+        if(imageLruCache!=null)
+        {
+            try {
+                Bitmap bitmap = imageLruCache.get(key+imageWidth+"_"+imageHeight);
+                imageLruCache.remove(key+imageWidth+"_"+imageHeight);
+                if(bitmap!=null&&!bitmap.isRecycled())
+                {
+                    bitmap.recycle();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+    }
+
+    /**
+     * 释放资源
+     */
+    public static void release()
+    {
+        if(imageLruCache!=null)
+        {
+            if (imageLruCache.size() > 0)
+            {
+                imageLruCache.evictAll();
+            }
+        }
+    }
+
+    private class QueueInfo
+    {
+        String url ;
+        String path;
+        OnProgressListener onProgressListener;
+
+        public QueueInfo(String url, String path, OnProgressListener onProgressListener) {
+            this.url = url;
+            this.path = path;
+            this.onProgressListener = onProgressListener;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public OnProgressListener getOnProgressListener() {
+            return onProgressListener;
+        }
+
+        public void setOnProgressListener(OnProgressListener onProgressListener) {
+            this.onProgressListener = onProgressListener;
+        }
     }
 
     private class LoadRunnable implements Runnable
@@ -110,12 +269,21 @@ public class ImageDownloader {
         private String url ;
         private OnProgressListener onProgressListener;
 
+        LoadRunnable(QueueInfo queueInfo)
+        {
+            this(queueInfo.url,queueInfo.onProgressListener);
+        }
+
         LoadRunnable(String url,OnProgressListener onProgressListener) {
             this.url = url;
             this.onProgressListener = onProgressListener;
         }
         @Override
         public void run() {
+            if(isStop)
+            {
+                return ;
+            }
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
             if(!ImageUtil.isOk(bitmapCache))
             {
@@ -164,7 +332,21 @@ public class ImageDownloader {
 
         private Bitmap getCacheImage(String url)
         {
-            return imageLruCache.get(url);
+            if(imageLruCache!=null&&url!=null)
+            {
+                return imageLruCache.get(url+imageWidth+"_"+imageHeight);
+            }
+            return null;
+        }
+        private void setCacheImage(String url,Bitmap bitmap)
+        {
+            if(getCacheImage(url+imageWidth+"_"+imageHeight)==null)
+            {
+                if(imageLruCache!=null)
+                {
+                    imageLruCache.put(url+imageWidth+"_"+imageHeight, bitmap);
+                }
+            }
         }
 
         private String downloadImage(String url,OnProgressListener onProgressListener)
@@ -181,6 +363,10 @@ public class ImageDownloader {
         private Bitmap loadLocalImage(String path)
         {
             Bitmap bitmap = ImageUtil.getBitmap(path);
+            if(imageWidth!=0&&imageHeight!=0)
+            {
+                ImageUtil.matrixBitmap(bitmap,imageWidth,imageHeight);
+            }
             if(bitmap==null||bitmap.isRecycled()||!ImageUtil.isOk(path))
             {
                 FileUtil.delFileIfExists(path);
@@ -197,6 +383,7 @@ public class ImageDownloader {
                 final ImageView imageView = image.getViewWeakReference().get();
                 if(imageView!=null)
                 {
+
                     baseHandler.post(() ->
                     {
                         imageView.setImageBitmap(bitmap);
@@ -207,6 +394,7 @@ public class ImageDownloader {
                     });
                 }
                 imageList.remove(image);
+                downloadList.remove(url);
             }
         }
 
