@@ -55,6 +55,7 @@ public class TbFileDAO extends TbBaseDAO {
     {
         if(getFileByUrl(obj.getUrl())!=null)
         {
+            changePathByUrl(obj.getUrl(),obj.getPath());
             return -1;
         }
         ContentValues values = new ContentValues();
@@ -133,6 +134,13 @@ public class TbFileDAO extends TbBaseDAO {
         ContentValues values = new ContentValues();
         values.put("change_time", DateTimeUtil.getNowMsTime());
         return update(tbName, values, "code=?", new String[]{code});
+    }
+
+    public static long changePathByUrl(String url,String path)
+    {
+        ContentValues values = new ContentValues();
+        values.put("path", path);
+        return update(tbName, values, "url=?", new String[]{url});
     }
 
     private static TbFileObj getFileNO1(String sql)

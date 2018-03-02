@@ -166,7 +166,6 @@ public class FileUtil {
 			try {
 				FileUtil.delFileIfExists(path);
 				FileOutputStream fileOutputStream = new FileOutputStream(new File(path));
-				long fileLength = inputStream.available();
 				long readSize = 0;
 				int len ;
 				while ((len=inputStream.read(byteBuff))>0)
@@ -175,7 +174,7 @@ public class FileUtil {
 					readSize+=len;
 					if(onProgressListener!=null)
 					{
-						onProgressListener.onProgress(readSize,fileLength);
+						onProgressListener.onProgress(readSize);
 					}
 				}
 				fileOutputStream.flush();

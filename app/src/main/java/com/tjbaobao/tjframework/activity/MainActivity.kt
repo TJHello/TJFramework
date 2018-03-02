@@ -26,7 +26,7 @@ class MainActivity : TJActivity() {
 
     override fun onInitView() {
         setContentView(R.layout.activity_main)
-        recyclerView.toGridView(2)
+        recyclerView.toGridView(1)
         recyclerView.addGridAverageCenterDecoration(10,10)
 
         adapter = MyAdapter(infoList,R.layout.main_activity_item_layout)
@@ -39,10 +39,16 @@ class MainActivity : TJActivity() {
 
     override fun onLoadData() {
         infoList.clear()
-        for(i in 0..10)
-        {
-            infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-01_4.jpg?alt=media"))
-        }
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-01_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-02_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-03_m_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-04_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-05_m_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-06_m_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-07_m_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-08_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-09_m_4.jpg?alt=media"))
+        infoList.add(MainActivityTestModel("https://firebasestorage.googleapis.com/v0/b/jigsaw-puzzle-52ba2.appspot.com/o/deer%2Fdeer%2Fdeer-10_m_4.jpg?alt=media"))
         adapter.notifyDataSetChanged()
     }
 
@@ -52,10 +58,11 @@ class MainActivity : TJActivity() {
 
         init {
             imageDownloader.onImageLoaderListener = this
+            imageDownloader.setDefaultImgSize(300,300)
         }
 
         override fun onBindViewHolder(holder: Holder?, info: MainActivityTestModel?, position: Int) {
-            imageDownloader.load(info!!.url,holder!!.imageView,onItemProgressListener())
+            imageDownloader.load(info!!.url,holder!!.imageView, OnItemProgressListener())
         }
 
         override fun onGetHolder(view: View?): Holder {
@@ -70,10 +77,9 @@ class MainActivity : TJActivity() {
             Tools.printLog("加载失败:$url")
         }
 
-        class onItemProgressListener : OnProgressListener
+        class OnItemProgressListener : OnProgressListener()
         {
             override fun onProgress(progress: Float, isFinish: Boolean) {
-
             }
 
             override fun onProgress(sizeProgress: Long, sizeTotal: Long) {

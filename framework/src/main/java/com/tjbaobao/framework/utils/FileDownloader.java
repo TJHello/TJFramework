@@ -1,8 +1,6 @@
 package com.tjbaobao.framework.utils;
 
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 
 import com.tjbaobao.framework.database.dao.TbFileDAO;
@@ -21,9 +19,8 @@ public class FileDownloader {
 	private static volatile List<String> downloadList = new ArrayList<>();//下载列表
 	private static volatile List<QueueInfo> queuePoolList = new ArrayList<>();//等待队列
 	private static final Map<String,String> downLoadHosts = new HashMap<>();//连接与本地地址映射
-	private static final FileDownloader fileDownloader = new FileDownloader();
 	private static BaseHandler baseHandler ;
-	private static boolean isShop = false;
+	private static boolean isStop = false;
 
 
 	private FileDownloader(){
@@ -33,8 +30,8 @@ public class FileDownloader {
 	public static FileDownloader getInstance()
 	{
 		baseHandler = new BaseHandler();
-		isShop = false;
-		return fileDownloader;
+		isStop = false;
+		return new FileDownloader();
 	}
 
 	public String download(String url,String path)
@@ -44,6 +41,7 @@ public class FileDownloader {
 
 	public String download(String url, String path, @Nullable OnProgressListener onProgressListener)
 	{
+		isStop = false;
 		if(url==null||url.equals(""))
 		{
 			return null;
@@ -59,12 +57,13 @@ public class FileDownloader {
 			}
 			else
 			{
-				onSuccess(url,outPath);
-				return outPath;
+				onSuccess(url,url);
+				return url;
 			}
 		}
 		else
 		{
+			TbFileDAO.changePathByUrl(url,path);
 			onSuccess(url,outPath);
 			return outPath;
 		}
@@ -122,6 +121,7 @@ public class FileDownloader {
 			{
 				return null;
 			}
+			Tools.printLog("获取磁盘缓存");
 		}
 		return outPath;
 	}
@@ -130,12 +130,13 @@ public class FileDownloader {
 	private void startDownloadThread(String url,String path,OnProgressListener onProgressListener)
 	{
 		QueueInfo queueInfo = new QueueInfo(url,path,onProgressListener);
+		queuePoolList.remove(queueInfo);
 		queuePoolList.add(queueInfo);
 		if(downloaderQueuePool==null)
 		{
 			downloaderQueuePool = new DownloaderQueuePool();
 		}
-		downloaderQueuePool.startTimer(0,500);
+		downloaderQueuePool.startTimer(0,100);
 	}
 
 	private DownloaderQueuePool downloaderQueuePool ;
@@ -157,7 +158,7 @@ public class FileDownloader {
 			{
 				for (int i = length-1; i >= 0; i--)
 				{
-					if(downloadList.size()<3)
+					if(downloadList.size()<3&&i<queuePoolList.size())
 					{
 						QueueInfo queueInfo = queuePoolList.get(i);
 						if(!downloadList.contains(queueInfo.getUrl()))
@@ -178,7 +179,7 @@ public class FileDownloader {
 
 	public void stop()
 	{
-		isShop = true;
+		isStop = true;
 		if(downloaderQueuePool!=null)
 		{
 			downloaderQueuePool.stopTimer();
@@ -187,7 +188,7 @@ public class FileDownloader {
 
 	public static boolean isStop()
 	{
-		return isShop;
+		return isStop;
 	}
 
 	private class QueueInfo
@@ -243,8 +244,9 @@ public class FileDownloader {
 		}
 		@Override
 		public void run() {
-			if(isShop)
+			if(isStop)
 			{
+				downloadList.remove(url);
 				return ;
 			}
 			boolean isOk = OKHttpUtil.download(url,path,onProgressListener);

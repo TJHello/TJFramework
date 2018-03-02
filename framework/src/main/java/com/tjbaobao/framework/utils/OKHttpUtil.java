@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by TJbaobao on 2018/1/12.
@@ -93,8 +94,16 @@ public class OKHttpUtil {
         Response response = execute(request);
         if(response!=null&&response.isSuccessful())
         {
-            InputStream inputStream = response.body().byteStream();
-            return  FileUtil.Writer.writeFile(inputStream,path,onProgressListener);
+            ResponseBody body = response.body();
+            if(body!=null)
+            {
+                if(onProgressListener!=null)
+                {
+                    onProgressListener.length =  body.contentLength();
+                }
+                InputStream inputStream = body.byteStream();
+                return  FileUtil.Writer.writeFile(inputStream,path,onProgressListener);
+            }
         }
         return false;
     }
