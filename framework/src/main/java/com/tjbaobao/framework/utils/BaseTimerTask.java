@@ -11,7 +11,7 @@ import java.util.TimerTask;
 public abstract class BaseTimerTask {
     private Timer timer ;
     private MyTimerTask mTimerTask ;
-    protected boolean isCancel = true;
+    protected volatile boolean isCancel = true;
 
     private class MyTimerTask extends TimerTask
     {

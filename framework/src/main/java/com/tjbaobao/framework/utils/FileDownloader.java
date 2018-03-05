@@ -63,7 +63,7 @@ public class FileDownloader {
 		}
 		else
 		{
-			TbFileDAO.changePathByUrl(url,path);
+			TbFileDAO.changePathByUrl(url,outPath);
 			onSuccess(url,outPath);
 			return outPath;
 		}
@@ -121,7 +121,6 @@ public class FileDownloader {
 			{
 				return null;
 			}
-			Tools.printLog("获取磁盘缓存");
 		}
 		return outPath;
 	}
@@ -320,6 +319,19 @@ public class FileDownloader {
 			}
 		}
 		return url;
+	}
+
+	public static void remove(String url)
+	{
+		if(downLoadHosts.containsKey(url))
+		{
+			downLoadHosts.remove(url);
+		}
+		TbFileObj fileObj = TbFileDAO.getFileByUrl(url);
+		if(fileObj!=null)
+		{
+			TbFileDAO.delFile(fileObj.getCode());
+		}
 	}
 
 }

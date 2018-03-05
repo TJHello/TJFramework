@@ -117,7 +117,10 @@ public class ResourcesGetTools {
 				startCutFromCamera();
 				break;
 			case RequestCode.IMG_GALLERY_GET:
-				startCutFromGallery(data);
+				if(onResourcesGetListener!=null)
+				{
+					onResourcesGetListener.onSuccess(requestCode, pathRes, data);
+				}
 				break;
 			case RequestCode.IMG_FILE_GET:
 				

@@ -11,7 +11,9 @@ import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,7 +42,7 @@ public class ImageDownloader {
     private static BaseHandler baseHandler ;
     private static volatile List<Image> imageList = new ArrayList<>();
     private volatile List<QueueInfo> queuePoolList = new ArrayList<>();
-    private volatile List<String> downloadList = new ArrayList<>();
+    private final List<String> downloadList = new ArrayList<>();
     private static boolean isStop = false;
     private Bitmap defaultBitmap = null;
     private static int imageWidth = 0,imageHeight = 0;
@@ -89,19 +91,17 @@ public class ImageDownloader {
     private BitmapConfig loadLocalImage(String path, OnProgressListener onProgressListener)
     {
         isStop = false;
-        BitmapConfig bitmapConfig = ImageUtil.getBitmapConfig(path);
-        if(bitmapConfig==null)
+
+        BitmapConfig bitmapConfig = new BitmapConfig();
+        if(defaultBitmap!=null)
         {
-            if(defaultBitmap!=null)
-            {
-                bitmapConfig.setWidth(defaultBitmap.getWidth());
-                bitmapConfig.setHeight(defaultBitmap.getHeight());
-            }
-            else
-            {
-                bitmapConfig.setHeight(500);
-                bitmapConfig.setWidth(500);
-            }
+            bitmapConfig.setWidth(defaultBitmap.getWidth());
+            bitmapConfig.setHeight(defaultBitmap.getHeight());
+        }
+        else
+        {
+            bitmapConfig.setHeight(500);
+            bitmapConfig.setWidth(500);
         }
         startLoadThread(path,onProgressListener);
         return bitmapConfig;
@@ -110,22 +110,13 @@ public class ImageDownloader {
     private BitmapConfig loadHttpImage(String url,OnProgressListener onProgressListener)
     {
         startLoadThread(url,onProgressListener);
-        String path = FileDownloader.getFilePath(url);
-        if(path!=null&&FileUtil.exists(path))
+        if(defaultBitmap!=null)
         {
-            return ImageUtil.getBitmapConfig(path);
+            BitmapConfig bitmapConfig = new BitmapConfig();
+            bitmapConfig.setWidth(defaultBitmap.getWidth());
+            bitmapConfig.setHeight(defaultBitmap.getHeight());
+            return bitmapConfig;
         }
-        else
-        {
-            if(defaultBitmap!=null)
-            {
-                BitmapConfig bitmapConfig = new BitmapConfig();
-                bitmapConfig.setWidth(defaultBitmap.getWidth());
-                bitmapConfig.setHeight(defaultBitmap.getHeight());
-                return bitmapConfig;
-            }
-        }
-
         return null;
     }
 
@@ -146,35 +137,66 @@ public class ImageDownloader {
     {
         @Override
         public BaseTimerTask startTimer(long delay, long period) {
-            if(isCancel)
+            synchronized (this)
             {
-                return super.startTimer(delay, period);
+                if(isCancel)
+                {
+                    return super.startTimer(delay, period);
+                }
+                return this;
             }
-            return this;
         }
 
         @Override
         public void run() {
-            int length = queuePoolList.size();
-            if(length>0)
+            synchronized (downloadList)
             {
-                for (int i = length-1; i >= 0; i--)
+                synchronized (queuePoolList)
                 {
-                    if(downloadList.size()<3)
+                    int length = queuePoolList.size();
+                    if(length>0)
                     {
-                        QueueInfo queueInfo = queuePoolList.get(i);
-                        if(!downloadList.contains(queueInfo.getUrl()))
+                        for (int i = length-1; i >= 0; i--)
                         {
-                            cachedThreadPool.execute(new LoadRunnable(queueInfo));
-                            downloadList.add(queueInfo.getUrl());
-                            queuePoolList.remove(queueInfo);
+                            if(downloadList.size()<3)
+                            {
+                                try{
+                                    QueueInfo queueInfo = queuePoolList.get(i);
+                                    if(!mapDownload.containsKey(queueInfo.getUrl())||!mapDownload.get(queueInfo.getUrl()))
+                                    {
+                                        mapDownload.put(queueInfo.getUrl(),true);
+                                        cachedThreadPool.execute(new LoadRunnable(queueInfo));
+                                        downloadList.add(queueInfo.getUrl());
+                                    }
+                                    queuePoolList.remove(i);
+                                }
+                                catch (Exception ignored){}
+                            }
+                            else
+                            {
+                                for(int j = downloadList.size()-1; j >= 0; j--)
+                                {
+                                    if(j<downloadList.size()) {
+                                        try {
+                                            String url = downloadList.get(j);
+                                            if(!mapDownload.containsKey(url)||!mapDownload.get(url))
+                                            {
+                                                downloadList.remove(url);
+                                            }
+                                        } catch (Exception ignored)
+                                        {
+
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
+                    else
+                    {
+                        this.stopTimer();
+                    }
                 }
-            }
-            else
-            {
-                this.stopTimer();
             }
         }
     }
@@ -275,10 +297,12 @@ public class ImageDownloader {
         }
     }
 
+    private volatile Map<String ,Boolean> mapDownload = new HashMap<>();
     private class LoadRunnable implements Runnable
     {
         private String url ;
         private OnProgressListener onProgressListener;
+
 
         LoadRunnable(QueueInfo queueInfo)
         {
@@ -293,7 +317,10 @@ public class ImageDownloader {
         public void run() {
             if(isStop)
             {
-                downloadList.remove(url);
+                while (downloadList.contains(url))
+                {
+                    downloadList.remove(url);
+                }
                 return ;
             }
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
@@ -309,7 +336,16 @@ public class ImageDownloader {
                     }
                     else
                     {
-                        onFail(url);
+                        FileUtil.delFileIfExists(path);
+                        path = downloadImage(url,onProgressListener);
+                        bitmap = loadLocalImage(path);
+                        if (ImageUtil.isOk(bitmap)) {
+                            onSuccess(url,path,bitmap);
+                        }
+                        else
+                        {
+                            onFail(url);
+                        }
                     }
                 }
                 else
@@ -338,10 +374,13 @@ public class ImageDownloader {
             }
             else
             {
-                Tools.printLog("获取缓存成功");
                 onSuccess(url,url,bitmapCache);
             }
-            downloadList.remove(url);
+            while (downloadList.contains(url))
+            {
+                downloadList.remove(url);
+            }
+            mapDownload.put(url,false);
         }
 
         private Bitmap getCacheImage(String url)
@@ -488,13 +527,20 @@ public class ImageDownloader {
             {
                 if(i<imageList.size())
                 {
-                    Image image = imageList.get(i);
-                    if(image!=null)
+                    try
                     {
-                        if(image.getUrl()!=null&&image.getUrl().equals(url))
+                        Image image = imageList.get(i);
+                        if(image!=null)
                         {
-                            return image;
+                            if(image.getUrl()!=null&&image.getUrl().equals(url))
+                            {
+                                return image;
+                            }
                         }
+                    }
+                    catch (Exception ignored)
+                    {
+
                     }
                 }
             }
@@ -525,12 +571,17 @@ public class ImageDownloader {
             {
                 if(i<imageList.size())
                 {
-                    Image image = imageList.get(i);
-                    if(image!=null)
-                    {
-                        if (image.getUrl().equals(url)) {
-                            images.add(image);
+                    try{
+                        Image image = imageList.get(i);
+                        if(image!=null)
+                        {
+                            if (image.getUrl().equals(url)) {
+                                images.add(image);
+                            }
                         }
+                    }catch (Exception ignored)
+                    {
+
                     }
                 }
             }
