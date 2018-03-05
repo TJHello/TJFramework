@@ -12,27 +12,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
+@SuppressWarnings("unused")
 public class BaseApplication extends Application {
+
 	public static Context context ;
 	private static int foregroundActivities =0;
 	private MyUncaughtExceptionHandler handler;
-	private UncaughtExceptionHandler defaultHandler;
-	
+
+	public static void init(Application application)
+	{
+		context = application.getApplicationContext();
+		//监听activity生命周期
+		application.registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
+		// 设置未捕获异常处理器
+		Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
+	}
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		context = this.getApplicationContext();
-		
-		//监听activity生命周期
-		registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
-		
-		// 获取默认未捕获异常处理器
-		defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-
-		// 设置未捕获异常处理器
-		handler = new MyUncaughtExceptionHandler();
-		Thread.setDefaultUncaughtExceptionHandler(handler);
+		init(this);
 	}
+
 	public static Context getContext() {
 		return context;
 	}
@@ -41,7 +42,7 @@ public class BaseApplication extends Application {
 	 * @author TJbaobao
 	 *
 	 */
-	private class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks
+	private static class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks
 	{
 
 		@Override
@@ -102,7 +103,7 @@ public class BaseApplication extends Application {
 	 * @author TJbaobao
 	 *
 	 */
-	private class MyUncaughtExceptionHandler implements UncaughtExceptionHandler
+	private static class MyUncaughtExceptionHandler implements UncaughtExceptionHandler
 	{
 		/**
 		 *  处理未捕获异常
@@ -129,7 +130,7 @@ public class BaseApplication extends Application {
 
 			}
 			//让默认未捕获异常处理器来处理未捕获异常
-			defaultHandler.uncaughtException(thread, ex);
+			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(thread, ex);
 		}
 	}
 }

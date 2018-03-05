@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class BaseAdapter extends android.widget.BaseAdapter {
 
 	protected Context context ;

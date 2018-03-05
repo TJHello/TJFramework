@@ -239,7 +239,13 @@ public class BaseHandler {
      *         looper processing the message queue is exiting.
      */
     public final boolean sendMessage(Message msg) {
+
         return mExec.sendMessage(msg);
+    }
+
+    public final Message obtainMessage()
+    {
+        return mExec.obtainMessage();
     }
 
     /**
@@ -252,6 +258,8 @@ public class BaseHandler {
     public final boolean sendEmptyMessage(int what) {
         return mExec.sendEmptyMessage(what);
     }
+
+
 
     /**
      * Sends a Message containing only the what value, to be delivered

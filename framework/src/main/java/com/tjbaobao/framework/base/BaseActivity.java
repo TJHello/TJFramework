@@ -15,10 +15,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.tjbaobao.framework.utils.BaseHandler;
+
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener{
 	protected Context context ;
 	protected Activity activity ;
@@ -30,8 +33,8 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	}
 	/**
 	 * 通过id获取颜色
-	 * @param id
-	 * @return
+	 * @param id 颜色资源id
+	 * @return 颜色值
 	 */
 	protected int getColorById(@ColorRes int id)
 	{
@@ -39,8 +42,8 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	}
 	/**
 	 * 通过id获取字符串
-	 * @param id
-	 * @return
+	 * @param id 字符串资源id
+	 * @return 字符串
 	 */
 	protected String getStringById(@StringRes int id)
 	{
@@ -83,15 +86,18 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 	private void setHideVirtualKey(Window window)
 	{
-		int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE|
-				//布局位于状态栏下方
-				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|
-				//全屏
-				View.SYSTEM_UI_FLAG_FULLSCREEN|
-				//隐藏导航栏
-				View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|
-				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-		if (VERSION.SDK_INT>=19){
+        int uiOptions = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE|
+                    //布局位于状态栏下方
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|
+                    //全屏
+                    View.SYSTEM_UI_FLAG_FULLSCREEN|
+                    //隐藏导航栏
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        }
+        if (VERSION.SDK_INT>=19){
 			uiOptions |= 0x00001000;
 		}else{
 			uiOptions |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
@@ -101,38 +107,44 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	/**
 	 * UI更新
 	 */
-	protected Handler handler = new Handler(){
-		public void handleMessage(Message msg) {
-			BaseActivity.this.onHandleMessage(msg,msg.what,msg.obj);
-			super.handleMessage(msg);
-		};
-	};
+
+	protected BaseHandler handler = new BaseHandler(new HandlerCallback());
+
+	private class HandlerCallback implements Handler.Callback {
+
+		@Override
+		public boolean handleMessage(Message message) {
+			BaseActivity.this.onHandleMessage(message,message.what,message.obj);
+			return false;
+		}
+	}
+
 	/**
 	 * 接受到的Handler的消息
-	 * @param msg
-	 * @param what
-	 * @param obj
+	 * @param msg Message
+	 * @param what what
+	 * @param obj obj
 	 */
 	protected void onHandleMessage(Message msg,int what,Object obj)
 	{
-		
+
 	}
 	
 	/**
 	 * 向Handler发送消息
-	 * @param what
-	 * @param obj
+	 * @param what what
+	 * @param obj obj
 	 */
-	protected void sendMessage(int what,Object obj)
+    protected void sendMessage(int what, Object obj)
 	{
-		Message msg = new Message();
+		Message msg = handler.obtainMessage();
 		msg.what = what ;
 		msg.obj = obj ;
 		handler.sendMessage(msg);
 	}
-	protected void sendMessage(int what,Object obj,int arg1)
+	protected  void sendMessage(int what,Object obj,int arg1)
 	{
-		Message msg = new Message();
+		Message msg = handler.obtainMessage();
 		msg.what = what ;
 		msg.obj = obj ;
 		msg.arg1 = arg1;
@@ -145,12 +157,10 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 		if(timerTask!=null)
 		{
 			timerTask.cancel();
-			timerTask = null;
 		}
 		if(timer!=null)
 		{
 			timer.cancel();
-			timer = null;
 		}
 	}
 	protected void startTimerTask(Timer timer,TimerTask timerTask,Date when)
@@ -225,7 +235,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	
 	/**
 	 * 获取状态栏高度
-	 * @return
+	 * @return 返回高度 -1代表失败
 	 */
 	protected int getBarHeight()
 	{
