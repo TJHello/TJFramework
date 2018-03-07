@@ -1,28 +1,39 @@
-#TJFramework
+# TJFramework
 一款自己用的android快速开发框架，在不断的完善中
 - - -
-- ##**框架引用**
+- ## **框架引用**
 
-      compile 'com.github.TJHello:TJFramework:1.0.13'
 
-- ##**框架配置**
+```
+compile 'com.github.TJHello:TJFramework:1.0.13'
+```
 
-###**1. Application配置**
 
-    在AndroidManifest-Application中增加
-    android:name="com.tjbaobao.framework.base.BaseApplication"
-    如果已经有了别的Application基类，请在Application-onCreate中增加以下代码
-    com.tjbaobao.framework.base.BaseApplication.init(this);
+- ## **框架配置**
+
+### **1. Application配置**
+
+``` java
+在AndroidManifest-Application中增加
+android:name="com.tjbaobao.framework.base.BaseApplication"
+如果已经有了别的Application基类，请在Application-onCreate中增加以下代码
+com.tjbaobao.framework.base.BaseApplication.init(this);
+```
+
+
     
-###**2. 数据库配置**
+### **2. 数据库配置**
 
+``` java
     在AndroidManifest-Application中增加
     <meta-data android:name="database_name" android:value="TjFramework" />
     <meta-data android:name="database_version" android:value="1"/>
-    
-- ##**框架入门**
+```
 
-+ ####**activity、fragment、adapter等基类的使用(直接继承即可，具体API请看具体类)**
+    
+- ## **框架入门**
+
++ #### **activity、fragment、adapter等基类的使用(直接继承即可，具体API请看具体类)**
 <pre>
 <code>
      - BaseActivity
@@ -39,7 +50,7 @@
      - TJFragmentActivity
 </code>
 </pre>
- + ####**database基类BaseDataBaseHelper的使用(直接继承即可，具体API请看具体类)**
+ + #### **database基类BaseDataBaseHelper的使用(直接继承即可，具体API请看具体类)**
  
  <pre>
  <code>
@@ -47,7 +58,7 @@
  </code>
  </pre>
 
- + ####**Dialog基类的使用(直接继承即可，具体API请看具体类)**
+ + #### **Dialog基类的使用(直接继承即可，具体API请看具体类)**
 
  <pre>
  <code>
@@ -55,7 +66,7 @@
  </code>
  </pre>
 
- + ####**view基类的使用**
+ + #### **view基类的使用**
 
 <pre>
 <code>
@@ -68,7 +79,7 @@
 </code>
 </pre>
 
- + ####**工具类的使用**
+ + #### **工具类的使用**
 
  <pre>
  <code>
