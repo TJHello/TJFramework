@@ -22,7 +22,6 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        immersiveStatusBar();
         initValues(savedInstanceState);
         initView();
         initTitleBar();
