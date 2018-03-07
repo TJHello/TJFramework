@@ -4,7 +4,7 @@
 - ## **框架引用**
 
 
-><p>`compile 'com.github.TJHello:TJFramework:1.0.13'`</p>**[查看最新版](https://github.com/TJHello/TJFramework/releases)**
+>`compile 'com.github.TJHello:TJFramework:1.0.13'`[查看最新版](https://github.com/TJHello/TJFramework/releases)
 
 
 - ## **框架配置**
