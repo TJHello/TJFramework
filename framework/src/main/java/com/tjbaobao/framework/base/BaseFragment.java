@@ -35,7 +35,7 @@ public class BaseFragment extends Fragment{
 	/**
 	 * 通过id获取颜色
 	 * @param id
-	 * @return
+	 * @return 颜色值
 	 */
 	@SuppressWarnings("deprecation")
 	protected int getColorById(int id)
@@ -46,7 +46,7 @@ public class BaseFragment extends Fragment{
 	/**
 	 * 通过id获取字符串
 	 * @param id
-	 * @return
+	 * @return 字符串
 	 */
 	protected String getStringById(int id)
 	{

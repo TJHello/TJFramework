@@ -8,6 +8,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
@@ -17,20 +18,30 @@ import android.view.WindowManager;
 
 import com.tjbaobao.framework.utils.BaseHandler;
 
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.Serializable;
 
+
+/**
+ * Activity基类
+ * Created by TJbaobao on 2017/9/8.
+ *
+ * 主要功能亮点:
+ * 1、常用工具使用
+ * 2、快捷启动Activity
+ *
+ */
 @SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener{
 	protected Context context ;
 	protected Activity activity ;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.context = this ;
 		this.activity = this ;
 	}
+
 	/**
 	 * 通过id获取颜色
 	 * @param id 颜色资源id
@@ -40,6 +51,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	{
 		return this.getResources().getColor(id);
 	}
+
 	/**
 	 * 通过id获取字符串
 	 * @param id 字符串资源id
@@ -49,6 +61,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	{
 		return this.getResources().getString(id);
 	}
+
+	/**
+	 * 带resultCode的finish
+	 * @param resultCode 返回结果
+	 */
 	protected void finish(int resultCode)
 	{
 		setResult(resultCode);
@@ -56,6 +73,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	}
 	/**
 	 * 沉浸式状态栏
+	 *
+	 * 使用需要在布局中配合增加以下参数
+	 * android:windowTranslucentStatus=“true"
+	 * android:fitsSystemWindows="true"
+	 *
 	 */
 	protected void immersiveStatusBar()
 	{
@@ -104,9 +126,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 		}
 		window.getDecorView().setSystemUiVisibility(uiOptions);
 	}
-	/**
-	 * UI更新
-	 */
+
 
 	protected BaseHandler handler = new BaseHandler(new HandlerCallback());
 
@@ -129,7 +149,18 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	{
 
 	}
-	
+
+	/**
+	 * 向Handler发送消息
+	 * @param what what
+	 */
+	protected void sendMessage(int what)
+	{
+		Message msg = handler.obtainMessage();
+		msg.what = what ;
+		handler.sendMessage(msg);
+	}
+
 	/**
 	 * 向Handler发送消息
 	 * @param what what
@@ -151,87 +182,254 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 		handler.sendMessage(msg);
 	}
 
-	//TimerTask启动与停止
-	protected void stopTimerTask(Timer timer,TimerTask timerTask)
-	{
-		if(timerTask!=null)
-		{
-			timerTask.cancel();
-		}
-		if(timer!=null)
-		{
-			timer.cancel();
-		}
-	}
-	protected void startTimerTask(Timer timer,TimerTask timerTask,Date when)
-	{
-		if(timer!=null&&timerTask!=null)
-			timer.schedule(timerTask, when);
-	}
-	protected void startTimerTask(Timer timer,TimerTask timerTask,long period)
-	{
-		if(timer!=null&&timerTask!=null)
-			timer.schedule(timerTask, period);
-	}
-	protected void startTimerTask(Timer timer,TimerTask timerTask,Date when,long period)
-	{
-		if(timer!=null&&timerTask!=null)
-			timer.schedule(timerTask, when, period);
-	}
-	protected void startTimerTask(Timer timer,TimerTask timerTask,long delay,long period)
-	{
-		if(timer!=null&&timerTask!=null)
-			timer.schedule(timerTask, delay, period);
-	}
-	
-	//启动Activity
+	/**
+	 * 快捷启动Activity
+	 * @param mClass Activity.class
+	 */
 	protected void startActivity(Class<? extends Activity> mClass)
 	{
 		Intent intent = new Intent(this,mClass);
 		this.startActivity(intent);
 	}
+
+	/**
+	 * 快捷启动Activity并且finish当前Activity
+	 * @param mClass Activity.class
+	 */
 	protected void startActivityAndFinish(Class<? extends Activity> mClass)
 	{
 		startActivity(mClass);
 		this.finish();
 	}
-	protected void startActivity(Class<? extends Activity> mClass,String[] names,String ... values)
+
+	/**
+	 * 快捷启动Activity并且传入参数
+	 * @param mClass Activity.class
+	 * @param keys keys
+	 * @param values values
+	 */
+	protected void startActivity(Class<? extends Activity> mClass,String[] keys,Object ... values)
 	{
 		Intent intent = new Intent(this,mClass);
 		int i=0;
-		for(String name:names)
+		for(String name:keys)
 		{
-			intent.putExtra(name, values[i]);
+			Object value = values[i];
+			if (value instanceof Integer) {
+				intent.putExtra(name, (Integer)value);
+			}
+			else if(value instanceof Byte)
+			{
+				intent.putExtra(name, (Byte)value);
+			}
+			else if(value instanceof Long)
+			{
+				intent.putExtra(name, (Long)value);
+			}
+			else if(value instanceof Float)
+			{
+				intent.putExtra(name, (Float)value);
+			}
+			else if(value instanceof Integer[])
+			{
+				intent.putExtra(name, (Integer[])value);
+			}
+			else if(value instanceof Short)
+			{
+				intent.putExtra(name, (Short)value);
+			}
+			else if(value instanceof Bundle)
+			{
+				intent.putExtra(name, (Bundle)value);
+			}
+			else if(value instanceof Byte[])
+			{
+				intent.putExtra(name, (Byte[])value);
+			}
+			else if(value instanceof char[])
+			{
+				intent.putExtra(name, (char[])value);
+			}
+			else if(value instanceof Double)
+			{
+				intent.putExtra(name, (Double)value);
+			}
+			else if(value instanceof String[])
+			{
+				intent.putExtra(name, (String[])value);
+			}
+			else if(value instanceof Boolean)
+			{
+				intent.putExtra(name, (Boolean)value);
+			}
+			else if(value instanceof Float[])
+			{
+				intent.putExtra(name, (Float[])value);
+			}
+			else if(value instanceof Short[])
+			{
+				intent.putExtra(name, (Short[])value);
+			}
+			else if(value instanceof Long[])
+			{
+				intent.putExtra(name, (Long[])value);
+			}
+			else if(value instanceof Parcelable)
+			{
+				intent.putExtra(name, (Parcelable)value);
+			}
+			else if(value instanceof Parcelable[])
+			{
+				intent.putExtra(name, (Parcelable[])value);
+			}
+			else if(value instanceof CharSequence)
+			{
+				intent.putExtra(name, (CharSequence)value);
+			}
+			else if(value instanceof CharSequence[])
+			{
+				intent.putExtra(name, (CharSequence[])value);
+			}
+			else if(value instanceof Serializable)
+			{
+				intent.putExtra(name, (Serializable)value);
+			}
 			i++;
 		}
 		this.startActivity(intent);
 	}
-	protected void startActivityAndFinish(Class<? extends Activity> mClass,String[] names,String ... values)
+
+	/**
+	 * 快捷启动Activity并且传入参数然后finish
+	 * @param mClass Activity.class
+	 * @param names keys
+	 * @param values values
+	 */
+	protected void startActivityAndFinish(Class<? extends Activity> mClass,String[] names,Object ... values)
 	{
 		startActivity(mClass,names,values);
 		this.finish();
 	}
+
+	/**
+	 * 快捷启动Activity并且finish
+	 * @param intent intent
+	 */
 	protected void startActivityAndFinish(Intent intent)
 	{
 		startActivity(intent);
 		this.finish();
 	}
+
+	/**
+	 * 通过ForResult方式快捷启动Activity
+	 * @param mClass Activity.class
+	 * @param requestCode 请求码
+	 */
 	protected void startActivityForResult(Class<? extends Activity> mClass,int requestCode)
 	{
 		Intent intent = new Intent(this,mClass);
 		startActivityForResult(intent, requestCode);
 	}
-	protected void startActivityForResult(Class<? extends Activity> mClass,int requestCode,String[] names,String ... values)
+
+	/**
+	 * 通过ForResult方式快捷启动Activity并且携带参数
+	 * @param mClass Activity.class
+	 * @param requestCode 请求码
+	 * @param keys keys
+	 * @param values values
+	 */
+	protected void startActivityForResult(Class<? extends Activity> mClass,int requestCode,String[] keys,Object ... values)
 	{
 		Intent intent = new Intent(this,mClass);
 		int i=0;
-		for(String name:names)
+		for(String name:keys)
 		{
-			intent.putExtra(name, values[i]);
+			Object value = values[i];
+			if (value instanceof Integer) {
+				intent.putExtra(name, (Integer)value);
+			}
+			else if(value instanceof Byte)
+			{
+				intent.putExtra(name, (Byte)value);
+			}
+			else if(value instanceof Long)
+			{
+				intent.putExtra(name, (Long)value);
+			}
+			else if(value instanceof Float)
+			{
+				intent.putExtra(name, (Float)value);
+			}
+			else if(value instanceof Integer[])
+			{
+				intent.putExtra(name, (Integer[])value);
+			}
+			else if(value instanceof Short)
+			{
+				intent.putExtra(name, (Short)value);
+			}
+			else if(value instanceof Bundle)
+			{
+				intent.putExtra(name, (Bundle)value);
+			}
+			else if(value instanceof Byte[])
+			{
+				intent.putExtra(name, (Byte[])value);
+			}
+			else if(value instanceof char[])
+			{
+				intent.putExtra(name, (char[])value);
+			}
+			else if(value instanceof Double)
+			{
+				intent.putExtra(name, (Double)value);
+			}
+			else if(value instanceof String[])
+			{
+				intent.putExtra(name, (String[])value);
+			}
+			else if(value instanceof Boolean)
+			{
+				intent.putExtra(name, (Boolean)value);
+			}
+			else if(value instanceof Float[])
+			{
+				intent.putExtra(name, (Float[])value);
+			}
+			else if(value instanceof Short[])
+			{
+				intent.putExtra(name, (Short[])value);
+			}
+			else if(value instanceof Long[])
+			{
+				intent.putExtra(name, (Long[])value);
+			}
+			else if(value instanceof Parcelable)
+			{
+				intent.putExtra(name, (Parcelable)value);
+			}
+			else if(value instanceof Parcelable[])
+			{
+				intent.putExtra(name, (Parcelable[])value);
+			}
+			else if(value instanceof CharSequence)
+			{
+				intent.putExtra(name, (CharSequence)value);
+			}
+			else if(value instanceof CharSequence[])
+			{
+				intent.putExtra(name, (CharSequence[])value);
+			}
+			else if(value instanceof Serializable)
+			{
+				intent.putExtra(name, (Serializable)value);
+			}
 			i++;
 		}
 		startActivityForResult(intent, requestCode);
 	}
+
 	
 	/**
 	 * 获取状态栏高度
@@ -251,5 +449,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 	@Override
 	public void onClick(View v) {
+
 	}
 }

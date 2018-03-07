@@ -19,6 +19,10 @@ public class BaseApplication extends Application {
 	private static int foregroundActivities =0;
 	private MyUncaughtExceptionHandler handler;
 
+	/**
+	 * 初始化框架
+	 * @param application application
+	 */
 	public static void init(Application application)
 	{
 		context = application.getApplicationContext();
@@ -34,9 +38,15 @@ public class BaseApplication extends Application {
 		init(this);
 	}
 
+	/**
+	 * 获取全局静态Context
+	 * (通常用于工具类型以及一些简单的例如Toast的UI更新上，不建议用使用该context进行大量任务以及一些可能会造成内存溢出的地方)
+	 * @return
+	 */
 	public static Context getContext() {
 		return context;
 	}
+
 	/**
 	 * activity生命周期回调接口
 	 * @author TJbaobao
@@ -86,6 +96,10 @@ public class BaseApplication extends Application {
 		
 	}
 
+	/**
+	 * 判断App是否是后台状态
+	 * @return true代表是，false代表不是
+	 */
 	public static boolean isAppRunInBackground()
 	{
 		if(foregroundActivities==0)
