@@ -13,18 +13,18 @@ compile 'com.github.TJHello:TJFramework:1.0.13'
 
 ### **1. Application配置**
 
-``` java
-在AndroidManifest-Application中增加
-android:name="com.tjbaobao.framework.base.BaseApplication"
-如果已经有了别的Application基类，请在Application-onCreate中增加以下代码
-com.tjbaobao.framework.base.BaseApplication.init(this);
+```java
+    在AndroidManifest-Application中增加
+    android:name="com.tjbaobao.framework.base.BaseApplication"
+    如果已经有了别的Application基类，请在Application-onCreate中增加以下代码
+    com.tjbaobao.framework.base.BaseApplication.init(this);
 ```
 
 
     
 ### **2. 数据库配置**
 
-``` java
+```java
     在AndroidManifest-Application中增加
     <meta-data android:name="database_name" android:value="TjFramework" />
     <meta-data android:name="database_version" android:value="1"/>
