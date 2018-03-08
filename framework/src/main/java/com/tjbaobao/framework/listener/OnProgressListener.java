@@ -1,6 +1,7 @@
 package com.tjbaobao.framework.listener;
 
 /**
+ * 统一进度接口类
  * Created by TJbaobao on 2018/1/12.
  */
 

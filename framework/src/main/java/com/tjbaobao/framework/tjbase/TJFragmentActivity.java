@@ -11,6 +11,7 @@ import com.tjbaobao.framework.ui.BaseTitleBar;
 import com.tjbaobao.framework.utils.Tools;
 
 /**
+ *
  * Created by TJbaobao on 2018/1/10.
  */
 
@@ -118,7 +119,7 @@ public abstract class TJFragmentActivity extends BaseFragmentActivity  implement
 
     public boolean onClickTwoExit()
     {
-        Tools.showToast("再次点击退出程序");
+        Tools.showToast(getStringById(R.string.fb_click_two_exit_tip));
         return true;
     }
     //endregion ***************双击退出应用结束*************

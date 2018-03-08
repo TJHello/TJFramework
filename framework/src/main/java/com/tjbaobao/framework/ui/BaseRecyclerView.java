@@ -13,12 +13,15 @@ import com.tjbaobao.framework.base.BaseItemDecoration;
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
 
 /**
+ * RecyclerView的二次封装
+ * 简单切换普通ListView、GridView、StaggeredGridView，只需要to一下
  * Created by TJbaobao on 2018/1/6.
  */
 
-public class BaseRecyclerView extends RecyclerView {
+@SuppressWarnings("unused")
+public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends RecyclerView {
 
-    private BaseRecyclerAdapter.OnItemClickListener mOnItemClickListener ;
+    private BaseRecyclerAdapter.OnItemClickListener<Holder,Info> mOnItemClickListener ;
 
     public BaseRecyclerView(Context context) {
         this(context,null);
@@ -36,6 +39,7 @@ public class BaseRecyclerView extends RecyclerView {
     {
         this.setLayoutManager(new LinearLayoutManager(getContext()));
     }
+
     public void toListView(int orientation, boolean reverseLayout)
     {
         this.setLayoutManager(new LinearLayoutManager(getContext(),orientation,reverseLayout));
@@ -80,27 +84,24 @@ public class BaseRecyclerView extends RecyclerView {
         public abstract void onInitView(View itemView);
     }
 
-    @Override
-    public void setAdapter(Adapter adapter) {
+    public void setAdapter(BaseRecyclerAdapter<Holder,Info> adapter)
+    {
+        adapter.setOnItemClickListener(mOnItemClickListener);
         super.setAdapter(adapter);
-        if(adapter instanceof BaseRecyclerAdapter)
-        {
-            ((BaseRecyclerAdapter)adapter).setOnItemClickListener(mOnItemClickListener);
-        }
     }
 
     public BaseRecyclerAdapter.OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
-    public void setOnItemClickListener(BaseRecyclerAdapter.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(BaseRecyclerAdapter.OnItemClickListener<Holder,Info> onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
         Adapter adapter = getAdapter();
         if(adapter!=null)
         {
             if(adapter instanceof BaseRecyclerAdapter)
             {
-                ((BaseRecyclerAdapter)adapter).setOnItemClickListener(mOnItemClickListener);
+                ((BaseRecyclerAdapter<Holder,Info>)adapter).setOnItemClickListener(mOnItemClickListener);
             }
         }
     }

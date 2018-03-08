@@ -5,6 +5,8 @@ import android.database.Cursor;
 
 import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.database.BaseDataBaseHelper;
+import com.tjbaobao.framework.utils.LogUtil;
+import com.tjbaobao.framework.utils.Tools;
 
 /**
  * Created by TJbaobao on 2017/9/12.
@@ -20,7 +22,7 @@ public class TbBaseDAO {
             try {
                 mDataBaseHelper = BaseDataBaseHelper.create(BaseApplication.getContext());
             } catch (Exception e) {
-                e.printStackTrace();
+                LogUtil.e(e.getMessage());
             }
         }
         return mDataBaseHelper;

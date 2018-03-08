@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,87 +17,87 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.tjbaobao.framework.R;
+import com.tjbaobao.framework.imp.HandlerToolsImp;
+import com.tjbaobao.framework.utils.BaseHandler;
 
 
 /**
+ *Dialog弹窗封装
+ * 使用方法:
+ * 1、创建布局
+ * 布局建议包含,最外层框(id为ll_windows_index,触摸外层关闭弹窗),内容框View(id为ll_index，控制动画),
+ * 以及标题TextView(id为tv_title)、确认按钮View(id为bt_continue),取消按钮View(id为bt_cancel)
+ * 以上view可以不带，id也可以不同，但可能会丢失一些对应的功能，以及相关的快捷功能
+ * 2、创建实例，传入布局id
+ * 3、show()
+ *
  * Created by TJbaobao on 2017/7/24.
  */
 
-public class BaseDialog extends Dialog implements View.OnClickListener{
+@SuppressWarnings({"unused", "WeakerAccess"})
+public abstract class BaseDialog extends Dialog implements View.OnClickListener,HandlerToolsImp {
 
-    private static final int MATCH_PARENT =  ViewGroup.LayoutParams.MATCH_PARENT;
-    private static final int WRAP_CONTENT =  ViewGroup.LayoutParams.WRAP_CONTENT;
+    private static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
+    private static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int windowAnimExitId = R.anim.fw_windows_anim_exit;
     private int windowAnimEnterId = R.anim.fw_windows_anim_enter;
     private int contentAnimEnterId = R.anim.fw_windows_content_anim_enter;
     private int contentAnimExitId = R.anim.fw_windows_content_anim_exit;
     private static final int Handler_What_Anim_Stop = 1001;
 
-    private int width,height ;
+    private int width, height;
 
 
-    protected Context context ;
-    private int layoutId ;
-    protected View baseView,ll_windows_index,ll_index ;
-    protected View bt_cancel,bt_continue ;
-    private TextView tv_help_title ;
-    protected boolean isStartAnim = true ;
-
-    private boolean canOutsideClose = true ;
+    protected Context context;
+    protected View baseView, ll_windows_index, ll_index;
+    protected View bt_cancel, bt_continue;
+    private TextView tvTitle;
+    protected boolean isStartAnim = true;
+    private boolean canOutsideClose = true;
 
     public BaseDialog(@NonNull Context context, int layoutId) {
-        this(context,layoutId,MATCH_PARENT,MATCH_PARENT);
-    }
-    public BaseDialog(@NonNull Context context, int layoutId, int width, int height)
-    {
-        super(context,R.style.FW_Dialog);
-        this.context = context;
-        this.layoutId = layoutId;
-        this.width = width;
-        this.height = height;
-        baseView = LayoutInflater.from(context).inflate(layoutId,null);
-        setContentView(baseView);
-        this.setOnDismissListener(new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                BaseDialog.this.onDismiss();
-            }
-        });
-        initView(baseView);
+        this(context, layoutId, MATCH_PARENT, MATCH_PARENT);
     }
 
-    private void initView(View view)
-    {
+    public BaseDialog(@NonNull Context context, int layoutId, int width, int height) {
+        super(context, R.style.FW_Dialog);
+        this.context = context;
+        this.width = width;
+        this.height = height;
+        baseView = LayoutInflater.from(context).inflate(layoutId, null);
+        setContentView(baseView);
+        initView(baseView);
+        this.setOnDismissListener(dialog -> BaseDialog.this.onDismiss());
+        this.setOnShowListener(dialog ->BaseDialog.this.onShow());
+    }
+
+    private void initView(View view) {
         ll_windows_index = view.findViewById(R.id.ll_windows_index);
         ll_index = view.findViewById(R.id.ll_index);
         bt_cancel = view.findViewById(R.id.bt_cancel);
         bt_continue = view.findViewById(R.id.bt_continue);
-        tv_help_title = (TextView) view.findViewById(R.id.tv_help_title);
-        if(bt_cancel!=null)
-        {
+        tvTitle = view.findViewById(R.id.tv_title);
+        if (bt_cancel != null) {
             bt_cancel.setOnClickListener(this);
         }
-        if(bt_continue!=null)
+        if (bt_continue != null) {
             bt_continue.setOnClickListener(this);
-        if(ll_windows_index!=null)
-        {
+        }
+        if (ll_windows_index != null) {
             ll_windows_index.setOnClickListener(this);
             ll_windows_index.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fw_circular_smaill));
         }
-        if(ll_index!=null)
-        {
+        if (ll_index != null) {
             ll_index.setOnClickListener(this);
         }
         onInitView(view);
     }
-    
-    public void show()
-    {
+
+    public void show() {
         isDismiss = false;
-        if(ll_windows_index!=null)
-        {
-            Animation animation = AnimationUtils.loadAnimation(context,contentAnimEnterId);
-            long durationMillis =450;
+        if (ll_windows_index != null) {
+            Animation animation = AnimationUtils.loadAnimation(context, contentAnimEnterId);
+            long durationMillis = 450;
             long delayMillis = 150;
             animation.setInterpolator(new DecelerateInterpolator(2));
             animation.setDuration(durationMillis);
@@ -104,38 +105,44 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
             ll_windows_index.setAnimation(animation);
             ll_windows_index.startAnimation(animation);
         }
-        if(isStartAnim)
-        {
-            Animation animationView = AnimationUtils.loadAnimation(context,windowAnimEnterId);
+        if (isStartAnim) {
+            Animation animationView = AnimationUtils.loadAnimation(context, windowAnimEnterId);
             animationView.setStartOffset(100);
             baseView.setAnimation(animationView);
             baseView.startAnimation(animationView);
         }
         baseView.setVisibility(View.VISIBLE);
-        try{
-            getWindow().setWindowAnimations(-1);
-            super.show();
-            WindowManager.LayoutParams layoutParams= getWindow().getAttributes();
-            if(layoutParams!=null)
+        try {
+            Window window = getWindow();
+            if(window!=null)
             {
+                window.setWindowAnimations(-1);
+            }
+            super.show();
+            WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+            if (layoutParams != null) {
                 layoutParams.width = width;
                 layoutParams.height = height;
             }
             this.getWindow().setAttributes(layoutParams);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void onInitView(View view){};
+    /**
+     * 初始化View
+     * @param view 主布局view
+     */
+    public abstract void onInitView(View view);
 
-    public void setMyTitle(String title)
-    {
-        if(tv_help_title!=null)
-        {
-            tv_help_title.setText(title);
+    /**
+     * 设置标题
+     * @param title 标题
+     */
+    public void setMyTitle(String title) {
+        if (tvTitle != null) {
+            tvTitle.setText(title);
         }
     }
 
@@ -148,38 +155,33 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
         } else if (i == R.id.bt_cancel) {
             onCancel();
 
-        } else if (i == R.id.ll_windows_index) {
-
-        } else if (i == R.id.ll_index) {
+        }else if (i == R.id.ll_index) {
             if (canOutsideClose) {
                 onClose();
                 this.dismiss();
             }
-
         } else {
             onClick(v, v.getId());
-
         }
     }
 
-    public void onClick(View view, int id)
-    {
+    public void onClick(View view, int id) {
 
     }
+
     private boolean isDismiss = false;
+
     @Override
     public void dismiss() {
-        if(!isDismiss)
-        {
+        if (!isDismiss) {
             isDismiss = true;
-            final Animation animation = AnimationUtils.loadAnimation(context,contentAnimExitId);
-            if(ll_windows_index!=null)
-            {
+            final Animation animation = AnimationUtils.loadAnimation(context, contentAnimExitId);
+            if (ll_windows_index != null) {
 
                 ll_windows_index.setAnimation(animation);
                 ll_windows_index.startAnimation(animation);
             }
-            final Animation animationView = AnimationUtils.loadAnimation(context,windowAnimExitId);
+            final Animation animationView = AnimationUtils.loadAnimation(context, windowAnimExitId);
             animationView.setFillAfter(true);
 
             baseView.setAnimation(animationView);
@@ -192,7 +194,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    sendMessage(Handler_What_Anim_Stop,null);
+                    sendMessage(Handler_What_Anim_Stop, null);
                     baseView.setVisibility(View.INVISIBLE);
                 }
 
@@ -204,51 +206,56 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
         }
     }
 
-    private Handler handler = new Handler(){
+    private BaseHandler handler = new BaseHandler(new Callback());
+    private class Callback implements Handler.Callback
+    {
         @Override
-        public void handleMessage(Message msg) {
-            onHandlerMessage(msg,msg.what,msg.obj);
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
+            onHandleMessage(msg,msg.what,msg.obj);
+            return false;
         }
-    };
-    protected void sendMessage(int what,Object obj)
-    {
-        Message msg = new Message();
-        msg.what = what;
-        msg.obj = obj;
-        handler.sendMessage(msg);
     }
-    protected void sendMessage(int what,int arg1,Object obj)
-    {
-        Message msg = new Message();
-        msg.what = what;
-        msg.obj = obj;
-        msg.arg1 = arg1;
-        handler.sendMessage(msg);
-    }
-    protected void onHandlerMessage(Message msg, int what, Object obj)
-    {
-        switch (what)
-        {
+
+    @Override
+    public void onHandleMessage(Message msg, int what, Object obj) {
+        switch (what) {
             case Handler_What_Anim_Stop:
                 super.dismiss();
                 break;
         }
     }
 
-    public void onCancel()
-    {
-        dismiss();
+    @Override
+    public void sendMessage(int what) {
+        handler.sendMessage(what);
     }
-    public void onClose()
-    {
-        dismiss();
-    }
-    public void onContinueClick(){
-        dismiss();
-    };
-    public void onDismiss(){};
 
+    @Override
+    public void sendMessage(int what, Object obj) {
+        handler.sendMessage(what,obj);
+    }
+
+    @Override
+    public void sendMessage(int what, Object obj, int arg1) {
+        handler.sendMessage(what,obj,arg1);
+    }
+
+    protected void onCancel() {
+        dismiss();
+    }
+
+    protected void onShow(){}
+
+    protected void onClose() {
+        dismiss();
+    }
+
+    protected void onContinueClick() {
+        dismiss();
+    }
+
+    public void onDismiss() {
+    }
 
     public boolean isCanOutsideClose() {
         return canOutsideClose;
@@ -259,12 +266,11 @@ public class BaseDialog extends Dialog implements View.OnClickListener{
     }
 
     //region===============Tools=================
-    protected String getStringById(int id)
-    {
+    protected String getStringById(int id) {
         return context.getString(id);
     }
-    protected int getColorById(int id)
-    {
+
+    protected int getColorById(int id) {
         return context.getResources().getColor(id);
     }
     //endregion

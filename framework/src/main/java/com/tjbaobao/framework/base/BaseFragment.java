@@ -7,154 +7,149 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tjbaobao.framework.imp.ActivityToolsImp;
+import com.tjbaobao.framework.imp.HandlerToolsImp;
+import com.tjbaobao.framework.utils.ActivityTools;
+import com.tjbaobao.framework.utils.BaseHandler;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BaseFragment extends Fragment{
-	protected Context context ;
-	protected Activity activity ;
+/**
+ * Activity基类
+ * Created by TJbaobao on 2017/9/8.
+ *
+ * 主要功能亮点:
+ * 1、常用工具使用
+ * 2、快捷启动Activity
+ *
+ */
+@SuppressWarnings({"unused", "UnusedAssignment"})
+public class BaseFragment extends Fragment implements View.OnClickListener,ActivityToolsImp,HandlerToolsImp{
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		this.context = this.getActivity();
-		this.activity = this.getActivity();
-		super.onCreate(savedInstanceState);
-	}
+    protected Context context;
+    protected Activity activity;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return super.onCreateView(inflater, container, savedInstanceState);
-	}
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.context = this.getActivity();
+        this.activity = this.getActivity();
+        super.onCreate(savedInstanceState);
+    }
 
-	/**
-	 * 通过id获取颜色
-	 * @param id
-	 * @return 颜色值
-	 */
-	@SuppressWarnings("deprecation")
-	protected int getColorById(int id)
-	{
-		final int version = Build.VERSION.SDK_INT;
-		return context.getResources().getColor(id);
-	}
-	/**
-	 * 通过id获取字符串
-	 * @param id
-	 * @return 字符串
-	 */
-	protected String getStringById(int id)
-	{
-		return this.getResources().getString(id);
-	}
-	
-	//TimerTask启动与停止
-		protected void stopTimerTask(Timer timer,TimerTask timerTask)
-		{
-			if(timerTask!=null)
-			{
-				timerTask.cancel();
-				timerTask = null;
-			}
-			if(timer!=null)
-			{
-				timer.cancel();
-				timer = null;
-			}
-		}
-		protected void startTimerTask(Timer timer,TimerTask timerTask,Date when)
-		{
-			if(timer!=null&&timerTask!=null)
-				timer.schedule(timerTask, when);
-		}
-		protected void startTimerTask(Timer timer,TimerTask timerTask,long period)
-		{
-			if(timer!=null&&timerTask!=null)
-				timer.schedule(timerTask, period);
-		}
-		protected void startTimerTask(Timer timer,TimerTask timerTask,Date when,long period)
-		{
-			if(timer!=null&&timerTask!=null)
-				timer.schedule(timerTask, when, period);
-		}
-		protected void startTimerTask(Timer timer,TimerTask timerTask,long delay,long period)
-		{
-			if(timer!=null&&timerTask!=null)
-				timer.schedule(timerTask, delay, period);
-		}
-		
-		//启动Activity
-		protected void startActivity(Class<? extends Activity> mClass)
-		{
-			Intent intent = new Intent(activity,mClass);
-			activity.startActivity(intent);
-		}
-		protected void startActivityAndFinish(Class<? extends Activity> mClass)
-		{
-			startActivity(mClass);
-			activity.finish();
-		}
-		protected void startActivity(Class<? extends Activity> mClass,String[] names,String ... values)
-		{
-			Intent intent = new Intent(activity,mClass);
-			int i=0;
-			for(String name:names)
-			{
-				intent.putExtra(name, values[i]);
-				i++;
-			}
-			activity.startActivity(intent);
-		}
-		protected void startActivityAndFinish(Class<? extends Activity> mClass,String[] names,String ... values)
-		{
-			startActivity(mClass,names,values);
-			activity.finish();
-		}
-		protected void startActivityAndFinish(Intent intent)
-		{
-			startActivity(intent);
-			activity.finish();
-		}
-		protected void startActivityForResult(Class<? extends Activity> mClass,int requestCode)
-		{
-			Intent intent = new Intent(activity,mClass);
-			startActivityForResult(intent, requestCode);
-		}
-		protected void startActivityForResult(Class<? extends Activity> mClass,int requestCode,String[] names,String ... values)
-		{
-			Intent intent = new Intent(activity,mClass);
-			int i=0;
-			for(String name:names)
-			{
-				intent.putExtra(name, values[i]);
-				i++;
-			}
-			startActivityForResult(intent, requestCode);
-		}
+    protected BaseHandler handler = new BaseHandler(new HandlerCallback());
 
-	/**
-	 * 获取状态栏高度
-	 * @return
-	 */
-	protected int getBarHeight()
-	{
-		if(getActivity()==null)
-		{
-			return 0;
-		}
-		int statusBarHeight = -1;
-		//获取status_bar_height资源的ID
-		int resourceId = getActivity().getResources().getIdentifier("status_bar_height", "dimen", "android");
-		if (resourceId > 0) {
-			//根据资源ID获取响应的尺寸值
-			statusBarHeight = getActivity().getResources().getDimensionPixelSize(resourceId);
-		}
-		return statusBarHeight;
-	}
-		
+    private class HandlerCallback implements Handler.Callback {
+        @Override
+        public boolean handleMessage(Message message) {
+            onHandleMessage(message,message.what,message.obj);
+            return false;
+        }
+    }
+
+    @Override
+    public int getColorById(int id) {
+        return ActivityTools.getColorById(activity,id);
+    }
+
+    @Override
+    public String getStringById(int id) {
+        return ActivityTools.getStringById(activity,id);
+    }
+
+    @Override
+    public void finish(int resultCode) {
+        ActivityTools.finish(activity,resultCode);
+    }
+
+    @Override
+    public void startActivity(Class<? extends Activity> mClass) {
+        ActivityTools.startActivity(activity,mClass);
+    }
+
+    @Override
+    public void startActivityAndFinish(Class<? extends Activity> mClass) {
+        ActivityTools.startActivityAndFinish(activity,mClass);
+    }
+
+    @Override
+    public void startActivity(Class<? extends Activity> mClass, String[] keys, Object... values) {
+        ActivityTools.startActivityAndFinish(activity,mClass,keys,values);
+    }
+
+    @Override
+    public void startActivityAndFinish(Class<? extends Activity> mClass, String[] keys, Object... values) {
+        ActivityTools.startActivityAndFinish(activity,mClass,keys,values);
+    }
+
+    @Override
+    public void startActivityAndFinish(Intent intent) {
+        ActivityTools.startActivityAndFinish(activity,intent);
+    }
+
+    @Override
+    public void startActivityForResult(Class<? extends Activity> mClass, int requestCode) {
+        ActivityTools.startActivityForResult(activity,mClass,requestCode);
+    }
+
+    @Override
+    public void startActivityForResult(Class<? extends Activity> mClass, int requestCode, String[] keys, Object... values) {
+        ActivityTools.startActivityForResult(activity,mClass,requestCode,keys,values);
+    }
+
+    /**
+     * 接受到的Handler的消息
+     * @param msg Message
+     * @param what what
+     * @param obj obj
+     */
+    public void onHandleMessage(Message msg,int what,Object obj){}
+
+    @Override
+    public void sendMessage(int what) {
+        handler.sendMessage(what);
+    }
+
+    @Override
+    public void sendMessage(int what, Object obj) {
+        handler.sendMessage(what,obj);
+    }
+
+    @Override
+    public void sendMessage(int what, Object obj, int arg1) {
+        handler.sendMessage(what,obj,arg1);
+    }
+
+    @Override
+    public int getBarHeight() {
+        return ActivityTools.getBarHeight(activity);
+    }
+
+    @Override
+    public void immersiveStatusBar() {
+        ActivityTools.immersiveStatusBar(activity);
+    }
+
+    @Override
+    public void fullScreen() {
+        ActivityTools.fullScreen(activity);
+    }
+
+    @Override
+    public void hideVirtualKey() {
+        ActivityTools.hideVirtualKey(activity);
+    }
+
+    @Override
+    public void onClick(View v) {}
 }

@@ -2,8 +2,8 @@ package com.tjbaobao.framework.listener;
 
 public interface OnTabListener {
 	/**
-	 * @param tag
-	 * @param position
+	 * @param tag tag
+	 * @param position position
 	 */
-	public void onTabClick(String tag, int position);
+	void onTabClick(String tag, int position);
 }

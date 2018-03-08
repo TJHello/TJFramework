@@ -46,28 +46,7 @@ public class Tools {
 	 */
 	public static void printLog(String msg)
 	{
-		int length = msg.length();
-		int max = 1024;
-		if(length>max)
-		{
-			for(int i=0;i<length;)
-			{
-				int j = i+max;
-				if(j<=length)
-				{
-					Log.i("MyDebug",msg.substring(i,j));
-				}
-				else
-				{
-					Log.i("MyDebug",msg.substring(i,length));
-				}
-				i=j;
-			}
-		}
-		else
-		{
-			Log.i("MyDebug",msg);
-		}
+		LogUtil.i(msg);
 	}
 	
 	/**
@@ -78,7 +57,7 @@ public class Tools {
 	{
 		try {
 			Thread.sleep(time);
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ignored) {
 		}
 	}
 	public static void setOnclickBackground(final View view)

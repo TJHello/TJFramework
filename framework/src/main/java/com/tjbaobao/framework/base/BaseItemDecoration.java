@@ -8,6 +8,7 @@ import android.view.View;
 import com.tjbaobao.framework.utils.Tools;
 
 /**
+ *
  * Created by TJbaobao on 2018/1/6.
  */
 
@@ -25,6 +26,7 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
     public static BaseItemDecoration getLineVerticalDecoration(int spacing) {
         return new BaseItemDecoration(spacing,TYPE_LINE_VERTICAL);
     }
+
     public static BaseItemDecoration getLineHorizontalDecoration(int spacing) {
         return new BaseItemDecoration(spacing,TYPE_LINE_HORIZONTAL);
     }

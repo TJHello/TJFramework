@@ -11,11 +11,11 @@ import com.tjbaobao.framework.ui.BaseTitleBar;
 import com.tjbaobao.framework.utils.Tools;
 
 /**
+ * TJActivity
+ * 规范Activity编程习惯及提供多能TitleBar的快捷集成
  * Created by TJbaobao on 2018/1/10.
  */
-
 public abstract class TJActivity extends BaseActivity implements BaseTitleBar.OnTitleBarClickListener{
-
 
     protected BaseTitleBar titleBar ;
 

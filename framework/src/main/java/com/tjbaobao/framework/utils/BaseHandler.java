@@ -243,6 +243,28 @@ public class BaseHandler {
         return mExec.sendMessage(msg);
     }
 
+    public void sendMessage(int what) {
+        Message msg = obtainMessage();
+        msg.what = what;
+        sendMessage(msg);
+    }
+
+    public void sendMessage(int what, Object obj) {
+        Message msg = obtainMessage();
+        msg.what = what;
+        msg.obj = obj;
+        sendMessage(msg);
+    }
+    public void sendMessage(int what, Object obj, int arg1)
+    {
+        Message msg = obtainMessage();
+        msg.what = what;
+        msg.obj = obj;
+        msg.arg1 = arg1;
+        sendMessage(msg);
+    }
+
+
     public final Message obtainMessage()
     {
         return mExec.obtainMessage();

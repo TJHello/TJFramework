@@ -1,5 +1,6 @@
 package com.tjbaobao.framework.base;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
@@ -14,12 +15,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * RecyclerAdapter
+ * 对RecyclerView.Adapter进行封装
+ * 将RecyclerView,Adapter,Holder,OnItemClickListener进行连贯统一
+ *
  * Created by TJbaobao on 2018/1/6.
  */
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends Adapter<Holder> {
 
-    private BaseRecyclerAdapter.OnItemClickListener<Holder,Info> mOnItemClickListener ;
+    private OnItemClickListener<Holder,Info> mOnItemClickListener ;
     private List<Info> infoList = new ArrayList<>();
     private int itemLayoutRes ;
     private Map<Object,Holder> mapHolder = new HashMap<>();
@@ -29,14 +35,15 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         this.itemLayoutRes = itemLayoutRes;
     }
 
+    @NonNull
     @Override
-    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view  = LayoutInflater.from(parent.getContext()).inflate(itemLayoutRes, null);
         return onGetHolder(view);
     }
 
     @Override
-    public void onViewRecycled(Holder holder) {
+    public void onViewRecycled(@NonNull Holder holder) {
         super.onViewRecycled(holder);
         mapHolder.put(holder.itemView.getTag(),null);
     }
@@ -50,16 +57,26 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         {
             mapHolder.put(tag,holder);
         }
-        holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
+        if(holder!=null&&holder.itemView!=null)
+        {
+            holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
+        }
     }
 
+    /**
+     * 处理item
+     * @param holder 布局统一对象{@link Holder}
+     * @param info 数据实体类
+     * @param position 序号
+     */
     public abstract void onBindViewHolder(@Nullable Holder holder,@Nullable Info info, int position);
 
-    public Object onGetItemTag(Info info,int position)
-    {
-        return null;
-    }
 
+    /**
+     * 获取Holder,通常是new一个自定义的{@link Holder}
+     * @param view 主布局,在new的时候传入{@link Holder}
+     * @return 返回自定义的 {@link Holder}
+     */
     public abstract Holder onGetHolder(View view);
 
     @Override
@@ -67,17 +84,36 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         return infoList.size();
     }
 
+    /**
+     * 按需重写，自由给Item赋值标签
+     * @param info 数据实体类
+     * @param position 序号
+     * @return 你自定义的标签，例如(url)
+     */
+    protected Object onGetItemTag(Info info,int position)
+    {
+        return null;
+    }
 
-    public Holder findHolder(Object tag)
+    /**
+     * 通过标签寻找{@link Holder},此功能需要与{@link #onGetItemTag}配合使用
+     * @param tag tag
+     * @return {@link Holder}
+     */
+    protected Holder findHolder(Object tag)
     {
         return mapHolder.get(tag);
     }
 
+    /**
+     * Item点击监听器
+     * @param <Holder> {@link Holder}
+     * @param <Info> 数据实体类
+     */
     public interface OnItemClickListener<Holder,Info>
     {
         void onItemClick(Holder holder, Info info, int position);
     }
-
 
     private class ItemOnClickListener implements View.OnClickListener
     {
@@ -85,7 +121,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         private Info info ;
         private int position;
 
-        public ItemOnClickListener(Holder holder, Info info, int position) {
+        ItemOnClickListener(Holder holder, Info info, int position) {
             mHolder = holder;
             this.info = info;
             this.position = position;
@@ -100,11 +136,12 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         }
     }
 
-    public BaseRecyclerAdapter.OnItemClickListener getOnItemClickListener() {
-        return mOnItemClickListener;
-    }
-
-    public void setOnItemClickListener(BaseRecyclerAdapter.OnItemClickListener onItemClickListener) {
+    /**
+     * 设置监听器
+     * @param onItemClickListener {@link OnItemClickListener}
+     */
+    public void setOnItemClickListener(BaseRecyclerAdapter.OnItemClickListener<Holder,Info> onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
+
 }

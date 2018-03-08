@@ -3,8 +3,12 @@ package com.tjbaobao.framework.base;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.tjbaobao.framework.database.BaseDataBaseHelper;
+import com.tjbaobao.framework.utils.DeviceUtil;
 import com.tjbaobao.framework.utils.ExecuteLog;
 import com.tjbaobao.framework.utils.Tools;
 
@@ -18,6 +22,7 @@ public class BaseApplication extends Application {
 	public static Context context ;
 	private static int foregroundActivities =0;
 	private MyUncaughtExceptionHandler handler;
+	private static boolean isDebug ;
 
 	/**
 	 * 初始化框架
@@ -41,7 +46,7 @@ public class BaseApplication extends Application {
 	/**
 	 * 获取全局静态Context
 	 * (通常用于工具类型以及一些简单的例如Toast的UI更新上，不建议用使用该context进行大量任务以及一些可能会造成内存溢出的地方)
-	 * @return
+	 * @return context
 	 */
 	public static Context getContext() {
 		return context;

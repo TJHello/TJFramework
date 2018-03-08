@@ -11,6 +11,8 @@ import com.tjbaobao.framework.entity.ui.TitleBarInfo;
 import com.tjbaobao.framework.ui.BaseTitleBar;
 
 /**
+ * TJFragment
+ * 规范Fragment的编程规范以及提供多能TitleBar的快捷集成
  * Created by TJbaobao on 2018/1/10.
  */
 

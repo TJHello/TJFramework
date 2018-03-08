@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.tjbaobao.framework.utils.DeviceUtil;
 
 /**
+ * 数据库管理
  * Created by TJbaobao on 2017/9/12.
  */
 
@@ -27,24 +28,29 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
                                 PackageManager.GET_META_DATA);
                 if(appInfo.metaData!=null)
                 {
-                    String dbName=appInfo.metaData.getString("database_name");
+                    String dbName=appInfo.metaData.getString("database_name",null);
                     int dbVersion = appInfo.metaData.getInt("database_version",1);
-                    mDataBaseHelper = new BaseDataBaseHelper(context,dbName,null,dbVersion);
+                    if(dbName!=null)
+                    {
+                        mDataBaseHelper = new BaseDataBaseHelper(context,dbName,null,dbVersion);
+                    }
+                    else
+                    {
+                        throw new Exception("未配置database_name和database_version");
+                    }
                 }
                 else
                 {
                     throw new Exception("未配置database_name和database_version");
                 }
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                throw new Exception("未配置database_name和database_version");
             }
         }
         return mDataBaseHelper;
     }
 
-
-
-    public BaseDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private BaseDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
@@ -57,19 +63,18 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
         onCreateFileTb(db);
     }
 
-    public void onCreateFileTb(SQLiteDatabase db)
+    private void onCreateFileTb(SQLiteDatabase db)
     {
-        StringBuilder sbSQL = new StringBuilder();
-        sbSQL.append("create table tb_file ");
-        sbSQL.append("( ");
-        sbSQL.append("code varchar(36) ,");//唯一标识
-        sbSQL.append("url varchar(255),");//下载链接
-        sbSQL.append("path varchar(255),");//文件路径
-        sbSQL.append("prefix varchar(8) ,");//后缀
-        sbSQL.append("create_time varchar(19),");//创建时间
-        sbSQL.append("change_time varchar(19)");//修改时间
-        sbSQL.append(");");
-        db.execSQL(sbSQL.toString());
+        String sbSQL = "create table tb_file " +
+                "( " +
+                "code varchar(36) ," +//唯一标识
+                "url varchar(255)," +//下载链接
+                "path varchar(255)," +//文件路径
+                "prefix varchar(8) ," +//后缀
+                "create_time varchar(19)," +//创建时间
+                "change_time varchar(19)" +//修改时间
+                ");";
+        db.execSQL(sbSQL);
     }
 
     @Override
@@ -77,6 +82,10 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * 运行SQL语句
+     * @param sql sql
+     */
     public void execSQL(String sql)
     {
         if(mDataBaseHelper!=null)
@@ -93,6 +102,7 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+
     public Cursor query(String table, String[] columns, String selection, String[] selectionArgs)
     {
         if(mDataBaseHelper!=null)

@@ -1,5 +1,6 @@
 package com.tjbaobao.framework.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.ColorRes;
@@ -18,16 +19,18 @@ import com.tjbaobao.framework.ui.base.BaseRelativeLayout;
 import java.util.List;
 
 /**
+ *多功能TitleBar，可以任意往左边或者右边或者中间加入ImageView或者TextView
  * Created by TJbaobao on 2018/1/5.
  */
 
+@SuppressWarnings("unused")
 public class BaseTitleBar extends BaseRelativeLayout {
 
     private static final int WRAP_CONTENT = LayoutParams.WRAP_CONTENT;
     private static final int MATCH_PARENT = LayoutParams.MATCH_PARENT;
 
     public static final int LAYOUT_LEFT = 0;
-    public static final int LAYOUT_CENER = 1;
+    public static final int LAYOUT_CENTER = 1;
     public static final int LAYOUT_RIGHT = 2;
 
     public BaseTitleBar(Context context) {
@@ -108,14 +111,11 @@ public class BaseTitleBar extends BaseRelativeLayout {
         TitleBarInfo.Text viewTitle = mTitleBarInfo.getViewTitle();
         if(mTitleBarInfo!=null)
         {
-            if(viewTitle instanceof TitleBarInfo.Text)
+            if(viewTitle.getView()!=null)
             {
-                if(viewTitle.getView()!=null)
-                {
-                   this.removeView(viewTitle.getView());
-                }
-                this.addView(createTextTitleView(viewTitle));
+                this.removeView(viewTitle.getView());
             }
+            this.addView(createTextTitleView(viewTitle));
         }
         super.setBackgroundColor(mTitleBarInfo.getBackGroundColor());
     }
@@ -276,15 +276,17 @@ public class BaseTitleBar extends BaseRelativeLayout {
         return textView;
     }
 
+    @SuppressLint("RtlHardcoded")
     private TextView createTextLeftView(TitleBarInfo.Text text)
     {
         TextView textView = createTextView(text);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(mTitleBarInfo.getBtWidth(),mTitleBarInfo.getBtHeight());
-        layoutParams.gravity = Gravity.LEFT  |CENTER_VERTICAL;
+        layoutParams.gravity = Gravity.LEFT|CENTER_VERTICAL;
         textView.setLayoutParams(layoutParams);
         return textView;
     }
 
+    @SuppressLint("RtlHardcoded")
     private TextView createTextRightView(TitleBarInfo.Text text)
     {
         TextView textView = createTextView(text);
@@ -307,6 +309,7 @@ public class BaseTitleBar extends BaseRelativeLayout {
         return textView;
     }
 
+    @SuppressLint("RtlHardcoded")
     private ImageView createImageLeft(TitleBarInfo.Image image)
     {
         ImageView imageView = createImage(image);
@@ -316,6 +319,7 @@ public class BaseTitleBar extends BaseRelativeLayout {
         return imageView;
     }
 
+    @SuppressLint("RtlHardcoded")
     private ImageView createImageRight(TitleBarInfo.Image image)
     {
         ImageView imageView = createImage(image);
@@ -354,7 +358,7 @@ public class BaseTitleBar extends BaseRelativeLayout {
         private int layoutType ;
         private int position ;
 
-        public MyOnClickListener(int layoutType, int position) {
+        MyOnClickListener(int layoutType, int position) {
             this.layoutType = layoutType;
             this.position = position;
         }
@@ -383,6 +387,16 @@ public class BaseTitleBar extends BaseRelativeLayout {
     private OnTitleBarClickListener mOnTitleBarClickListener;
     public interface OnTitleBarClickListener
     {
+        /**
+         * TitleBar的点击事件监听器
+         * @param layoutType 布局位置
+         *                   LAYOUT_LEFT左边
+         *                   LAYOUT_RIGHT 右边
+         *                   LAYOUT_CENTER 中间
+         * @param position 序号
+         * @param viewInfo {@link TitleBarInfo.BaseView}
+         * @param <V> {@link TitleBarInfo.BaseView}
+         */
         <V extends TitleBarInfo.BaseView> void onTitleBarClick(int layoutType, int position,V viewInfo);
     }
 
