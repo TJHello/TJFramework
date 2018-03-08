@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 
 
 import com.tjbaobao.framework.entity.BitmapConfig;
@@ -51,19 +52,16 @@ public class ImageUtil {
 		try {
 			if(FileUtil.exists(path))
 			{
-				is = new FileInputStream(new File(path));
+				bitmap =BitmapFactory.decodeFile(path);
 			}
 			else
 			{
 				is = Tools.getAssetsInputSteam(path);
+				if(is!=null)
+				{
+					bitmap = BitmapFactory.decodeStream(is);
+				}
 			}
-			if(is!=null)
-			{
-				bitmap = BitmapFactory.decodeStream(is);
-
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}catch (Exception e){
 			e.printStackTrace();
 		}finally {
@@ -472,23 +470,22 @@ public class ImageUtil {
 		return matrixBitmap(bitmap,toWidth,toHeight,Config.RGB_565);
 	}
 
-	public static Bitmap matrixBitmap(Bitmap bitmap,float toWidth,float toHeight,Config config)
+	public static Bitmap matrixBitmap(@Nullable Bitmap bitmap, float toWidth, float toHeight, Config config)
 	{
 		if(bitmap==null||toWidth<=0||toHeight<=0)
 		{
 			return  null;
 		}
-		Bitmap bitmapTarget = null;
-		if(bitmap.getWidth()>0&&bitmap.getHeight()>0)
+		if(!bitmap.isRecycled()&&bitmap.getWidth()>0&&bitmap.getHeight()>0)
 		{
 			float scale_y = toWidth / (float)bitmap.getWidth();
 			float scale_x = toHeight / (float)bitmap.getHeight();
 			Matrix matrix = new Matrix();
 			matrix.postScale(scale_x, scale_y);
-			bitmapTarget = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+			Bitmap bitmapTarget = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+			return bitmapTarget;
 		}
-		bitmap.recycle();
-		return bitmapTarget;
+		return bitmap;
 	}
 
 	/**

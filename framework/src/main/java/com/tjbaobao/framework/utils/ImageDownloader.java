@@ -37,7 +37,7 @@ public class ImageDownloader {
 			}
 		}
 	};
-	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(3);
+	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(5);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private static BaseHandler baseHandler ;
     private static volatile List<Image> imageList = new ArrayList<>();
@@ -158,7 +158,7 @@ public class ImageDownloader {
                     {
                         for (int i = length-1; i >= 0; i--)
                         {
-                            if(downloadList.size()<3)
+                            if(downloadList.size()<8)
                             {
                                 try{
                                     QueueInfo queueInfo = queuePoolList.get(i);
@@ -383,24 +383,7 @@ public class ImageDownloader {
             mapDownload.put(url,false);
         }
 
-        private Bitmap getCacheImage(String url)
-        {
-            if(imageLruCache!=null&&url!=null)
-            {
-                return imageLruCache.get(url+imageWidth+"_"+imageHeight);
-            }
-            return null;
-        }
-        private void setCacheImage(String url,Bitmap bitmap)
-        {
-            if(getCacheImage(url+imageWidth+"_"+imageHeight)==null)
-            {
-                if(imageLruCache!=null&&bitmap!=null)
-                {
-                    imageLruCache.put(url+imageWidth+"_"+imageHeight, bitmap);
-                }
-            }
-        }
+
 
         private String downloadImage(String url,OnProgressListener onProgressListener)
         {
@@ -432,30 +415,7 @@ public class ImageDownloader {
             return bitmap;
         }
 
-        private void onSuccess(String url,String path,Bitmap bitmap)
-        {
-            setCacheImage(url,bitmap);
-            final List<Image> images = findImages(url);
-            for(Image image:images)
-            {
-                final ImageView imageView = image.getViewWeakReference().get();
-                if(image.getUrl().equals(url))
-                {
-                    baseHandler.post(() ->
-                    {
-                        if(imageView!=null)
-                        {
-                            imageView.setImageBitmap(bitmap);
-                        }
-                        if(onImageLoaderListener!=null)
-                        {
-                            onImageLoaderListener.onSuccess(url,path,bitmap);
-                        }
-                    });
-                }
-                imageList.remove(image);
-            }
-        }
+
 
         private void onFail(String url)
         {
@@ -467,6 +427,49 @@ public class ImageDownloader {
             });
         }
 
+    }
+    private void onSuccess(String url,String path,Bitmap bitmap)
+    {
+        setCacheImage(url,bitmap);
+        final List<Image> images = findImages(url);
+        for(Image image:images)
+        {
+            final ImageView imageView = image.getViewWeakReference().get();
+            if(image.getUrl().equals(url))
+            {
+                baseHandler.post(() ->
+                {
+                    if(imageView!=null)
+                    {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                    if(onImageLoaderListener!=null)
+                    {
+                        onImageLoaderListener.onSuccess(url,path,bitmap);
+                    }
+                });
+            }
+            imageList.remove(image);
+        }
+    }
+
+    private void setCacheImage(String url,Bitmap bitmap)
+    {
+        if(getCacheImage(url+imageWidth+"_"+imageHeight)==null)
+        {
+            if(imageLruCache!=null&&bitmap!=null)
+            {
+                imageLruCache.put(url+imageWidth+"_"+imageHeight, bitmap);
+            }
+        }
+    }
+    private Bitmap getCacheImage(String url)
+    {
+        if(imageLruCache!=null&&url!=null)
+        {
+            return imageLruCache.get(url+imageWidth+"_"+imageHeight);
+        }
+        return null;
     }
 
     private static class Image

@@ -5,6 +5,7 @@ import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
 import okhttp3.Interceptor;
@@ -21,9 +22,12 @@ import okhttp3.ResponseBody;
 
 public class OKHttpUtil {
 
-    private static final OkHttpClient mOkHttpClient = new OkHttpClient();
+    private static final OkHttpClient mOkHttpClient =  new OkHttpClient.Builder()
+            .connectTimeout(1,TimeUnit.SECONDS)//设置连接超时时间
+            .build();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
+    static {
+    }
     private static Response execute(Request request){
         try {
             return  mOkHttpClient.newCall(request).execute();
