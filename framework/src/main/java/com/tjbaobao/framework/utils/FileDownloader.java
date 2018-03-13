@@ -8,16 +8,18 @@ import com.tjbaobao.framework.database.obj.TbFileObj;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class FileDownloader {
 
-	private static volatile List<String> downloadList = new ArrayList<>();//下载列表
-	private static volatile List<QueueInfo> queuePoolList = new ArrayList<>();//等待队列
+	private static final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());//下载列表
+	private static final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());//等待队列
 	private static final Map<String,String> downLoadHosts = new HashMap<>();//连接与本地地址映射
 	private static BaseHandler baseHandler ;
 	private static boolean isStop = false;
@@ -152,26 +154,32 @@ public class FileDownloader {
 
 		@Override
 		public void run() {
-			int length = queuePoolList.size();
-			if(length>0)
+			synchronized (queuePoolList)
 			{
-				for (int i = length-1; i >= 0; i--)
+				synchronized (downloadList)
 				{
-					if(downloadList.size()<3&&i<queuePoolList.size())
+					int length = queuePoolList.size();
+					if(length>0)
 					{
-						QueueInfo queueInfo = queuePoolList.get(i);
-						if(!downloadList.contains(queueInfo.getUrl()))
+						for (int i = length-1; i >= 0; i--)
 						{
-							executorService.execute(new DownloadRunnable(queueInfo));
-							downloadList.add(queueInfo.getUrl());
-							queuePoolList.remove(queueInfo);
+							if(downloadList.size()<3&&i<queuePoolList.size())
+							{
+								QueueInfo queueInfo = queuePoolList.get(i);
+								if(!downloadList.contains(queueInfo.getUrl()))
+								{
+									executorService.execute(new DownloadRunnable(queueInfo));
+									downloadList.add(queueInfo.getUrl());
+									queuePoolList.remove(queueInfo);
+								}
+							}
 						}
 					}
+					else
+					{
+						this.stopTimer();
+					}
 				}
-			}
-			else
-			{
-				this.stopTimer();
 			}
 		}
 	}
@@ -183,6 +191,8 @@ public class FileDownloader {
 		{
 			downloaderQueuePool.stopTimer();
 		}
+		queuePoolList.clear();
+		downloadList.clear();
 	}
 
 	public static boolean isStop()

@@ -11,6 +11,7 @@ import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("unused")
 public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
 	private final static int cacheSize = maxMemory / 10;
@@ -40,9 +42,9 @@ public class ImageDownloader {
 	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(5);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private static BaseHandler baseHandler ;
-    private static volatile List<Image> imageList = new ArrayList<>();
-    private volatile List<QueueInfo> queuePoolList = new ArrayList<>();
-    private final List<String> downloadList = new ArrayList<>();
+    private static final List<Image> imageList = new ArrayList<>();
+    private static final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());
+    private static final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());
     private static boolean isStop = false;
     private Bitmap defaultBitmap = null;
     private static int imageWidth = 0,imageHeight = 0;
@@ -91,7 +93,6 @@ public class ImageDownloader {
     private BitmapConfig loadLocalImage(String path, OnProgressListener onProgressListener)
     {
         isStop = false;
-
         BitmapConfig bitmapConfig = new BitmapConfig();
         if(defaultBitmap!=null)
         {
@@ -110,17 +111,50 @@ public class ImageDownloader {
     private BitmapConfig loadHttpImage(String url,OnProgressListener onProgressListener)
     {
         startLoadThread(url,onProgressListener);
+        BitmapConfig bitmapConfig = new BitmapConfig();
         if(defaultBitmap!=null)
         {
-            BitmapConfig bitmapConfig = new BitmapConfig();
             bitmapConfig.setWidth(defaultBitmap.getWidth());
             bitmapConfig.setHeight(defaultBitmap.getHeight());
             return bitmapConfig;
         }
+
         return null;
     }
 
-    private void startLoadThread(String url,OnProgressListener onImageLoaderListener)
+    private void startLoadThread(final String url,final OnProgressListener onImageLoaderListener)
+    {
+        new Thread(() -> {
+            final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
+            if(!ImageUtil.isOk(bitmapCache))
+            {
+                if(url.indexOf("http")!=0)
+                {
+                    //本地路径
+                    Bitmap bitmap = loadLocalImage(url);
+                    if(!ImageUtil.isOk(bitmapCache))
+                    {
+                        //本地图片读取出错
+                        runInQueue(url,onImageLoaderListener);
+                    }
+                    else
+                    {
+                        onSuccess(url,url,bitmap);
+                    }
+                }
+                else
+                {
+                    runInQueue(url,onImageLoaderListener);
+                }
+            }
+            else
+            {
+                onSuccess(url,null,bitmapCache);
+            }
+        }).start();
+    }
+
+    private void runInQueue(String url,OnProgressListener onImageLoaderListener)
     {
         QueueInfo queueInfo = new QueueInfo(url,null,onImageLoaderListener);
         queuePoolList.remove(queueInfo);
@@ -149,9 +183,9 @@ public class ImageDownloader {
 
         @Override
         public void run() {
-            synchronized (downloadList)
+            synchronized (queuePoolList)
             {
-                synchronized (queuePoolList)
+                synchronized (downloadList)
                 {
                     int length = queuePoolList.size();
                     if(length>0)
@@ -239,7 +273,7 @@ public class ImageDownloader {
                     bitmap.recycle();
                 }
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {
 
             }
@@ -260,13 +294,14 @@ public class ImageDownloader {
         }
     }
 
+    @SuppressWarnings("unused")
     private class QueueInfo
     {
         String url ;
         String path;
         OnProgressListener onProgressListener;
 
-        public QueueInfo(String url, String path, OnProgressListener onProgressListener) {
+        QueueInfo(String url, String path, OnProgressListener onProgressListener) {
             this.url = url;
             this.path = path;
             this.onProgressListener = onProgressListener;
@@ -396,38 +431,43 @@ public class ImageDownloader {
             return fileDownloader.downloadExecute(url,path,onProgressListener);
         }
 
-        private Bitmap loadLocalImage(String path)
-        {
-            Bitmap bitmap ;
-            if(imageWidth!=0&&imageHeight!=0)
-            {
-                bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
-            }
-            else
-            {
-                bitmap = ImageUtil.getBitmap(path);
-            }
-            if(bitmap==null||bitmap.isRecycled()||!ImageUtil.isOk(path))
-            {
-                FileUtil.delFileIfExists(path);
-                return null;
-            }
-            return bitmap;
-        }
 
-
-
-        private void onFail(String url)
-        {
-            baseHandler.post(() -> {
-                if(onImageLoaderListener!=null)
-                {
-                    onImageLoaderListener.onFail(url);
-                }
-            });
-        }
 
     }
+
+    private Bitmap loadLocalImage(String path)
+    {
+        Bitmap bitmap ;
+        if(imageWidth!=0&&imageHeight!=0)
+        {
+            bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
+//            Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,imageWidth,imageHeight);
+//            ImageUtil.recycled(bitmap);
+//            bitmap = bitmap2;
+        }
+        else
+        {
+            bitmap = ImageUtil.getBitmap(path);
+        }
+        if(bitmap==null||bitmap.isRecycled()||!ImageUtil.isOk(path))
+        {
+            FileUtil.delFileIfExists(path);
+            return null;
+        }
+        return bitmap;
+    }
+
+
+    private void onFail(String url)
+    {
+        baseHandler.post(() -> {
+            if(onImageLoaderListener!=null)
+            {
+                onImageLoaderListener.onFail(url);
+            }
+        });
+    }
+
     private void onSuccess(String url,String path,Bitmap bitmap)
     {
         setCacheImage(url,bitmap);
@@ -557,10 +597,13 @@ public class ImageDownloader {
     {
         for(int i=imageList.size()-1;i>=0;i--)
         {
-            Image image = imageList.get(i);
-            if(image==null)
+            if(i<imageList.size())
             {
-                imageList.remove(i);
+                Image image = imageList.get(i);
+                if(image==null)
+                {
+                    imageList.remove(i);
+                }
             }
         }
     }

@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 
@@ -40,11 +41,11 @@ import java.util.UUID;
 
 import static android.graphics.BitmapFactory.decodeStream;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ImageUtil {
 	private static final int defWidth =Tools.getScreenWidth();
 	private static final int defHeight= 480;
 	
-
 	public static Bitmap getBitmap(String path)
 	{
 		Bitmap bitmap = null;
@@ -52,7 +53,7 @@ public class ImageUtil {
 		try {
 			if(FileUtil.exists(path))
 			{
-				bitmap =BitmapFactory.decodeFile(path);
+				return BitmapFactory.decodeFile(path);
 			}
 			else
 			{
@@ -433,7 +434,7 @@ public class ImageUtil {
 		return outBitmap ;
 	}
 
-	public static final Bitmap createRGBImage(Bitmap bitmap,int color)
+	public static Bitmap createRGBImage(Bitmap bitmap,int color)
 	{
 		int bitmapWidth=bitmap.getWidth();
 		int bitmapHeight=bitmap.getHeight();
@@ -482,8 +483,7 @@ public class ImageUtil {
 			float scale_x = toHeight / (float)bitmap.getHeight();
 			Matrix matrix = new Matrix();
 			matrix.postScale(scale_x, scale_y);
-			Bitmap bitmapTarget = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-			return bitmapTarget;
+			return Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
 		}
 		return bitmap;
 	}

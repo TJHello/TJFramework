@@ -17,13 +17,14 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
+ *
  * Created by TJbaobao on 2018/1/12.
  */
 
 public class OKHttpUtil {
 
     private static final OkHttpClient mOkHttpClient =  new OkHttpClient.Builder()
-            .connectTimeout(1,TimeUnit.SECONDS)//设置连接超时时间
+            .connectTimeout(3,TimeUnit.SECONDS)//设置连接超时时间
             .build();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     static {
