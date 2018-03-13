@@ -142,4 +142,5 @@ public class SVGUtil {
         svg.renderToCanvas(canvas);
         return svgBitmap;
     }
+
 }

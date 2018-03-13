@@ -41,10 +41,6 @@ public class LogUtil {
 
     private static void util(String msg,int type)
     {
-        if(!BuildConfig.DEBUG)
-        {
-            return ;
-        }
         int length = msg.length();
         int max = 1024;
         if(length>max)
