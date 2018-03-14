@@ -3,25 +3,17 @@ package com.tjbaobao.framework.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
-import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.tjbaobao.framework.imp.ActivityToolsImp;
 import com.tjbaobao.framework.imp.HandlerToolsImp;
 import com.tjbaobao.framework.utils.ActivityTools;
 import com.tjbaobao.framework.utils.BaseHandler;
 
-import java.io.Serializable;
 
 
 /**

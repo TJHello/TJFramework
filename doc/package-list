@@ -1,0 +1,15 @@
+com.tjbaobao.framework
+com.tjbaobao.framework.base
+com.tjbaobao.framework.database
+com.tjbaobao.framework.database.dao
+com.tjbaobao.framework.database.obj
+com.tjbaobao.framework.dialog
+com.tjbaobao.framework.entity
+com.tjbaobao.framework.entity.ui
+com.tjbaobao.framework.imp
+com.tjbaobao.framework.listener
+com.tjbaobao.framework.tjbase
+com.tjbaobao.framework.ui
+com.tjbaobao.framework.ui.base
+com.tjbaobao.framework.utils
+com.tjbaobao.tjframework.model
