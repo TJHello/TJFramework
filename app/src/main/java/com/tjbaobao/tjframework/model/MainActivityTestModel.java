@@ -1,5 +1,7 @@
 package com.tjbaobao.tjframework.model;
 
+import com.tjbaobao.framework.base.BaseAdapter;
+
 /**
  * Created by TJbaobao on 2018/2/9.
  */
@@ -23,4 +25,5 @@ public class MainActivityTestModel {
     public void setUrl(String url) {
         this.url = url;
     }
+
 }

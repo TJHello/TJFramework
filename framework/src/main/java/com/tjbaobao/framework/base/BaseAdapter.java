@@ -12,10 +12,13 @@ import java.util.ArrayList;
  * Created by TJbaobao on 2017/9/8.
  *
  *
- * @deprecated 该类已经不建议使用，可以使用BaseRecyclerAdapter代替，同时，已经不建议使用ListView,可以使用BaseRecyclerView代替
+ * @deprecated 该类已经不建议使用，可以使用{@link BaseRecyclerAdapter}代替，
+ *
+ * 				同时，已经不建议使用ListView,可以使用{@link com.tjbaobao.framework.ui.BaseRecyclerView}代替
  *
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
+@Deprecated
 public class BaseAdapter extends android.widget.BaseAdapter {
 
 	protected Context context ;
