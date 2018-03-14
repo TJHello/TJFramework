@@ -24,11 +24,11 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
     private int type = TYPE_LINE_VERTICAL;
 
     public static BaseItemDecoration getLineVerticalDecoration(int spacing) {
-        return new BaseItemDecoration(spacing,TYPE_LINE_VERTICAL);
+        return new BaseItemDecoration(TYPE_LINE_VERTICAL,spacing);
     }
 
     public static BaseItemDecoration getLineHorizontalDecoration(int spacing) {
-        return new BaseItemDecoration(spacing,TYPE_LINE_HORIZONTAL);
+        return new BaseItemDecoration(TYPE_LINE_HORIZONTAL,spacing);
     }
 
     public static BaseItemDecoration getGridCenterDecoration(int spacingVertical,int spacingHorizontal)
