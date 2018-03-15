@@ -7,7 +7,10 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class BaseUI extends View {
+import com.tjbaobao.framework.imp.HandlerToolsImp;
+import com.tjbaobao.framework.utils.BaseHandler;
+
+public class BaseUI extends View implements HandlerToolsImp{
 
 	protected Context context ;
 	protected int viewWidth,viewHeight ;
@@ -106,6 +109,7 @@ public class BaseUI extends View {
 		}
 		return result;
 	}
+
 	/**
 	 * 将dip数值转化为px数值
 	 * @param dip
@@ -117,34 +121,35 @@ public class BaseUI extends View {
         return (int) (dip * scale + 0.5f);  
 	}
 
-	private Handler handler = new Handler(){
-		@Override
-		public void handleMessage(Message msg) {
-			onHandleMessage(msg.what,msg.obj,msg);
-			super.handleMessage(msg);
-		}
-	};
-	protected void onHandleMessage(int what,Object obj,Message msg)
-	{};
+	protected BaseHandler handler = new BaseHandler(new HandlerCallback());
 
-	/**
-	 * 向Handler发送消息
-	 * @param what
-	 * @param obj
-	 */
-	protected void sendMessage(int what,Object obj)
+	private class HandlerCallback implements Handler.Callback
 	{
-		Message msg = new Message();
-		msg.what = what ;
-		msg.obj = obj ;
-		handler.sendMessage(msg);
+		@Override
+		public boolean handleMessage(Message msg) {
+			onHandleMessage(msg,msg.what,msg.obj);
+			return false;
+		}
 	}
-	protected void sendMessage(int what,Object obj,int arg1)
-	{
-		Message msg = new Message();
-		msg.what = what ;
-		msg.obj = obj ;
-		msg.arg1 = arg1;
-		handler.sendMessage(msg);
+
+	@Override
+	public void onHandleMessage(Message msg, int what, Object obj) {
+
+	}
+
+	@Override
+	public void sendMessage(int what) {
+		handler.sendMessage(what);
+
+	}
+
+	@Override
+	public void sendMessage(int what, Object obj) {
+		handler.sendMessage(what,obj);
+	}
+
+	@Override
+	public void sendMessage(int what, Object obj, int arg1) {
+		handler.sendMessage(what,obj,arg1);
 	}
 }
