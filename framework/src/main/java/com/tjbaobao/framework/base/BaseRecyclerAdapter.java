@@ -49,7 +49,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     }
 
     @Override
-    public void onBindViewHolder(@Nullable Holder holder, int position) {
+    public void onBindViewHolder(@NonNull Holder holder, int position) {
         Info info = infoList.get(position);
         onBindViewHolder(holder,info,position);
         Object tag = onGetItemTag(info,position);
@@ -57,7 +57,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         {
             mapHolder.put(tag,holder);
         }
-        if(holder!=null&&holder.itemView!=null)
+        if(holder.itemView!=null)
         {
             holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
         }
@@ -69,7 +69,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      * @param info 数据实体类
      * @param position 序号
      */
-    public abstract void onBindViewHolder(@Nullable Holder holder,@Nullable Info info, int position);
+    public abstract void onBindViewHolder(@NonNull Holder holder,@NonNull Info info, int position);
 
 
     /**
@@ -100,6 +100,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      * @param tag tag
      * @return {@link Holder}
      */
+    @Nullable
     protected Holder findHolder(Object tag)
     {
         return mapHolder.get(tag);

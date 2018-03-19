@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -131,80 +132,99 @@ public class BaseTitleBar extends BaseRelativeLayout {
 
     //region================外部方法==================
 
-    public void addImageToLeft(@DrawableRes int res)
+    @NonNull
+    public TitleBarInfo.Image addImageToLeft(@DrawableRes int res)
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addLeft(image);
         reLayout();
+        return image;
     }
 
-    public void addImageToRight(@DrawableRes int res)
+    @NonNull
+    public TitleBarInfo.Image addImageToRight(@DrawableRes int res)
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addRight(image);
         reLayout();
+        return image;
     }
-
-    public void addImageToLeftFirst(@DrawableRes int res)
+    @NonNull
+    public TitleBarInfo.Image addImageToLeftFirst(@DrawableRes int res)
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addLeftFirst(image);
         reLayout();
+        return image;
     }
-
-    public void addImageToRightFirst(@DrawableRes int res)
+    @NonNull
+    public TitleBarInfo.Image addImageToRightFirst(@DrawableRes int res)
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addRightFirst(image);
         reLayout();
+        return image;
     }
-
-    public void addImageToLeft(int position,TitleBarInfo.Image image)
+    @NonNull
+    public TitleBarInfo.Image addImageToLeft(int position,TitleBarInfo.Image image)
     {
         mTitleBarInfo.addLeft(position,image);
         reLayout();
+        return image;
     }
-
-    public void addImageToRight(int position,TitleBarInfo.Image image)
+    @NonNull
+    public TitleBarInfo.Image addImageToRight(int position,TitleBarInfo.Image image)
     {
         mTitleBarInfo.addRight(position,image);
         reLayout();
+        return image;
     }
 
-    public void addTextToLeftFirst(String txt)
+    @NonNull
+    public TitleBarInfo.Text addTextToLeftFirst(String txt)
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addLeftFirst(text);
         reLayout();
+        return text;
     }
-    public void addTextToLeft(String txt)
+    @NonNull
+    public TitleBarInfo.Text addTextToLeft(String txt)
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addLeft(text);
         reLayout();
+        return text;
     }
-    public void addTextToLeft(int position,TitleBarInfo.Text text)
+    @NonNull
+    public TitleBarInfo.Text addTextToLeft(int position,TitleBarInfo.Text text)
     {
         mTitleBarInfo.addLeft(position,text);
         reLayout();
+        return text;
     }
-
-    public void addTextToLeftRight(String txt)
+    @NonNull
+    public TitleBarInfo.Text addTextToLeftRight(String txt)
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addRightFirst(text);
         reLayout();
+        return text;
     }
-    public void addTextToRight(String txt)
+    @NonNull
+    public TitleBarInfo.Text addTextToRight(String txt)
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addRight(text);
         reLayout();
+        return text;
     }
-    public void addTextToRight(int position,TitleBarInfo.Text text)
+    @NonNull
+    public TitleBarInfo.Text addTextToRight(int position,TitleBarInfo.Text text)
     {
         mTitleBarInfo.addRight(position,text);
         reLayout();
+        return text;
     }
 
     public TitleBarInfo getTitleBarInfo() {

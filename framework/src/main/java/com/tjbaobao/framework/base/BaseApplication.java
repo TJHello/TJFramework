@@ -107,14 +107,7 @@ public class BaseApplication extends Application {
 	 */
 	public static boolean isAppRunInBackground()
 	{
-		if(foregroundActivities==0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return foregroundActivities==0;
 	}
 
 	/**
@@ -144,7 +137,7 @@ public class BaseApplication extends Application {
 				ps.close();
 				baos.close();
 			}
-			catch (Exception e)
+			catch (Exception ignored)
 			{
 
 			}
