@@ -1,6 +1,5 @@
 package com.tjbaobao.framework.utils;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -115,7 +114,6 @@ public class ValueTools {
         }
         return data;
     }
-
 
     public static int valueOf(String value)
     {

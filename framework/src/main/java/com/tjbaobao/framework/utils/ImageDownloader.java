@@ -268,15 +268,18 @@ public class ImageDownloader {
             try {
                 Bitmap bitmap = imageLruCache.get(key+imageWidth+"_"+imageHeight);
                 imageLruCache.remove(key+imageWidth+"_"+imageHeight);
-                if(bitmap!=null&&!bitmap.isRecycled())
+                Image image = findImage(key);
+                if(image!=null)
                 {
-                    bitmap.recycle();
+                    ImageView imageView = image.getImageView();
+                    if(imageView!=null)
+                    {
+                        imageView.setImageBitmap(null);
+                    }
                 }
+//                ImageUtil.recycled(bitmap);
             }
-            catch (Exception ignored)
-            {
-
-            }
+            catch (Exception ignored){}
         }
     }
 
@@ -527,6 +530,15 @@ public class ImageDownloader {
 
         WeakReference<ImageView> getViewWeakReference() {
             return viewWeakReference;
+        }
+
+        ImageView getImageView()
+        {
+            if(viewWeakReference!=null)
+            {
+                return viewWeakReference.get();
+            }
+            return null;
         }
 
         void setViewWeakReference(ImageView imageView) {

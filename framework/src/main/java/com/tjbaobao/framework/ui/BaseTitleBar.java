@@ -137,7 +137,6 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addLeft(image);
-        reLayout();
         return image;
     }
 
@@ -146,7 +145,6 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addRight(image);
-        reLayout();
         return image;
     }
     @NonNull
@@ -154,7 +152,6 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addLeftFirst(image);
-        reLayout();
         return image;
     }
     @NonNull
@@ -162,21 +159,18 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Image image = mTitleBarInfo.new Image(res);
         mTitleBarInfo.addRightFirst(image);
-        reLayout();
         return image;
     }
     @NonNull
     public TitleBarInfo.Image addImageToLeft(int position,TitleBarInfo.Image image)
     {
         mTitleBarInfo.addLeft(position,image);
-        reLayout();
         return image;
     }
     @NonNull
     public TitleBarInfo.Image addImageToRight(int position,TitleBarInfo.Image image)
     {
         mTitleBarInfo.addRight(position,image);
-        reLayout();
         return image;
     }
 
@@ -185,7 +179,6 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addLeftFirst(text);
-        reLayout();
         return text;
     }
     @NonNull
@@ -193,14 +186,12 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addLeft(text);
-        reLayout();
         return text;
     }
     @NonNull
     public TitleBarInfo.Text addTextToLeft(int position,TitleBarInfo.Text text)
     {
         mTitleBarInfo.addLeft(position,text);
-        reLayout();
         return text;
     }
     @NonNull
@@ -208,7 +199,6 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addRightFirst(text);
-        reLayout();
         return text;
     }
     @NonNull
@@ -216,14 +206,12 @@ public class BaseTitleBar extends BaseRelativeLayout {
     {
         TitleBarInfo.Text text = mTitleBarInfo.new Text(txt);
         mTitleBarInfo.addRight(text);
-        reLayout();
         return text;
     }
     @NonNull
     public TitleBarInfo.Text addTextToRight(int position,TitleBarInfo.Text text)
     {
         mTitleBarInfo.addRight(position,text);
-        reLayout();
         return text;
     }
 

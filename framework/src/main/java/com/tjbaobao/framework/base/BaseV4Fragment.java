@@ -77,7 +77,7 @@ public class BaseV4Fragment extends Fragment implements View.OnClickListener,Act
 
     @Override
     public void startActivity(Class<? extends Activity> mClass, String[] keys, Object... values) {
-        ActivityTools.startActivityAndFinish(activity,mClass,keys,values);
+        ActivityTools.startActivity(activity,mClass,keys,values);
     }
 
     @Override

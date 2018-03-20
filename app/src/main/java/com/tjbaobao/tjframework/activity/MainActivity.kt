@@ -54,15 +54,15 @@ class MainActivity : TJActivity() {
 
     class MyAdapter(infoList: MutableList <MainActivityTestModel>?, itemLayoutRes: Int) : BaseRecyclerAdapter<MainActivity.Holder, MainActivityTestModel>(infoList, itemLayoutRes),ImageDownloader.OnImageLoaderListener
     {
+        override fun onBindViewHolder(holder: Holder, info: MainActivityTestModel, position: Int) {
+            imageDownloader.load(info.url,holder.imageView, OnItemProgressListener())
+        }
+
         private var imageDownloader :ImageDownloader = ImageDownloader.getInstance()
 
         init {
             imageDownloader.onImageLoaderListener = this
             imageDownloader.setDefaultImgSize(300,300)
-        }
-
-        override fun onBindViewHolder(holder: Holder?, info: MainActivityTestModel?, position: Int) {
-            imageDownloader.load(info!!.url,holder!!.imageView, OnItemProgressListener())
         }
 
         override fun onGetHolder(view: View?): Holder {

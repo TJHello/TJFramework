@@ -39,6 +39,7 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
         }
         onInitValues(savedInstanceState);
     }
+
     /**
      * 初始化组件与布局
      */
@@ -55,6 +56,7 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
             titleBar.setOnTitleBarClickListener(this);
             titleBar.setBackgroundColor(getColorById(R.color.fw_theme_color));
             onInitTitleBar(titleBar);
+            titleBar.reLayout();
         }
     }
 

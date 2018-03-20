@@ -74,7 +74,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 	@Override
 	public void startActivity(Class<? extends Activity> mClass, String[] keys, Object... values) {
-		ActivityTools.startActivityAndFinish(activity,mClass,keys,values);
+		ActivityTools.startActivity(activity,mClass,keys,values);
 	}
 
 	@Override

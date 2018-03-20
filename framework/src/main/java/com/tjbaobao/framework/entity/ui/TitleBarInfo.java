@@ -15,6 +15,7 @@ import java.util.List;
  * Created by TJbaobao on 2018/1/5.
  */
 
+@SuppressWarnings("unused")
 public class TitleBarInfo {
 
     private List<BaseView> viewLeftList = new ArrayList<>();
@@ -75,24 +76,27 @@ public class TitleBarInfo {
             return imageRes;
         }
 
-        public void setImageRes(int imageRes) {
+        public Image setImageRes(int imageRes) {
             this.imageRes = imageRes;
+            return this;
         }
 
         public int getPadding() {
             return padding;
         }
 
-        public void setPadding(int padding) {
+        public Image setPadding(int padding) {
             this.padding = padding;
+            return this;
         }
 
         public int getBackground() {
             return background;
         }
 
-        public void setBackground(int background) {
+        public Image setBackground(int background) {
             this.background = background;
+            return this;
         }
     }
 
@@ -127,24 +131,27 @@ public class TitleBarInfo {
             return text;
         }
 
-        public void setText(String text) {
+        public Text setText(String text) {
             this.text = text;
+            return this;
         }
 
         public int getTextColor() {
             return textColor;
         }
 
-        public void setTextColor(int textColor) {
+        public Text setTextColor(int textColor) {
             this.textColor = textColor;
+            return this;
         }
 
         public float getTextSize() {
             return textSize;
         }
 
-        public void setTextSize(float textSize) {
+        public Text setTextSize(float textSize) {
             this.textSize = textSize;
+            return this;
         }
 
 
@@ -152,8 +159,9 @@ public class TitleBarInfo {
             return background;
         }
 
-        public void setBackground(int background) {
+        public Text setBackground(int background) {
             this.background = background;
+            return this;
         }
     }
 
