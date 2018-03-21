@@ -23,6 +23,7 @@ public class BaseApplication extends Application {
 	private static int foregroundActivities =0;
 	private MyUncaughtExceptionHandler handler;
 	private static boolean isDebug ;
+	private static UncaughtExceptionHandler defHandler ;
 
 	/**
 	 * 初始化框架
@@ -34,6 +35,7 @@ public class BaseApplication extends Application {
 		//监听activity生命周期
 		application.registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
 		// 设置未捕获异常处理器
+		defHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
 	}
 
@@ -142,7 +144,7 @@ public class BaseApplication extends Application {
 
 			}
 			//让默认未捕获异常处理器来处理未捕获异常
-			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(thread, ex);
+			defHandler.uncaughtException(thread, ex);
 		}
 	}
 }

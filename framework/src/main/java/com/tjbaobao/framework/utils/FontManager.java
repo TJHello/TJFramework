@@ -1,5 +1,6 @@
 package com.tjbaobao.framework.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
@@ -8,48 +9,69 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tjbaobao.framework.base.BaseApplication;
+
+import static com.tjbaobao.framework.base.BaseApplication.context;
+
 /**
  * Created by TJbaobao on 2017/6/22.
  */
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class FontManager {
-    public static void changeFonts(ViewGroup root, Context act, String fontPath) {
 
-        Typeface tf = Typeface.createFromAsset(act.getAssets(),
-                fontPath);
+    public static void changeFonts(ViewGroup viewGroup, String fontPath) {
 
-        for (int i = 0; i < root.getChildCount(); i++) {
-            View v = root.getChildAt(i);
+        Typeface tf = getTypeface(fontPath);
+        changeFonts(viewGroup,tf);
+    }
+
+    public static void changeFonts(ViewGroup viewGroup,Typeface typeface)
+    {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View v = viewGroup.getChildAt(i);
             if (v instanceof TextView) {
-                ((TextView) v).setTypeface(tf);
-            } else if (v instanceof Button) {
-                ((Button) v).setTypeface(tf);
-            } else if (v instanceof EditText) {
-                ((EditText) v).setTypeface(tf);
-            } else if (v instanceof ViewGroup) {
-                changeFonts((ViewGroup) v, act,fontPath);
+                ((TextView) v).setTypeface(typeface);
+            }else if (v instanceof ViewGroup) {
+                changeFonts((ViewGroup) v,typeface);
             }
         }
-
     }
 
-    public static void changeFonts(Context context,View view,String fontPath)
+    public static void changeFont(View view,String fontPath)
     {
-        Typeface tf = Typeface.createFromAsset(context.getAssets(),
-                fontPath);
+        Typeface tf = getTypeface(fontPath);
+        changeFont(view,tf);
+    }
+
+    public static void changeFont(View view,Typeface typeface)
+    {
         if (view instanceof TextView) {
-            ((TextView) view).setTypeface(tf);
-        } else if (view instanceof Button) {
-            ((Button) view).setTypeface(tf);
-        } else if ( view instanceof EditText) {
-            ((EditText) view).setTypeface(tf);
+            ((TextView) view).setTypeface(typeface);
         }
     }
 
-    public static Typeface getTypeface(Context context,String fontPath)
+    public static Typeface getTypeface(String fontPath)
     {
-        return Typeface.createFromAsset(context.getAssets(),
-                fontPath);
+        Context context = BaseApplication.getContext();
+        if(context!=null)
+        {
+            Typeface tf = Typeface.createFromAsset(context.getAssets(),
+                    fontPath);
+            return tf;
+        }
+        return null;
     }
+
+    public static void changeFonts(Activity activity,String fontPath)
+    {
+        changeFonts( (ViewGroup) activity.getWindow().getDecorView(),fontPath);
+    }
+    public static void changeFonts(Activity activity,Typeface typeface)
+    {
+        changeFonts( (ViewGroup) activity.getWindow().getDecorView(),typeface);
+    }
+
+
 
 }
