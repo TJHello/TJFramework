@@ -9,6 +9,7 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.tjbaobao.framework.imp.DataBaseImp;
 import com.tjbaobao.framework.utils.DeviceUtil;
 
 /**
@@ -17,6 +18,8 @@ import com.tjbaobao.framework.utils.DeviceUtil;
  */
 
 public class BaseDataBaseHelper extends SQLiteOpenHelper {
+
+    private static DataBaseImp dataBaseImp ;
     private static BaseDataBaseHelper mDataBaseHelper = null ;
     public static BaseDataBaseHelper create(Context context) throws Exception {
         if(mDataBaseHelper==null)
@@ -61,6 +64,10 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         onCreateFileTb(db);
+        if(dataBaseImp!=null)
+        {
+            dataBaseImp.onCreate(db);
+        }
     }
 
     private void onCreateFileTb(SQLiteDatabase db)
@@ -79,7 +86,10 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if(dataBaseImp!=null)
+        {
+            dataBaseImp.onUpgrade(db,oldVersion,newVersion);
+        }
     }
 
     /**
@@ -137,5 +147,13 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
             getReadableDatabase().close();
         }
         mDataBaseHelper = null;
+    }
+
+    public static DataBaseImp getDataBaseImp() {
+        return dataBaseImp;
+    }
+
+    public static void setDataBaseImp(DataBaseImp dataBaseImp) {
+        BaseDataBaseHelper.dataBaseImp = dataBaseImp;
     }
 }

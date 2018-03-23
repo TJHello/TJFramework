@@ -1,6 +1,7 @@
 package com.tjbaobao.framework.utils;
 
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +15,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Looper;
 import android.support.annotation.ColorRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,12 +33,12 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 
+@SuppressWarnings("ALL")
 public class Tools {
 	private static Toast toast;
-	private static Context context;
+	private static Context context = BaseApplication.getContext();
 	private static SharedPreferences pref ;
 	static{
-		context = BaseApplication.getContext();
 		if(context!=null)
 		pref = context.getSharedPreferences("app", 0);
 	}
@@ -64,30 +65,28 @@ public class Tools {
 	{
 		setOnclickBackground(view,true);
 	}
-	public static void setOnclickBackground(final View view,boolean hasBackground)
+	@SuppressLint("ClickableViewAccessibility")
+	public static void setOnclickBackground(final View view, boolean hasBackground)
 	{
 		if(hasBackground)
 		{
 			view.setBackgroundResource(R.drawable.fw_ripple);
 		}
-		view.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction()==MotionEvent.ACTION_DOWN)
-				{
-					view.setAlpha(0.7f);
-				}
-				else if(event.getAction()==MotionEvent.ACTION_UP)
-				{
-					view.setAlpha(1.0f);
-				}
-				else if(event.getAction()==MotionEvent.ACTION_CANCEL)
-				{
-					view.setAlpha(1.0f);
-				}
-				return false;
-			}
-		});
+		view.setOnTouchListener((View v, MotionEvent event) -> {
+            if(event.getAction()==MotionEvent.ACTION_DOWN)
+            {
+                view.setAlpha(0.7f);
+            }
+            else if(event.getAction()==MotionEvent.ACTION_UP)
+            {
+                view.setAlpha(1.0f);
+            }
+            else if(event.getAction()==MotionEvent.ACTION_CANCEL)
+            {
+                view.setAlpha(1.0f);
+            }
+            return false;
+        });
 	}
 	
 	public static void showToast(String text)
@@ -263,6 +262,7 @@ public class Tools {
 		return dm.heightPixels;
 	}
 
+	@Nullable
 	public static InputStream getAssetsInputSteam(String fileName)
 	{
 		if(context!=null)
@@ -271,17 +271,16 @@ public class Tools {
 				return context.getAssets().open(fileName);
 			} catch (IOException e) {
 				e.printStackTrace();
-				Tools.printLog("没找到文件"+fileName);
 			}
 			catch (Exception e)
 			{
-				Tools.printLog("读取资源出错"+fileName);
 				e.printStackTrace();
 			}
 		}
 		return null;
 	}
 
+	@Nullable
 	public static InputStream getResInputSteam(String fileName)
 	{
 		if(context!=null)

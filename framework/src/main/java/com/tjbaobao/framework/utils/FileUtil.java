@@ -1,9 +1,12 @@
 package com.tjbaobao.framework.utils;
 
+import android.annotation.SuppressLint;
+
 import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,10 +26,12 @@ import java.util.Map;
  * @author Tjbaobao
  * @time 2016年11月25日 下午3:27:29
  */
+@SuppressWarnings({"JavaDoc", "UnusedReturnValue", "unused", "WeakerAccess", "SameParameterValue"})
 public class FileUtil {
 	private static final String DEF_CHARSET_NAME = "iso8859-1";
 	private static final int DEF_SIZE_SUFF=1024*1024;//默认缓存区字节大小
 	//--------------------------Write
+	@SuppressWarnings({"JavaDoc", "WeakerAccess", "UnusedReturnValue", "unused"})
 	public static class Writer{
 		/**
 		 * 将制定字节在指定文件的指定位置写入
@@ -65,6 +70,7 @@ public class FileUtil {
 			try {
 				out = new FileOutputStream(file);
 				out.write(bytes);
+                bOk = true;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -191,13 +197,14 @@ public class FileUtil {
 	}
 	
 	//--------------------------Read
+	@SuppressWarnings({"JavaDoc", "WeakerAccess", "unused"})
 	public static class Reader{
 		/**
 		 * 在指定文件的指定位置读取指定大小的内容到字节数组
 		 * @param position 开始读取的位置
 		 * @param size 读取的大小，不宜过大，需要考虑内存
-		 * @param path
-		 * @return
+		 * @param path path
+		 * @return byte[]
 		 */
 		public static byte[] readFileToBytes(long position, int size, String path) {
 			RandomAccessFile randomAccessFile = null;
@@ -235,9 +242,9 @@ public class FileUtil {
 		 */
 		public static String readTextByInputSteam(InputStream inputStream)
 		{
-			String str = "";
+			String str ;
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-			StringBuffer stringBuffer = new StringBuffer();
+			StringBuilder stringBuffer = new StringBuilder();
 			try {
 				while ((str=reader.readLine())!=null)
                 {
@@ -254,8 +261,8 @@ public class FileUtil {
 
 		/**
 		 * 通过文本地址读取文本文件
-		 * @param path
-		 * @return
+		 * @param path inPath
+		 * @return String
 		 */
 		public static String readTextByPath(String path)
 		{
@@ -263,11 +270,11 @@ public class FileUtil {
 			if(file.exists())
 			{
 				try {
-					StringBuffer stringBuffer = new StringBuffer();
+					StringBuilder stringBuffer = new StringBuilder();
 					FileInputStream fileInputStream = new FileInputStream(file);
 					InputStreamReader reader = new InputStreamReader(fileInputStream);
 					BufferedReader bufferedReader = new BufferedReader(reader);
-					String lineText = "";
+					String lineText ;
 					while((lineText=bufferedReader.readLine())!=null)
 					{
 						stringBuffer.append(lineText);
@@ -287,8 +294,8 @@ public class FileUtil {
 
 		/**
 		 * 一行一行的将文本读取出来
-		 * @param path
-		 * @return
+		 * @param path inPath
+		 * @return lineString
 		 */
 		public static ArrayList<String> readTextLineListByPath(String path)
 		{
@@ -296,11 +303,11 @@ public class FileUtil {
 			if(file.exists())
 			{
 				try {
-					ArrayList<String> stringList = new ArrayList<String>();
+					ArrayList<String> stringList = new ArrayList<>();
 					FileInputStream fileInputStream = new FileInputStream(file);
 					InputStreamReader reader = new InputStreamReader(fileInputStream);
 					BufferedReader bufferedReader = new BufferedReader(reader);
-					String lineText = "";
+					String lineText ;
 					while((lineText=bufferedReader.readLine())!=null)
 					{
 						stringList.add(lineText);
@@ -323,16 +330,16 @@ public class FileUtil {
 	//--------------------------Find
 	/**
 	 * 从指定文件中寻找指定字符串，并返回该字符串在文件中的位置
-	 * @param path
+	 * @param path path
 	 * @return 位置,如果发生错误或为找到该字符串，则返回-1
 	 */
 	public static ArrayList<Long> indexOf(long position,long length,String str,String path)
 	{
 		int size = 1024 *100;
-		long index = -1 ;
-		int offset = 0;//偏移量
+		long index ;
+		int offset ;//偏移量
 		long readSize =0;
-		ArrayList<Long> list = new ArrayList<Long>();
+		ArrayList<Long> list = new ArrayList<>();
 		try {
 			offset = str.getBytes(DEF_CHARSET_NAME).length;
 		} catch (UnsupportedEncodingException e1) {
@@ -381,20 +388,13 @@ public class FileUtil {
 	 * @param path
 	 * @return
 	 */
-	public static boolean delFileIfExists(String path)
-	{
-		if(path==null)
-		{
-			return false;
-		}
-		File file = new File(path);
-		if(file.exists())
-		{
-			file.delete();
-			return true;
-		}
-		return false; 
-	}
+    public static boolean delFileIfExists(String path) {
+        if (path == null) {
+            return false;
+        }
+        File file = new File(path);
+        return file.exists() && file.delete();
+    }
 
 	//--------------------------Tools
 	/**
@@ -404,7 +404,8 @@ public class FileUtil {
 	 */
 	public static class CurrentTime
 	{
-		private static Map<Integer, Long> mapBeginTime = new HashMap<Integer, Long>();
+		@SuppressLint("UseSparseArrays")
+        private static Map<Integer, Long> mapBeginTime = new HashMap<>();
 		private static int defTag = 0 ;
 		public static void begin()
 		{
@@ -453,6 +454,7 @@ public class FileUtil {
 			sizeNow += sizeBase;
 		}
 	}
+
 	public static boolean copyFile(String inPath,String outPath)
 	{
 		File inFile = new File(inPath);
@@ -463,6 +465,27 @@ public class FileUtil {
 		}
 		return false;
 	}
+
+	public static boolean copyFile(InputStream inputStream,String outPath)
+    {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(outPath);
+            byte[] buffer = new byte[DEF_SIZE_SUFF];
+            int byteCount;
+            while((byteCount = inputStream.read(buffer)) > 0) {
+                fileOutputStream.write(buffer, 0, byteCount);
+            }
+            fileOutputStream.flush();
+            inputStream.close();
+            fileOutputStream.close();
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 	/**
 	 * 在指定位置复写一个新的文件到一个文件里
@@ -483,7 +506,7 @@ public class FileUtil {
 					sizeBuff = (int) inFile.length();
 				}
 				byte[] data = new byte[sizeBuff];
-				int len = 0;
+				int len ;
 				while ((len = in.read(data)) > 0) {
 					randomAccessFile.seek(position);
 					randomAccessFile.write(data, 0, len);
@@ -544,7 +567,8 @@ public class FileUtil {
 	 * 创建文件夹 
 	 * @param path
 	 */
-	public static void createFolder(String path)
+	@SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
+    public static void createFolder(String path)
 	{
 		if(path==null||path.equals(""))
 		{
@@ -610,7 +634,8 @@ public class FileUtil {
 		return null;
 	}
 	
-	public static boolean exists(String path)
+	@SuppressWarnings("SimplifiableIfStatement")
+    public static boolean exists(String path)
 	{
 		if(path!=null&&!path.equals(""))
 		{

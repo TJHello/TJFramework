@@ -10,6 +10,7 @@ import java.io.File;
  * 常量数据组件
  * @author lyzyjoyo 
  */
+@SuppressWarnings("WeakerAccess")
 public class ConstantUtil
 {
 
@@ -39,12 +40,12 @@ public class ConstantUtil
 		FileUtil.createFolder(CONFIG_CACHE_PATH);
 	}
 
-	private static String getFilesPath()
+	public static String getFilesPath()
 	{
 		return BaseApplication.getContext().getFilesDir().getPath()+SEPARATOR;
 	}
 
-	private static String getCachePath()
+	public static String getCachePath()
 	{
 		return BaseApplication.getContext().getCacheDir().getPath()+SEPARATOR;
 	}

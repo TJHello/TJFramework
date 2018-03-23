@@ -3,8 +3,10 @@ package com.tjbaobao.framework.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,19 +16,20 @@ import com.tjbaobao.framework.base.BaseApplication;
 import static com.tjbaobao.framework.base.BaseApplication.context;
 
 /**
+ * 字体管理器
  * Created by TJbaobao on 2017/6/22.
  */
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class FontManager {
 
-    public static void changeFonts(ViewGroup viewGroup, String fontPath) {
+    public static void changeFonts(@NonNull ViewGroup viewGroup, String fontPath) {
 
         Typeface tf = getTypeface(fontPath);
         changeFonts(viewGroup,tf);
     }
 
-    public static void changeFonts(ViewGroup viewGroup,Typeface typeface)
+    public static void changeFonts(@NonNull ViewGroup viewGroup,Typeface typeface)
     {
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View v = viewGroup.getChildAt(i);
@@ -56,22 +59,43 @@ public class FontManager {
         Context context = BaseApplication.getContext();
         if(context!=null)
         {
-            Typeface tf = Typeface.createFromAsset(context.getAssets(),
-                    fontPath);
-            return tf;
+            return  Typeface.createFromAsset(context.getAssets(),fontPath);
         }
         return null;
     }
 
-    public static void changeFonts(Activity activity,String fontPath)
+    public static void changeFonts(@NonNull Activity activity, String fontPath)
     {
-        changeFonts( (ViewGroup) activity.getWindow().getDecorView(),fontPath);
-    }
-    public static void changeFonts(Activity activity,Typeface typeface)
-    {
-        changeFonts( (ViewGroup) activity.getWindow().getDecorView(),typeface);
+        try
+        {
+            Window window = activity.getWindow();
+            if(window!=null)
+            {
+                View view = window.getDecorView() ;
+                if(view instanceof ViewGroup)
+                {
+                    changeFonts((ViewGroup) view,fontPath);
+                }
+            }
+        }
+        catch (Exception ignored){}
     }
 
-
+    public static void changeFonts(@NonNull Activity activity,Typeface typeface)
+    {
+        try
+        {
+            Window window = activity.getWindow();
+            if(window!=null)
+            {
+                View view = window.getDecorView() ;
+                if(view instanceof ViewGroup)
+                {
+                    view.post(() -> changeFonts((ViewGroup) view,typeface));
+                }
+            }
+        }
+        catch (Exception ignored){}
+    }
 
 }
