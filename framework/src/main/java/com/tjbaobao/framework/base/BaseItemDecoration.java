@@ -60,7 +60,7 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        int positon = parent.getChildAdapterPosition(view);
+        int position = parent.getChildAdapterPosition(view);
         int itemCount = state.getItemCount();
         if(type==TYPE_LINE_VERTICAL)
         {
@@ -77,14 +77,16 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
                 GridLayoutManager manager = (GridLayoutManager) layoutManager;
                 int spanCount =manager.getSpanCount();
                 int rowCount = itemCount/spanCount-1;
-                if(positon/spanCount!=rowCount)
+                if(position<spanCount)
                 {
-                    outRect.bottom = spacingBottom;
+                    outRect.top = spacingBottom;
                 }
-                if(positon%spanCount!=0)
+                if(position%spanCount==spanCount-1)
                 {
-                    outRect.left = spacingLeft;
+                    outRect.right = spacingLeft;
                 }
+                outRect.bottom = spacingBottom;
+                outRect.left = spacingLeft;
             }
         }
     }
