@@ -1,39 +1,62 @@
-# TJFramework
+# TJFramework [![](https://jitpack.io/v/TJHello/TJFramework.svg)](https://jitpack.io/#TJHello/TJFramework)
 一款自己用的android快速开发框架，在不断的完善中
 - - -
 - ## **框架引用**
 
+  * **Step 1. 添加Jitpack仓库到你的项目build.gradle**
+  ```groovy
+    allprojects {
+	    repositories {
+		    ...
+		    maven { url 'https://jitpack.io' }
+	    }
+    }
+  ```
+  * **Step 2. 添加远程库到app-build.gradle**
+  ```groovy
+    dependencies {
+        compile 'com.github.TJHello:TJFramework:1.0.021'
+    }
+  ```
 
->`compile 'com.github.TJHello:TJFramework:1.0.13'`[查看最新版](https://github.com/TJHello/TJFramework/releases)
+  * **Step 3. app-build.gradle配置支持JAVA8**
+
+  ```groovy
+    android {
+        ...
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+    }
+  ``` 
 
 
 - ## **框架配置**
 
-### **1. Application配置**
+  #### **1. Application配置**
 
-```java
-    在AndroidManifest-Application中增加
+  ```java
+    //在AndroidManifest-Application中增加
     android:name="com.tjbaobao.framework.base.BaseApplication"
-    如果已经有了别的Application基类，请在Application-onCreate中增加以下代码
+    //如果已经有了别的Application基类，请在Application-onCreate中增加以下代码
     com.tjbaobao.framework.base.BaseApplication.init(this);
-```
-
-
+  ```
     
-### **2. 数据库配置**
+  #### **2. 数据库配置**
 
-```java
-    在AndroidManifest-Application中增加
+  ```
+    //在AndroidManifest-Application中增加
     <meta-data android:name="database_name" android:value="TjFramework" />
     <meta-data android:name="database_version" android:value="1"/>
-```
+  ```
 
     
 - ## **框架入门**
 
-+ #### **activity、fragment、adapter等基类的使用(直接继承即可，具体API请看具体类)**
-<pre>
-<code>
+  + #### **activity、fragment、adapter等基类的使用(直接继承即可，具体API请看具体类)**
+  <pre>
+  <code>
      - BaseActivity
      - BaseAdapter
      - BaseApplication
@@ -46,41 +69,41 @@
      - TJActivity
      - TJFragment
      - TJFragmentActivity
-</code>
-</pre>
- + #### **database基类BaseDataBaseHelper的使用(直接继承即可，具体API请看具体类)**
+  </code>
+  </pre>
+   + #### **database基类BaseDataBaseHelper的使用(直接继承即可，具体API请看具体类)**
  
- <pre>
- <code>
-    -- BaseDataBaseHelper
- </code>
- </pre>
+   <pre>
+   <code>
+    - BaseDataBaseHelper
+   </code>
+   </pre>
 
- + #### **Dialog基类的使用(直接继承即可，具体API请看具体类)**
+   + #### **Dialog基类的使用(直接继承即可，具体API请看具体类)**
 
- <pre>
- <code>
+   <pre>
+   <code>
     -- BaseDialog//弹窗封装，带有动画等
- </code>
- </pre>
+   </code>
+   </pre>
 
- + #### **view基类的使用**
+   + #### **view基类的使用**
 
-<pre>
-<code>
+  <pre>
+  <code>
     - BaseUI //UI基类
     - BaseLinearLayout
     - BaseRelativeLayout
     - BaseRecyclerView //RecyclerView封装
     - BaseTitleBar//多功能标题栏
     - ClickTabbar//点击选择Tabbar
-</code>
-</pre>
+  </code>
+  </pre>
 
- + #### **工具类的使用**
+   + #### **工具类的使用**
 
- <pre>
- <code>
+   <pre>
+   <code>
     -- BaseHandler//handler封装，Created by Dmytro Voronkevych
     -- BaseTimerTask//TimerTask封装
     -- ConstantUtil//常量类，主要封装了地址获取方法
@@ -99,5 +122,5 @@
     -- SVGUtil//SVG文件处理工具
     -- Tools //常用工具集合,日志输出，Toast等等
     -- ValueTools//字节于对象之间的转换
- </code>
- </pre>
+   </code>
+   </pre>
