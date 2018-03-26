@@ -99,7 +99,7 @@ public class ImageUtil {
 			if(is!=null)
 			{
 				BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-				bmpFactoryOptions.inJustDecodeBounds = false;
+				bmpFactoryOptions.inJustDecodeBounds = true;
 				BitmapFactory.decodeStream(is,null,bmpFactoryOptions);
 				BitmapConfig bitmapConfig = new BitmapConfig();
 				bitmapConfig.setWidth(bmpFactoryOptions.outWidth);
