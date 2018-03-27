@@ -9,12 +9,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Looper;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
@@ -199,7 +201,6 @@ public class Tools {
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
-			Tools.showToast("你没安装google play");
 			return false;
 		}
 	}
@@ -369,5 +370,16 @@ public class Tools {
 
 	public static boolean isMainThread() {
 		return Looper.getMainLooper() == Looper.myLooper();
+	}
+
+	/**
+	 * 判断当前设备是手机还是平板，代码来自 Google I/O App for Android
+	 * @param context 上下文容器
+	 * @return 平板返回 True，手机返回 False
+	 */
+	public static boolean isPad() {
+		return (context.getResources().getConfiguration().screenLayout
+				& Configuration.SCREENLAYOUT_SIZE_MASK)
+				>= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}
 }
