@@ -23,7 +23,7 @@ public class BaseFragmentActivity extends FragmentActivity implements View.OnCli
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.context = this ;
+		this.context = this;
 		this.activity = this ;
 	}
 

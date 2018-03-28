@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("unused")
 public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
-	private final static int cacheSize = maxMemory / 10;
+	private final static int cacheSize = maxMemory / 6;
 	private static LruCache<String, Bitmap> imageLruCache = new LruCache<String, Bitmap>(cacheSize){
 		protected int sizeOf(String key, Bitmap value) {
 			if(value!=null&&!value.isRecycled())

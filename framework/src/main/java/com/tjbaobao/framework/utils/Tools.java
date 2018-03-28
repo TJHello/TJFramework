@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -272,10 +273,12 @@ public class Tools {
 				return context.getAssets().open(fileName);
 			} catch (IOException e) {
 				e.printStackTrace();
+				LogUtil.e(e.getMessage());
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				LogUtil.e(e.getMessage());
 			}
 		}
 		return null;

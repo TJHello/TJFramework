@@ -34,8 +34,11 @@ public class BaseV4Fragment extends Fragment implements View.OnClickListener,Act
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        this.context = this.getActivity();
         this.activity = this.getActivity();
+        if(activity!=null)
+        {
+            this.context = activity;
+        }
         super.onCreate(savedInstanceState);
     }
 

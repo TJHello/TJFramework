@@ -33,7 +33,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.context = this ;
+		this.context = this;
 		this.activity = this ;
 	}
 

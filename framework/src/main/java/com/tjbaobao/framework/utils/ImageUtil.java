@@ -108,6 +108,11 @@ public class ImageUtil {
 				{
 					return null;
 				}
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				return bitmapConfig;
 			}
 		} catch (FileNotFoundException e) {
@@ -173,6 +178,11 @@ public class ImageUtil {
 			if(inputStream!=null)
 			{
 				BitmapFactory.decodeStream(inputStream,null, bmpFactoryOptions);
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			else
 			{
@@ -200,6 +210,11 @@ public class ImageUtil {
 			if(inputStream!=null)
 			{
 				bitmap =BitmapFactory.decodeStream(inputStream,null, bmpFactoryOptions);
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			else
 			{
@@ -552,20 +567,6 @@ public class ImageUtil {
 			}
 		}
 		return data;
-	}
-
-	public static Bitmap readBitmapByPosition(int left,int top,int width,int height)
-	{
-		InputStream is = Tools.getAssetsInputSteam("game_images/puzzle_assets_01.jpg");
-		try {
-			BitmapRegionDecoder mDecoder = BitmapRegionDecoder.newInstance(is, true);
-			Rect mRect = new Rect();
-			mRect.set(left,top,left+width,top+height);
-			return mDecoder.decodeRegion(mRect, null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public static void recycled(Bitmap bitmap)

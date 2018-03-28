@@ -31,7 +31,7 @@ public class BaseApplication extends Application {
 	 */
 	public static void init(Application application)
 	{
-		context = application.getApplicationContext();
+		context = application.getBaseContext();
 		//监听activity生命周期
 		application.registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
 		// 设置未捕获异常处理器
