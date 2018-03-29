@@ -19,6 +19,7 @@ public class ResourcesGetTools {
 		public static final int VIDEO_CAMERA_GET = 201;//从相机获取视频
 		public static final int VIDEO_GALLERY_GET = 202 ;//从图库获取视频
 		public static final int VIDEO_FILE_GET = 203 ;//从文件管理器获取视频
+		public static final int FILE_FILE_GET = 301;//从文件管理器获取文件
 	}
 	private String pathRes = "";
 	private Activity activity ;
@@ -77,6 +78,18 @@ public class ResourcesGetTools {
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		activity.startActivityForResult(intent, RequestCode.VIDEO_FILE_GET);
 	}
+
+	/**
+	 * 从文件管理器获取文件
+	 */
+	public void getFileByFile()
+	{
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("*/*");
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		activity.startActivityForResult(intent, RequestCode.FILE_FILE_GET);
+	}
+
 	/**
 	 * 从相机启动剪切图片
 	 */
@@ -152,7 +165,14 @@ public class ResourcesGetTools {
 					onResourcesGetListener.onSuccess(requestCode, data.getData().getPath(), data);
 				}
 				break;
+			case RequestCode.FILE_FILE_GET:
+				if(onResourcesGetListener!=null)
+				{
+					onResourcesGetListener.onSuccess(requestCode, data.getData().getPath(), data);
+				}
+				break;
 			}
+
 		}
 		else if(resultCode==Activity.RESULT_FIRST_USER)
 		{

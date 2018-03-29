@@ -1,6 +1,7 @@
 package com.tjbaobao.framework.entity;
 
 /**
+ *
  * Created by TJbaobao on 2017/9/8.
  */
 

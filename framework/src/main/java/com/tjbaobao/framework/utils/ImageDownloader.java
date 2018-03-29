@@ -444,9 +444,17 @@ public class ImageDownloader {
         if(imageWidth!=0&&imageHeight!=0)
         {
             bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
-//            Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,imageWidth,imageHeight);
-//            ImageUtil.recycled(bitmap);
-//            bitmap = bitmap2;
+            if(bitmap!=null)
+            {
+                int width = (int) (imageWidth*0.6);
+                int height = width*bitmap.getHeight()/bitmap.getWidth();
+                Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,width,height);
+                if(!bitmap.equals(bitmap2))
+                {
+                    ImageUtil.recycled(bitmap);
+                }
+                bitmap = bitmap2;
+            }
         }
         else
         {
