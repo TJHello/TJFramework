@@ -509,12 +509,15 @@ public class ImageUtil {
 	 * @param rotate
 	 * @return
 	 */
-	public static Bitmap rotateBitmap(Bitmap bitmap,float rotate)
+	public static Bitmap rotateBitmap(@NonNull Bitmap bitmap,float rotate)
     {
         Matrix matrix = new Matrix();
         matrix.postRotate(rotate);
 		Bitmap bitmapTarget = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-		bitmap.recycle();
+		if(!bitmap.equals(bitmapTarget))
+		{
+			bitmap.recycle();
+		}
 		return bitmapTarget;
     }
 

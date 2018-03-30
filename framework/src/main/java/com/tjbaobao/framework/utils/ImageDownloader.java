@@ -446,8 +446,8 @@ public class ImageDownloader {
             bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
             if(bitmap!=null)
             {
-                int width = (int) (imageWidth*0.6);
-                int height = width*bitmap.getHeight()/bitmap.getWidth();
+                float width = (float)imageWidth*0.8f;
+                float height = width*(float)bitmap.getHeight()/(float)bitmap.getWidth();
                 Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,width,height);
                 if(!bitmap.equals(bitmap2))
                 {
@@ -467,7 +467,6 @@ public class ImageDownloader {
         }
         return bitmap;
     }
-
 
     private void onFail(String url)
     {
