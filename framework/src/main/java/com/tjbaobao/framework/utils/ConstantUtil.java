@@ -52,7 +52,9 @@ public class ConstantUtil
 
 	public static String getMyAppPath()
 	{
-		String homePath = Environment.getExternalStorageDirectory().getPath()+"/"+DeviceUtil.getAppName()+"/";
+		String appName = DeviceUtil.getAppName().replace(".","_").replace("/","_");
+		String homePath = Environment.getExternalStorageDirectory().getPath()+"/"+appName+"/";
+		FileUtil.createFolder(homePath);
 		return homePath;
 	}
 
