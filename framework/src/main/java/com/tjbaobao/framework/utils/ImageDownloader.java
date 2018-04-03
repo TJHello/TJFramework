@@ -493,14 +493,17 @@ public class ImageDownloader {
                     {
                         imageView.setImageBitmap(bitmap);
                     }
-                    if(onImageLoaderListener!=null)
-                    {
-                        onImageLoaderListener.onSuccess(url,path,bitmap);
-                    }
                 });
             }
             imageList.remove(image);
         }
+        baseHandler.post(() -> {
+            if(onImageLoaderListener!=null)
+            {
+                onImageLoaderListener.onSuccess(url,path,bitmap);
+            }
+        });
+
     }
 
     private void setCacheImage(String url,Bitmap bitmap)
