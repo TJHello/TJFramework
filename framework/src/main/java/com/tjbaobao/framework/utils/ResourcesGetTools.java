@@ -4,10 +4,41 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+
+import com.tjbaobao.framework.base.BaseApplication;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.UUID;
 
+/**
+ * 磁盘资源获取器(内置获取图片、视频、以及所有文件的方法)
+ *
+ * 使用方法：
+ *
+ * 1、创建对象
+ * ResourcesGetTools tools = new ResourcesGetTools（activity);
+ * 2、设置接口
+ * tools.setOnResourcesGetListener(...);
+ * 3、重写Activity等的onActivityResult
+ *  @Override
+ *	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+ *	 super.onActivityResult(requestCode, resultCode, data);
+ *	 tools.onActivityResult(requestCode,resultCode,data);
+ * }
+ * 4、调起对应的方法获取资源
+ * tools.getImgByCamera();//启动系统相机获取图片
+ * tools.getImgByGallery();//从系统图库获取图片
+ * getVideoByCamera();//启动系统录像机获取视频
+ * getVideoByFile();//通过系统文件管理器获取视频文件
+ * getFileByFile();//从文件管理器获取文件
+ *
+ * @author TJbaobao
+ */
+
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ResourcesGetTools {
 	public class RequestCode
 	{
@@ -21,6 +52,13 @@ public class ResourcesGetTools {
 		public static final int VIDEO_FILE_GET = 203 ;//从文件管理器获取视频
 		public static final int FILE_FILE_GET = 301;//从文件管理器获取文件
 	}
+
+	public static final String AUDIO = "audio/*";
+	public static final String VIDEO = "video/*";
+	public static final String IMAGE = "image/*";
+	public static final String ALL = "*/*";
+
+
 	private String pathRes = "";
 	private Activity activity ;
 	private OnResourcesGetListener onResourcesGetListener;
@@ -31,7 +69,7 @@ public class ResourcesGetTools {
 	}
 	
 	/**
-	 * 启动相机获取图片
+	 * 启动系统相机获取图片
 	 */
 	public void getImgByCamera()
 	{
@@ -44,7 +82,7 @@ public class ResourcesGetTools {
         activity.startActivityForResult(intent, RequestCode.IMG_CAMERA_GET);
 	}
 	/**
-	 * 从图库获取图片
+	 * 从系统图库获取图片
 	 */
 	public void getImgByGallery()
 	{
@@ -59,7 +97,7 @@ public class ResourcesGetTools {
 	}
 
 	/**
-	 * 启动录像机获取视频
+	 * 启动系统录像机获取视频
 	 */
 	public void getVideoByCamera()
 	{
@@ -71,6 +109,9 @@ public class ResourcesGetTools {
 		activity.startActivityForResult(intent, RequestCode.VIDEO_CAMERA_GET);
 	}
 
+	/**
+	 * 通过系统文件管理器获取视频文件
+	 */
 	public void getVideoByFile()
 	{
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -91,6 +132,18 @@ public class ResourcesGetTools {
 	}
 
 	/**
+	 * 从文件管理器获取指定类型的文件
+	 * @param fileType 文件类型例如{@link #AUDIO },{@link #VIDEO},{@link #IMAGE},{@link #ALL}等等
+	 */
+	public void getFileByFile(String fileType)
+	{
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType(fileType);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		activity.startActivityForResult(intent, RequestCode.FILE_FILE_GET);
+	}
+
+	/**
 	 * 从相机启动剪切图片
 	 */
 	private void startCutFromCamera()
@@ -106,7 +159,7 @@ public class ResourcesGetTools {
 	}
 	/**
 	 * 从图库启动剪切图片
-	 * @param data
+	 * @param data Intent
 	 */
 	private void startCutFromGallery(Intent data)
 	{
@@ -124,6 +177,7 @@ public class ResourcesGetTools {
 	{
 		if(resultCode==Activity.RESULT_OK)
 		{
+			Uri uri = data.getData();
 			switch(requestCode)
 			{
 			case RequestCode.IMG_CAMERA_GET:
@@ -162,13 +216,14 @@ public class ResourcesGetTools {
 			case RequestCode.VIDEO_FILE_GET:
 				if(onResourcesGetListener!=null)
 				{
-					onResourcesGetListener.onSuccess(requestCode, data.getData().getPath(), data);
+
+					onResourcesGetListener.onSuccess(requestCode,uri, data);
 				}
 				break;
 			case RequestCode.FILE_FILE_GET:
 				if(onResourcesGetListener!=null)
 				{
-					onResourcesGetListener.onSuccess(requestCode, data.getData().getPath(), data);
+					onResourcesGetListener.onSuccess(requestCode, uri, data);
 				}
 				break;
 			}
@@ -191,14 +246,48 @@ public class ResourcesGetTools {
 	}
 
 	/**
+	 * 通过Uri获取路径(并不能获取真正的路径，建议高版本API使用InputStream方法来获取文件
+	 * @param uri uri
+	 * @return 路径
+	 */
+	@Nullable
+	private static String getPath(Uri uri){
+		if(uri==null) {
+			return null;
+		}
+		return uri.getPath();
+	}
+
+	@Nullable
+	public static InputStream getInputStream(Uri uri)
+	{
+		InputStream inputStream = null;
+		try {
+			inputStream = BaseApplication.getContext().getContentResolver().openInputStream(uri);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return inputStream;
+	}
+
+	/**
 	 * 获取资源返回监听器
 	 * @author TJbaobao
 	 * @time 2017年5月16日
 	 */
 	public interface OnResourcesGetListener
 	{
-		public void onSuccess(int requestCode, String path, Intent data);
-		public void onFail(int requestCode, int resultCode);
+		default void onSuccess(int requestCode, String path, Intent data){}
+
+		default void onSuccess(int requestCode,Uri uri,Intent data)
+		{
+			onSuccess(requestCode,getInputStream(uri),data);
+			onSuccess(requestCode, getPath(uri),data);
+		}
+
+		void onSuccess(int requestCode,InputStream inputStream, Intent data);
+
+		void onFail(int requestCode, int resultCode);
 	}
 
 	public OnResourcesGetListener getOnResourcesGetListener() {
