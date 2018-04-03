@@ -132,7 +132,7 @@ public class ImageDownloader {
                 {
                     //本地路径
                     Bitmap bitmap = loadLocalImage(url);
-                    if(!ImageUtil.isOk(bitmapCache))
+                    if(!ImageUtil.isOk(bitmap))
                     {
                         //本地图片读取出错
                         runInQueue(url,onImageLoaderListener);
@@ -444,7 +444,7 @@ public class ImageDownloader {
         if(imageWidth!=0&&imageHeight!=0)
         {
             bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
-            if(bitmap!=null)
+            if(ImageUtil.isOk(bitmap))
             {
                 float width = (float)imageWidth*0.8f;
                 float height = width*(float)bitmap.getHeight()/(float)bitmap.getWidth();
