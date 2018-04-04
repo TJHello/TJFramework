@@ -23,7 +23,7 @@ import com.tjbaobao.framework.utils.BaseHandler;
  * 主要功能亮点:
  * 1、常用工具使用
  * 2、快捷启动Activity
- *
+ * @author TJbaobao
  */
 @SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener,ActivityToolsImp,HandlerToolsImp {
