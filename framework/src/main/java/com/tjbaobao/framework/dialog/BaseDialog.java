@@ -2,7 +2,6 @@ package com.tjbaobao.framework.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -206,7 +205,7 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener,
         }
     }
 
-    private BaseHandler handler = new BaseHandler(new Callback());
+    protected BaseHandler handler = new BaseHandler(new Callback());
     private class Callback implements Handler.Callback
     {
         @Override
