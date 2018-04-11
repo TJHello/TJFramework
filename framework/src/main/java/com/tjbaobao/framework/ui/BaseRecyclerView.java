@@ -9,8 +9,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.tjbaobao.framework.base.BaseGridLayoutManager;
 import com.tjbaobao.framework.base.BaseItemDecoration;
+import com.tjbaobao.framework.base.BaseLinearLayoutManager;
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
+import com.tjbaobao.framework.base.BaseStaggeredGridLayoutManager;
 
 /**
  * RecyclerView的二次封装
@@ -37,21 +40,21 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder,Inf
 
     public void toListView()
     {
-        this.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.setLayoutManager(new BaseLinearLayoutManager(getContext()));
     }
 
     public void toListView(int orientation, boolean reverseLayout)
     {
-        this.setLayoutManager(new LinearLayoutManager(getContext(),orientation,reverseLayout));
+        this.setLayoutManager(new BaseLinearLayoutManager(getContext(),orientation,reverseLayout));
     }
 
     public void toGridView(int spanCount)
     {
-        this.setLayoutManager(new GridLayoutManager(getContext(),spanCount));
+        this.setLayoutManager(new BaseGridLayoutManager(getContext(),spanCount));
     }
     public void toGridView(int spanCount,int orientation, boolean reverseLayout)
     {
-        this.setLayoutManager(new GridLayoutManager(getContext(),spanCount,orientation,reverseLayout));
+        this.setLayoutManager(new BaseGridLayoutManager(getContext(),spanCount,orientation,reverseLayout));
     }
 
     public void toStaggeredGridView(int spanCount)
@@ -61,7 +64,7 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder,Inf
 
     public void toStaggeredGridView(int spanCount,int orientation)
     {
-        this.setLayoutManager(new StaggeredGridLayoutManager(spanCount,orientation));
+        this.setLayoutManager(new BaseStaggeredGridLayoutManager(spanCount,orientation));
     }
 
     public void addListViewItemDecoration()
