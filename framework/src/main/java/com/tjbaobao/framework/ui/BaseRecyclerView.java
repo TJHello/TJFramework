@@ -52,6 +52,7 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder,Inf
     {
         this.setLayoutManager(new BaseGridLayoutManager(getContext(),spanCount));
     }
+
     public void toGridView(int spanCount,int orientation, boolean reverseLayout)
     {
         this.setLayoutManager(new BaseGridLayoutManager(getContext(),spanCount,orientation,reverseLayout));
