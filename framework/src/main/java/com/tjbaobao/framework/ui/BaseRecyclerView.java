@@ -105,7 +105,7 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder,Inf
         {
             if(adapter instanceof BaseRecyclerAdapter)
             {
-                ((BaseRecyclerAdapter<Holder,Info>)adapter).setOnItemClickListener(mOnItemClickListener);
+                ((BaseRecyclerAdapter<Holder,Info>)adapter).setOnItemClickListener(onItemClickListener);
             }
         }
     }

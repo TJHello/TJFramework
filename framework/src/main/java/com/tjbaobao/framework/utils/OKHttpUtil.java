@@ -1,6 +1,8 @@
 package com.tjbaobao.framework.utils;
 
 
+import android.support.annotation.NonNull;
+
 import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import okhttp3.ResponseBody;
  * Created by TJbaobao on 2018/1/12.
  */
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class OKHttpUtil {
 
     private static final OkHttpClient mOkHttpClient =  new OkHttpClient.Builder()
@@ -49,7 +52,11 @@ public class OKHttpUtil {
             Response response = execute(request);
             if(response!=null&&response.isSuccessful())
             {
-                return response.body().string();
+                ResponseBody body =  response.body();
+                if(body!=null)
+                {
+                    body.string();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -116,7 +123,7 @@ public class OKHttpUtil {
     public static class TJInterceptor implements Interceptor
     {
         @Override
-        public Response intercept(Chain chain) throws IOException {
+        public Response intercept(@NonNull Chain chain) throws IOException {
             Response originalResponse = chain.proceed(chain.request());
             return originalResponse.newBuilder()
                     .body(new TJResponseBody(originalResponse.body()))

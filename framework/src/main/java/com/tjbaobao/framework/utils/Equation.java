@@ -22,6 +22,7 @@ public class Equation {
 		float circleX = (float) Math.sqrt(r*r-circleY*circleY);
 		return a-circleX;
 	}
+
 	public static float getYForCircle(float x,float a,float b,float r)
 	{
 		float circleX = a-x ;
