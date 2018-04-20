@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("unused")
 public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
-	private final static int cacheSize = maxMemory / 6;
+	private final static int cacheSize = maxMemory / 10;
 	private static LruCache<String, Bitmap> imageLruCache = new LruCache<String, Bitmap>(cacheSize){
 		protected int sizeOf(String key, Bitmap value) {
 			if(value!=null&&!value.isRecycled())
@@ -46,7 +46,7 @@ public class ImageDownloader {
     private static final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());
     private static final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());
     private static boolean isStop = false;
-    private Bitmap defaultBitmap = null;
+    private Bitmap defaultBitmap ;
     private static int imageWidth = 0,imageHeight = 0;
 
     private ImageDownloader(){
@@ -124,7 +124,7 @@ public class ImageDownloader {
 
     private void startLoadThread(final String url,final OnProgressListener onImageLoaderListener)
     {
-        new Thread(() -> {
+        cachedThreadPool.execute(new Thread(() -> {
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
             if(!ImageUtil.isOk(bitmapCache))
             {
@@ -151,7 +151,7 @@ public class ImageDownloader {
             {
                 onSuccess(url,null,bitmapCache);
             }
-        }).start();
+        }));
     }
 
     private void runInQueue(String url,OnProgressListener onImageLoaderListener)
@@ -617,14 +617,17 @@ public class ImageDownloader {
 
     private static void cleanNullImage()
     {
-        for(int i=imageList.size()-1;i>=0;i--)
+        synchronized (imageList)
         {
-            if(i<imageList.size())
+            for(int i=imageList.size()-1;i>=0;i--)
             {
-                Image image = imageList.get(i);
-                if(image==null)
+                if(i<imageList.size())
                 {
-                    imageList.remove(i);
+                    Image image = imageList.get(i);
+                    if(image==null)
+                    {
+                        imageList.remove(i);
+                    }
                 }
             }
         }

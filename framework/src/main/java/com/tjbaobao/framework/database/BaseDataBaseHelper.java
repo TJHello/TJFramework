@@ -15,6 +15,16 @@ import com.tjbaobao.framework.utils.DeviceUtil;
 /**
  * 数据库管理
  * Created by TJbaobao on 2017/9/12.
+ *
+ * 使用方法：
+ * //在AndroidManifest-Application中增加
+ * <meta-data android:name="database_name" android:value="TjFramework" />//数据库名称
+ * <meta-data android:name="database_version" android:value="1"/>//数据库版本
+ *
+ * 在自己的Application-onCreate()里面为BaseDataBaseHelper设置监听器。
+ * setDataBaseImp然后在对应的地方创建表以及做数据库更新的处理即可
+ *
+ *
  */
 
 public class BaseDataBaseHelper extends SQLiteOpenHelper {
