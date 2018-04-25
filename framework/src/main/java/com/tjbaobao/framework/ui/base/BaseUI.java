@@ -10,11 +10,13 @@ import android.view.View;
 import com.tjbaobao.framework.imp.HandlerToolsImp;
 import com.tjbaobao.framework.utils.BaseHandler;
 
+@SuppressWarnings("unused")
 public class BaseUI extends View implements HandlerToolsImp{
+
 
 	protected Context context ;
 	protected int viewWidth,viewHeight ;
-	
+
 	public BaseUI(Context context) {
 		this(context,null);
 	}
@@ -26,55 +28,40 @@ public class BaseUI extends View implements HandlerToolsImp{
 		initView(context, attrs, defStyleAttr);
 	}
 
-	/**
-	 * 初始化组件
-	 * @param context
-	 * @param attrs
-	 * @param defStyleAttr
-	 */
 	private void initView(Context context, AttributeSet attrs, int defStyleAttr)
 	{
 		this.context = context ;
 		onInitView(context, attrs, defStyleAttr);
 	}
+
 	protected void onInitView(Context context, AttributeSet attrs, int defStyleAttr) {
-		
+
 	}
-	
+
 	public View setLayout(int layoutId)
 	{
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		return inflater.inflate(layoutId,null);
+		if(inflater!=null)
+		{
+			return inflater.inflate(layoutId,null);
+		}
+		return null;
 	}
-	
+
 	protected int getColorForRes(int resID)
 	{
 		return context.getResources().getColor(resID);
 	}
 
 
-
-    public class UILinearLayout extends BaseUI
-	{
-		public UILinearLayout(Context context) {
-			super(context);
-		}
-		public UILinearLayout(Context context, AttributeSet attrs) {
-			super(context, attrs);
-		}
-		public UILinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-			super(context, attrs, defStyleAttr);
-		}
-	}
-	
 	/**
 	 * 计算xml布局里的view大小
 	 */
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		this.viewWidth = measureWidth(widthMeasureSpec);  
-        this.viewHeight = measureHeight(heightMeasureSpec);  
-        setMeasuredDimension(viewWidth, viewHeight);
+		this.viewWidth = measureWidth(widthMeasureSpec);
+		this.viewHeight = measureHeight(heightMeasureSpec);
+		setMeasuredDimension(viewWidth, viewHeight);
 	}
 	/**
 	 * 计算组件宽度
@@ -112,13 +99,13 @@ public class BaseUI extends View implements HandlerToolsImp{
 
 	/**
 	 * 将dip数值转化为px数值
-	 * @param dip
-	 * @return
+	 * @param dip dip
+	 * @return px
 	 */
-	protected int dpToPx(int dip)
+	protected float dpToPx(int dip)
 	{
-		final float scale = context.getResources().getDisplayMetrics().density;  
-        return (int) (dip * scale + 0.5f);  
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return dip * scale + 0.5f;
 	}
 
 	protected BaseHandler handler = new BaseHandler(new HandlerCallback());

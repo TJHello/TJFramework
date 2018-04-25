@@ -235,6 +235,16 @@ public class FileUtil {
 			return byteBuffer;
 		}
 
+		public static byte[] readFileToBytes(String path)
+		{
+			File file = new File(path);
+			if(file.exists())
+			{
+				return readFileToBytes(0, (int) file.length(),path);
+			}
+			return null;
+		}
+
 		/**
 		 * 通过inputStream读取字符串
 		 * @param inputStream

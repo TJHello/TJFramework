@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("unused")
 public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
-	private final static int cacheSize = maxMemory / 10;
+	private final static int cacheSize = maxMemory / 7;
 	private static LruCache<String, Bitmap> imageLruCache = new LruCache<String, Bitmap>(cacheSize){
 		protected int sizeOf(String key, Bitmap value) {
 			if(value!=null&&!value.isRecycled())
@@ -39,7 +39,7 @@ public class ImageDownloader {
 			}
 		}
 	};
-	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(5);
+	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(3);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private static BaseHandler baseHandler ;
     private static final List<Image> imageList = new ArrayList<>();
@@ -626,7 +626,10 @@ public class ImageDownloader {
                     Image image = imageList.get(i);
                     if(image==null)
                     {
-                        imageList.remove(i);
+                        if(i<imageList.size())
+                        {
+                            imageList.remove(i);
+                        }
                     }
                 }
             }
