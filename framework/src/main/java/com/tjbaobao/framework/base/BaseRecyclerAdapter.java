@@ -26,7 +26,7 @@ import java.util.Map;
 public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends Adapter<Holder> {
 
     private OnItemClickListener<Holder,Info> mOnItemClickListener ;
-    private List<Info> infoList = new ArrayList<>();
+    private List<Info> infoList ;
     private int itemLayoutRes ;
     private Map<Object,Holder> mapHolder = new HashMap<>();
 
@@ -50,6 +50,10 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
+        if(infoList==null||position<0||position>=infoList.size())
+        {
+            return ;
+        }
         Info info = infoList.get(position);
         onBindViewHolder(holder,info,position);
         Object tag = onGetItemTag(info,position);
@@ -81,6 +85,10 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
     @Override
     public int getItemCount() {
+        if(infoList==null)
+        {
+            return 0;
+        }
         return infoList.size();
     }
 

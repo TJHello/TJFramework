@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -270,15 +271,12 @@ public class Tools {
 		if(context!=null)
 		{
 			try {
-				return context.getAssets().open(fileName);
+				AssetManager assetManager = context.getAssets();
+				if(assetManager!=null)
+				{
+					return assetManager.open(fileName);
+				}
 			} catch (IOException e) {
-				e.printStackTrace();
-				LogUtil.e(e.getMessage());
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				LogUtil.e(e.getMessage());
 			}
 		}
 		return null;
