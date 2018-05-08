@@ -53,48 +53,6 @@ public class BaseLinearLayout extends LinearLayout implements HandlerToolsImp {
 		return context.getResources().getColor(resID);
 	}
 
-	/**
-	 * 计算xml布局里的view大小
-	 */
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		this.viewWidth = measureWidth(widthMeasureSpec);
-		this.viewHeight = measureHeight(heightMeasureSpec);
-		setMeasuredDimension(viewWidth, viewHeight);
-	}
-	/**
-	 * 计算组件宽度
-	 */
-	private int measureWidth(int measureSpec) {
-		int specMode = MeasureSpec.getMode(measureSpec);
-		int specSize = MeasureSpec.getSize(measureSpec);
-		int result = 500;
-		if (specMode == MeasureSpec.AT_MOST) {
-			result = specSize;
-		}
-		else if (specMode == MeasureSpec.EXACTLY) {
-
-			result = specSize;
-		}
-		return result;
-	}
-
-	/**
-	 * 计算组件高度
-	 */
-	private int measureHeight(int measureSpec) {
-
-		int specMode = MeasureSpec.getMode(measureSpec);
-		int specSize = MeasureSpec.getSize(measureSpec);
-		int result = 500;
-		if (specMode == MeasureSpec.AT_MOST) {
-			result = specSize;
-		} else if (specMode == MeasureSpec.EXACTLY) {
-
-			result = specSize;
-		}
-		return result;
-	}
 
 	/**
 	 * 将dip数值转化为px数值
