@@ -26,7 +26,7 @@ import java.util.Map;
 public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends Adapter<Holder> {
 
     private OnItemClickListener<Holder,Info> mOnItemClickListener ;
-    private List<Info> infoList ;
+    protected List<Info> infoList ;
     private int itemLayoutRes ;
     private Map<Object,Holder> mapHolder = new HashMap<>();
 

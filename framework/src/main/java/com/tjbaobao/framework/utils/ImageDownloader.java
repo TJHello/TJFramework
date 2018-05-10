@@ -41,26 +41,26 @@ public class ImageDownloader {
 	};
 	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(3);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
-    private static BaseHandler baseHandler ;
+    private BaseHandler baseHandler = new BaseHandler();
     private static final List<Image> imageList = new ArrayList<>();
     private static final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());
     private static final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());
-    private static boolean isStop = false;
+    private boolean isStop;
     private Bitmap defaultBitmap ;
-    private static int imageWidth = 0,imageHeight = 0;
+    private int imageWidth,imageHeight;
 
     private ImageDownloader(){
         Bitmap bitmap = Bitmap.createBitmap(100, 100,Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.parseColor("#FDFDFD"));//填充颜色
         defaultBitmap = bitmap  ;
+
+        isStop = false;
+        imageWidth = 0 ;
+        imageHeight = 0;
     }
 
     public static ImageDownloader getInstance()
     {
-        isStop = false;
-        imageWidth = 0 ;
-        imageHeight = 0;
-        baseHandler = new BaseHandler();
         return new ImageDownloader();
     }
 
@@ -76,10 +76,9 @@ public class ImageDownloader {
             return null;
         }
         isStop = false;
-        Image image = findImage(url);
+        Image image = findImage(imageView);
         image.setUrl(url);
         image.setViewWeakReference(imageView);
-
         if(url.indexOf("http")==0)
         {
             return loadHttpImage(url,onProgressListener);
@@ -433,9 +432,6 @@ public class ImageDownloader {
             String path = ConstantUtil.getImageFilesPath()+ UUID.randomUUID().toString()+"."+prefix;
             return fileDownloader.downloadExecute(url,path,onProgressListener);
         }
-
-
-
     }
 
     private Bitmap loadLocalImage(String path)
@@ -484,18 +480,18 @@ public class ImageDownloader {
         final List<Image> images = findImages(url);
         for(Image image:images)
         {
-            final ImageView imageView = image.getViewWeakReference().get();
-            if(image.getUrl().equals(url))
+            final ImageView imageView = image.getImageView();
+            if(image.getUrl().equals(url)&&imageView!=null)
             {
-                baseHandler.post(() ->
+                synchronized(this)
                 {
-                    if(imageView!=null)
+                    baseHandler.post(() ->
                     {
                         imageView.setImageBitmap(bitmap);
-                    }
-                });
+                        imageList.remove(image);
+                    });
+                }
             }
-            imageList.remove(image);
         }
         baseHandler.post(() -> {
             if(onImageLoaderListener!=null)
@@ -569,7 +565,7 @@ public class ImageDownloader {
                     Image image = imageList.get(i);
                     if(image!=null)
                     {
-                        ImageView iv = image.getViewWeakReference().get();
+                        ImageView iv = image.getImageView();
                         if(iv!=null&&iv.equals(imageView))
                         {
                             return image;

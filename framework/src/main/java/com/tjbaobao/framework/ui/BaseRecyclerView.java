@@ -1,6 +1,7 @@
 package com.tjbaobao.framework.ui;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -125,5 +126,15 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder, In
             }
         }
         return 0;
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
     }
 }
