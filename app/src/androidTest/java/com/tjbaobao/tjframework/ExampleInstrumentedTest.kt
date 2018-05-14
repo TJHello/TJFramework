@@ -2,6 +2,8 @@ package com.tjbaobao.tjframework
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.tjbaobao.framework.base.BaseApplication
+import com.tjbaobao.framework.utils.Tools
 
 import org.junit.Test
 import org.junit.runner.RunWith

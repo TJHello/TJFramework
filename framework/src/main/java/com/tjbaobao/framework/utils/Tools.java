@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.tjbaobao.framework.R;
 import com.tjbaobao.framework.base.BaseApplication;
+import com.tjbaobao.framework.database.BaseDataBaseHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -382,5 +383,41 @@ public class Tools {
 		return (context.getResources().getConfiguration().screenLayout
 				& Configuration.SCREENLAYOUT_SIZE_MASK)
 				>= Configuration.SCREENLAYOUT_SIZE_LARGE;
+	}
+
+	public static Object getAppMetaData(String key,Object def)
+	{
+		ApplicationInfo appInfo = null;
+		try {
+			appInfo = context.getPackageManager()
+					.getApplicationInfo(context.getPackageName(),
+							PackageManager.GET_META_DATA);
+			if(appInfo!=null&&appInfo.metaData!=null)
+			{
+				if(def==null||def instanceof String)
+				{
+					return appInfo.metaData.getString(key, (String) def);
+				}
+				else if(def instanceof Integer)
+				{
+					return appInfo.metaData.getInt(key, (Integer) def);
+				}
+				else if(def instanceof Float)
+				{
+					return appInfo.metaData.getFloat(key, (Float) def);
+				}
+				else if(def instanceof Long)
+				{
+					return appInfo.metaData.getLong(key, (Long) def);
+				}
+				else if(def instanceof Boolean)
+				{
+					return appInfo.metaData.getBoolean(key, (Boolean) def);
+				}
+			}
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
