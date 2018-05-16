@@ -15,7 +15,7 @@
   * **Step 2. 添加远程库到app-build.gradle**
   ```groovy
     dependencies {
-        compile 'com.github.TJHello:TJFramework:1.0.021'
+        api 'com.github.TJHello:TJFramework:***'
     }
   ```
 

@@ -150,7 +150,10 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      * @param onItemClickListener {@link OnItemClickListener}
      */
     public void setOnItemClickListener(BaseRecyclerAdapter.OnItemClickListener<Holder,Info> onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
+        if(onItemClickListener!=null)
+        {
+            mOnItemClickListener = onItemClickListener;
+        }
     }
 
 }
