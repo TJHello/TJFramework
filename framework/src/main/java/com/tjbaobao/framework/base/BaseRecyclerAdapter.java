@@ -128,7 +128,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     {
         private Holder mHolder ;
         private Info info ;
-        private int position;
+        protected int position;
 
         ItemOnClickListener(Holder holder, Info info, int position) {
             mHolder = holder;
