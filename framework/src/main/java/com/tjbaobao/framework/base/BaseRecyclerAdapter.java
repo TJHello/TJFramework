@@ -27,7 +27,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
     private OnItemClickListener<Holder,Info> mOnItemClickListener ;
     protected List<Info> infoList ;
-    private int itemLayoutRes ;
+    protected int itemLayoutRes ;
     private Map<Object,Holder> mapHolder = new HashMap<>();
 
     public BaseRecyclerAdapter(List<Info> infoList, int itemLayoutRes) {
@@ -128,7 +128,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     {
         private Holder mHolder ;
         private Info info ;
-        protected int position;
+        private int position;
 
         ItemOnClickListener(Holder holder, Info info, int position) {
             mHolder = holder;
