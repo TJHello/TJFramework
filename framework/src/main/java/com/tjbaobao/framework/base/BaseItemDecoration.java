@@ -85,22 +85,31 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
             {
                 GridLayoutManager manager = (GridLayoutManager) layoutManager;
                 int spanCount =manager.getSpanCount();
-                int rowCount = itemCount/spanCount-1;
                 if(position%spanCount==0)
                 {
                     outRect.left = spacingLeft;
                     outRect.right = spacingLeft/2;
                 }
-                else
+                else if(position%spanCount==spanCount-1)
                 {
                     outRect.left = spacingLeft/2;
                     outRect.right = spacingLeft;
                 }
+                else
+                {
+                    outRect.left = spacingLeft/2;
+                    outRect.right = spacingLeft/2;
+                }
                 if(position<spanCount)
                 {
                     outRect.top = spacingBottom;
+                    outRect.bottom = spacingBottom/2;
                 }
-                outRect.bottom = spacingBottom;
+                else
+                {
+                    outRect.top = spacingBottom/2;
+                    outRect.bottom = spacingBottom/2;
+                }
             }
         }
     }
