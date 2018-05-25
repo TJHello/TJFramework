@@ -38,8 +38,8 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view  = LayoutInflater.from(parent.getContext()).inflate(itemLayoutRes, null);
-        return onGetHolder(view);
+        View view  = LayoutInflater.from(parent.getContext()).inflate(itemLayoutRes, parent,false);
+        return onGetHolder(view,viewType);
     }
 
     @Override
@@ -81,7 +81,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      * @param view 主布局,在new的时候传入{@link Holder}
      * @return 返回自定义的 {@link Holder}
      */
-    public abstract Holder onGetHolder(View view);
+    public abstract Holder onGetHolder(View view , int type);
 
     @Override
     public int getItemCount() {

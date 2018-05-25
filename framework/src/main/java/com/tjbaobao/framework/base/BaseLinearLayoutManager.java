@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 
 public class BaseLinearLayoutManager extends LinearLayoutManager {
     public BaseLinearLayoutManager(Context context) {
@@ -25,11 +26,29 @@ public class BaseLinearLayoutManager extends LinearLayoutManager {
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        //override this method and implement code as below
         try {
             super.onLayoutChildren(recycler, state);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void layoutDecoratedWithMargins(View child, int left, int top, int right, int bottom) {
+        try {
+            super.layoutDecoratedWithMargins(child, left, top, right, bottom);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void layoutDecorated(View child, int left, int top, int right, int bottom) {
+        try {
+            super.layoutDecorated(child, left, top, right, bottom);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

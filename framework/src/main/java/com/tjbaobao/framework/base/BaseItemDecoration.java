@@ -41,6 +41,7 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
     public BaseItemDecoration(int type, int spacingLeft) {
         this.type = type;
         this.spacingLeft = spacingLeft;
+        this.spacingTop = spacingLeft;
     }
 
     public BaseItemDecoration(int type, int spacingLeft, int spacingBottom) {
@@ -64,10 +65,18 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
         int itemCount = state.getItemCount();
         if(type==TYPE_LINE_VERTICAL)
         {
-            outRect.bottom = spacingLeft ;
+            if(position==0)
+            {
+                outRect.top = spacingTop ;
+            }
+            outRect.bottom = spacingTop;
         }
         else if(type==TYPE_LINE_HORIZONTAL)
         {
+            if(position==0)
+            {
+                outRect.left = spacingLeft ;
+            }
             outRect.right = spacingLeft ;
         }
         else if(type==TYPE_GRID_AVERAGE_CENTER)
@@ -77,16 +86,21 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
                 GridLayoutManager manager = (GridLayoutManager) layoutManager;
                 int spanCount =manager.getSpanCount();
                 int rowCount = itemCount/spanCount-1;
+                if(position%spanCount==0)
+                {
+                    outRect.left = spacingLeft;
+                    outRect.right = spacingLeft/2;
+                }
+                else
+                {
+                    outRect.left = spacingLeft/2;
+                    outRect.right = spacingLeft;
+                }
                 if(position<spanCount)
                 {
                     outRect.top = spacingBottom;
                 }
-                if(position%spanCount==spanCount-1)
-                {
-                    outRect.right = spacingLeft;
-                }
                 outRect.bottom = spacingBottom;
-                outRect.left = spacingLeft;
             }
         }
     }
