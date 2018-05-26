@@ -4,12 +4,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
  * 日期时间组件
  * @author lyzyjoyo
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class DateTimeUtil
 {
 	/**
@@ -42,9 +44,9 @@ public class DateTimeUtil
 
 	/**
 	 * 通过毫秒获取想要的格式的字符
-	 * @param milliseconds
-	 * @param format
-	 * @return
+	 * @param milliseconds milliseconds
+	 * @param format format
+	 * @return Str
 	 */
 	public static String getTimeFormat(long milliseconds,String format)
 	{
@@ -202,19 +204,18 @@ public class DateTimeUtil
 
 	/**
 	 * 通过生日获取年龄
-	 * @param birthday
-	 * @return
+	 * @param birthday birthday
+	 * @return String
 	 */
 	public static String getAge(String birthday)
 	{
-		SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
-		  Date date=new Date();
-		  Date mydate;
+		SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+		  Date date1=new Date();
+		  Date date2;
 		try {
-			mydate = myFormatter.parse(birthday);
-			long day=(date.getTime()-mydate.getTime())/(24*60*60*1000) + 1;
-			  String year=new java.text.DecimalFormat("#").format(day/365f);
-			  return year ;
+			date2 = myFormatter.parse(birthday);
+			long day=(date1.getTime()-date2.getTime())/(24*60*60*1000) + 1;
+			  return new java.text.DecimalFormat("#").format(day/365f);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -229,7 +230,7 @@ public class DateTimeUtil
 		try {
 			int msec = DateTimeUtil.getMilliSeconds(DateTimeUtil.getNowMsTime(),dtStringLast);
 			Date date = DateTimeUtil.getDateByStr(dtStringLast);
-			int secAbs = (int)(Math.abs(msec)/1000);
+			int secAbs = Math.abs(msec)/1000;
 			int minAbs = secAbs/60;
 			int hourAbs = minAbs/60;
 			int dayAbs = hourAbs/24;
@@ -301,16 +302,41 @@ public class DateTimeUtil
 
 	public static String repair(int number,int length)
 	{
-		String sNum = number+"";
+		StringBuilder sNum = new StringBuilder(number + "");
 		if(sNum.length()<length)
 		{
 			for(int i=0;i<length-sNum.length();i++)
 			{
-				sNum = "0"+sNum;
+				sNum.insert(0, "0");
 			}
 		}
-		return sNum;
+		return sNum.toString();
 	}
+
+
+	public static long getNowTimeMilliseconds()
+	{
+		return new Date().getTime();
+	}
+
+	public static long toTime(String dtFromString,String dateString)
+	{
+		SimpleDateFormat sdf=(SimpleDateFormat)DateFormat.getInstance();
+		sdf.applyPattern(dtFromString);
+		try {
+			Date date = sdf.parse(dateString);
+			return date.getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public static long toTime(String dateString)
+	{
+		return toTime("yyyy-MM-dd",dateString);
+	}
+
 }
 
 

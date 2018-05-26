@@ -114,7 +114,7 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public  static Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
+    public static Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
     {
         if(mDataBaseHelper!=null)
         {

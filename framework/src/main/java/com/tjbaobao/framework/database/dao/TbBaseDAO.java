@@ -12,9 +12,12 @@ import com.tjbaobao.framework.utils.Tools;
  * Created by TJbaobao on 2017/9/12.
  */
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class TbBaseDAO {
     private static BaseDataBaseHelper mDataBaseHelper = null;
-
+    static{
+        create();
+    }
     private static BaseDataBaseHelper create()
     {
         if(mDataBaseHelper==null)
@@ -30,19 +33,19 @@ public class TbBaseDAO {
 
     protected static Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
     {
-        return create().query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+        return BaseDataBaseHelper.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
     public static Cursor query(String table, String[] columns, String selection, String[] selectionArgs)
     {
-        return create().query(table, columns, selection, selectionArgs,null,null,null,null);
+        return BaseDataBaseHelper.query(table, columns, selection, selectionArgs,null,null,null,null);
     }
     protected static Cursor rawQuery(String sql, String[] selectionArgs)
     {
-        return create().rawQuery(sql, selectionArgs);
+        return BaseDataBaseHelper.rawQuery(sql, selectionArgs);
     }
     protected static long insert(String tbName, String nullColumnHack, ContentValues cValue)
     {
-        return create().insert(tbName, nullColumnHack, cValue);
+        return BaseDataBaseHelper.insert(tbName, nullColumnHack, cValue);
     }
 
     protected static int  update(String table, ContentValues values, String whereClause, String[] whereArgs)
@@ -56,7 +59,7 @@ public class TbBaseDAO {
 
     protected static Cursor rawQuery(String sql)
     {
-        return create().rawQuery(sql, null);
+        return BaseDataBaseHelper.rawQuery(sql, null);
     }
 
     protected static long delete(String table, String whereClause, String[] whereArgs)
@@ -79,6 +82,10 @@ public class TbBaseDAO {
     protected static byte[] getBlobByColumn(Cursor cursor, String column)
     {
         return cursor.getBlob(cursor.getColumnIndex(column));
+    }
+    protected static long getLongByColumn(Cursor cursor,String column)
+    {
+        return cursor.getLong(cursor.getColumnIndex(column));
     }
 
 
