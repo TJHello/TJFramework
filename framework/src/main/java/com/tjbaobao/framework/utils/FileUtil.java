@@ -451,6 +451,7 @@ public class FileUtil {
 	 * @param outPath 新文件地址
 	 */
 	public static void copyFile(long position, int size, String inPath, String outPath) {
+		delFileIfExists(outPath);
 		long sizeNow = 0;
 		int sizeBase = DEF_SIZE_SUFF;
 		while (sizeNow < size) {
