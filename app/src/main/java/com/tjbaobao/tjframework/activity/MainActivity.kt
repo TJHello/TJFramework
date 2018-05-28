@@ -12,6 +12,7 @@ import com.tjbaobao.framework.ui.BaseTitleBar
 import com.tjbaobao.framework.utils.ImageDownloader
 import com.tjbaobao.framework.utils.Tools
 import com.tjbaobao.tjframework.R
+import com.tjbaobao.tjframework.R.id.recyclerView
 import com.tjbaobao.tjframework.model.MainActivityTestModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -65,7 +66,7 @@ class MainActivity : TJActivity() {
             imageDownloader.setDefaultImgSize(300,300)
         }
 
-        override fun onGetHolder(view: View?): Holder {
+        override fun onGetHolder(view: View?,viewType : Int): Holder {
             return Holder(view)
         }
 

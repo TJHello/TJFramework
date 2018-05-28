@@ -4,12 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.AnimRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -36,17 +38,14 @@ import com.tjbaobao.framework.utils.BaseHandler;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class BaseDialog extends Dialog implements View.OnClickListener,HandlerToolsImp {
 
+    private static final int Handler_What_Anim_Stop = 1001;
     private static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
     private static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int windowAnimExitId = R.anim.fw_windows_anim_exit;
     private int windowAnimEnterId = R.anim.fw_windows_anim_enter;
     private int contentAnimEnterId = R.anim.fw_windows_content_anim_enter;
     private int contentAnimExitId = R.anim.fw_windows_content_anim_exit;
-    private static final int Handler_What_Anim_Stop = 1001;
-
     private int width, height;
-
-
     protected Context context;
     protected View baseView, ll_windows_index, ll_index;
     protected View bt_cancel, bt_continue;
@@ -84,7 +83,6 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener,
         }
         if (ll_windows_index != null) {
             ll_windows_index.setOnClickListener(this);
-            ll_windows_index.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fw_circular_smaill));
         }
         if (ll_index != null) {
             ll_index.setOnClickListener(this);
@@ -96,17 +94,11 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener,
         isDismiss = false;
         if (ll_windows_index != null) {
             Animation animation = AnimationUtils.loadAnimation(context, contentAnimEnterId);
-            long durationMillis = 450;
-            long delayMillis = 150;
-            animation.setInterpolator(new DecelerateInterpolator(2));
-            animation.setDuration(durationMillis);
-            animation.setStartOffset(delayMillis);
             ll_windows_index.setAnimation(animation);
             ll_windows_index.startAnimation(animation);
         }
         if (isStartAnim) {
             Animation animationView = AnimationUtils.loadAnimation(context, windowAnimEnterId);
-            animationView.setStartOffset(100);
             baseView.setAnimation(animationView);
             baseView.startAnimation(animationView);
         }
@@ -127,6 +119,26 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setContentEnterAnim(@AnimRes int animId)
+    {
+        contentAnimEnterId = animId;
+    }
+
+    public void setContentAnimExitId(@AnimRes int animId)
+    {
+        contentAnimExitId =  animId;
+    }
+
+    public void setWindowAnimEnterId(@AnimRes int animEnterId)
+    {
+        windowAnimEnterId = animEnterId;
+    }
+
+    public void setWindowAnimExitId(@AnimRes int animExitId)
+    {
+        windowAnimExitId = animExitId;
     }
 
     /**
@@ -182,7 +194,6 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener,
             }
             final Animation animationView = AnimationUtils.loadAnimation(context, windowAnimExitId);
             animationView.setFillAfter(true);
-
             baseView.setAnimation(animationView);
             baseView.startAnimation(animationView);
             animationView.setAnimationListener(new Animation.AnimationListener() {
