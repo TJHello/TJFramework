@@ -22,23 +22,8 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("unused")
 public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
-	private final static int cacheSize = maxMemory / 6;
-	private static LruCache<String, Bitmap> imageLruCache = new LruCache<String, Bitmap>(cacheSize){
-		protected int sizeOf(String key, Bitmap value) {
-			if(value!=null&&!value.isRecycled())
-			{
-				return value.getByteCount() ;
-			}
-			return 0;
-		}
-		@Override
-		protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-			super.entryRemoved(evicted, key, oldValue, newValue);
-			if (evicted && oldValue != null&&!oldValue.isRecycled()){
-				oldValue.recycle();
-			}
-		}
-	};
+	private static int cacheSize = maxMemory / 7;
+	private static LruCache<String, Bitmap> imageLruCache ;
 	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(3);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private BaseHandler baseHandler = new BaseHandler();
@@ -53,10 +38,28 @@ public class ImageDownloader {
         Bitmap bitmap = Bitmap.createBitmap(100, 100,Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.parseColor("#FDFDFD"));//填充颜色
         defaultBitmap = bitmap  ;
-
         isStop = false;
         imageWidth = 0 ;
         imageHeight = 0;
+        if(imageLruCache==null)
+        {
+            imageLruCache = new LruCache<String, Bitmap>(cacheSize){
+                protected int sizeOf(String key, Bitmap value) {
+                    if(value!=null&&!value.isRecycled())
+                    {
+                        return value.getByteCount() ;
+                    }
+                    return 0;
+                }
+                @Override
+                protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
+                    super.entryRemoved(evicted, key, oldValue, newValue);
+                    if (evicted && oldValue != null&&!oldValue.isRecycled()){
+                        oldValue.recycle();
+                    }
+                }
+            };
+        }
     }
 
     public static ImageDownloader getInstance()
@@ -657,6 +660,10 @@ public class ImageDownloader {
             }
         }
         return images;
+    }
+
+    public static void setCacheSize(int cacheSize) {
+        ImageDownloader.cacheSize = cacheSize;
     }
 
     public OnImageLoaderListener onImageLoaderListener ;
