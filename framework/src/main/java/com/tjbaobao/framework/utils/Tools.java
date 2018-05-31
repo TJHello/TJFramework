@@ -103,6 +103,7 @@ public class Tools {
 	 * @param text 内容
 	 * @param duration 时长
 	 */
+
 	public static void showToast(String text,int duration)
 	{
 		if(toast==null)
@@ -116,6 +117,7 @@ public class Tools {
 		toast.show();
 	}
 
+	@Nullable
 	public static Object getSharedPreferencesValue(String key,Object defValue)
 	{
 		if(defValue==null||defValue instanceof String)
@@ -380,11 +382,13 @@ public class Tools {
 	 * @return 平板返回 True，手机返回 False
 	 */
 	public static boolean isPad() {
+		if(context==null) return false;
 		return (context.getResources().getConfiguration().screenLayout
 				& Configuration.SCREENLAYOUT_SIZE_MASK)
 				>= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}
 
+	@Nullable
 	public static Object getAppMetaData(String key,Object def)
 	{
 		ApplicationInfo appInfo = null;

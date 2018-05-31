@@ -3,6 +3,7 @@ package com.tjbaobao.framework.utils;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.LruCache;
 import android.widget.ImageView;
 
@@ -19,6 +20,15 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 图片下载器-支持磁盘缓存功能-支持优先下载队列-支持列表图片加载，防止混乱-支持图片压缩裁切-支持设置缓存大小
+ *
+ * 使用方法：
+ * ImageDownloader imageDownloader = ImageDownloader.getInstance();
+ * imageDownloader.setDefaultImgSize(int width,int height);//设置默认大小，如果不设置，会加载原图。
+ * imageDownloader.load(String url,ImageView imageView);//加载图片,url可以是本地路径，可以是在线链接，可以是assets路径
+ *
+ */
 @SuppressWarnings("unused")
 public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
@@ -33,6 +43,7 @@ public class ImageDownloader {
     private boolean isStop;
     private Bitmap defaultBitmap ;
     private int imageWidth,imageHeight;
+    private static boolean isStrictMode = false;//严格模式
 
     private ImageDownloader(){
         Bitmap bitmap = Bitmap.createBitmap(100, 100,Bitmap.Config.ARGB_8888);
@@ -54,8 +65,11 @@ public class ImageDownloader {
                 @Override
                 protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
                     super.entryRemoved(evicted, key, oldValue, newValue);
-                    if (evicted && oldValue != null&&!oldValue.isRecycled()){
-                        oldValue.recycle();
+                    if(isStrictMode)
+                    {
+                        if (evicted && oldValue != null&&!oldValue.isRecycled()){
+                            oldValue.recycle();
+                        }
                     }
                 }
             };
@@ -72,6 +86,14 @@ public class ImageDownloader {
         return load(url,imageView,null);
     }
 
+    /**
+     *
+     * @param url url
+     * @param imageView imageView
+     * @param onProgressListener 进度监听器
+     * @return 没有什么用了
+     */
+    @Nullable
     public BitmapConfig load(String url, ImageView imageView, OnProgressListener onProgressListener)
     {
         if(url==null)
@@ -92,6 +114,7 @@ public class ImageDownloader {
         }
     }
 
+    @Nullable
     private BitmapConfig loadLocalImage(String path, OnProgressListener onProgressListener)
     {
         isStop = false;
@@ -110,6 +133,7 @@ public class ImageDownloader {
         return bitmapConfig;
     }
 
+    @Nullable
     private BitmapConfig loadHttpImage(String url,OnProgressListener onProgressListener)
     {
         startLoadThread(url,onProgressListener);
@@ -120,7 +144,6 @@ public class ImageDownloader {
             bitmapConfig.setHeight(defaultBitmap.getHeight());
             return bitmapConfig;
         }
-
         return null;
     }
 
@@ -237,6 +260,9 @@ public class ImageDownloader {
         }
     }
 
+    /**
+     * 停止所有下载任务，清空等待下载队列
+     */
     public void stop()
     {
         isStop = true;
@@ -252,17 +278,30 @@ public class ImageDownloader {
         return isStop;
     }
 
+    /**
+     * 设置默认图片大小
+     * @param width width
+     * @param height height
+     */
     public void setDefaultImgSize(int width,int height)
     {
         imageWidth = width ;
         imageHeight  = height ;
     }
 
+    /**
+     * 设置默认图片，如果加载失败会使用这个图片
+     * @param bitmap bitmap
+     */
     public void setDefaultBitmap(Bitmap bitmap)
     {
         this.defaultBitmap = bitmap;
     }
 
+    /**
+     * 清除某个地址的内存缓存
+     * @param key url
+     */
     public void remove(String key)
     {
         if(imageLruCache!=null)
@@ -662,8 +701,24 @@ public class ImageDownloader {
         return images;
     }
 
+    /**
+     * 设置缓存大小
+     * @param cacheSize 1*1024*1024 == 1M
+     */
     public static void setCacheSize(int cacheSize) {
         ImageDownloader.cacheSize = cacheSize;
+    }
+
+    public static int getCacheSize() {
+        return cacheSize;
+    }
+
+    /**
+     * 是否启动严格模式，启动严格模式之后，超出缓存池的图片会被主动recycle
+     * @param isStrictMode {true:开启,false:关闭}
+     */
+    public static void setIsStrictMode(boolean isStrictMode) {
+        ImageDownloader.isStrictMode = isStrictMode;
     }
 
     public OnImageLoaderListener onImageLoaderListener ;

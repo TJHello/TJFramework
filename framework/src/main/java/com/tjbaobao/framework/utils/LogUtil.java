@@ -11,6 +11,7 @@ import com.tjbaobao.framework.BuildConfig;
  */
 
 public class LogUtil {
+    private static boolean IS_DEBUG = false;
     private static final String TAG = "TJFramework";
     private static final int TYPE_I = 0;
     private static final int TYPE_E = 1;
@@ -41,6 +42,10 @@ public class LogUtil {
 
     private static void util(String msg,int type)
     {
+        if(!IS_DEBUG)
+        {
+            return ;
+        }
         int length = msg.length();
         int max = 1024;
         if(length>max)
@@ -86,5 +91,10 @@ public class LogUtil {
                 Log.d(tag,msg);
                 break;
         }
+    }
+
+    public static void setDebug(boolean isDebug)
+    {
+        IS_DEBUG = isDebug;
     }
 }

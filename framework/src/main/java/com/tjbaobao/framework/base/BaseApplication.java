@@ -10,6 +10,7 @@ import android.os.Bundle;
 import com.tjbaobao.framework.database.BaseDataBaseHelper;
 import com.tjbaobao.framework.utils.DeviceUtil;
 import com.tjbaobao.framework.utils.ExecuteLog;
+import com.tjbaobao.framework.utils.LogUtil;
 import com.tjbaobao.framework.utils.Tools;
 
 import java.io.ByteArrayOutputStream;
@@ -37,6 +38,11 @@ public class BaseApplication extends Application {
 		// 设置未捕获异常处理器
 		defHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
+		Boolean isDebug = (Boolean) Tools.getAppMetaData("FW_IS_DEBUG",false);
+		if(isDebug!=null)
+		{
+			LogUtil.setDebug(isDebug);
+		}
 	}
 
 	@Override

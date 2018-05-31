@@ -35,9 +35,17 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         this.itemLayoutRes = itemLayoutRes;
     }
 
+    public BaseRecyclerAdapter(List<Info> infoList) {
+        this(infoList,-1);
+    }
+
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if(itemLayoutRes==-1)
+        {
+            return onGetHolder(null,viewType);
+        }
         View view  = LayoutInflater.from(parent.getContext()).inflate(itemLayoutRes, parent,false);
         return onGetHolder(view,viewType);
     }

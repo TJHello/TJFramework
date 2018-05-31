@@ -416,6 +416,9 @@ public class FileUtil {
 	{
 		@SuppressLint("UseSparseArrays")
         private static Map<Integer, Long> mapBeginTime = new HashMap<>();
+
+		@SuppressLint("UseSparseArrays")
+		private static Map<Integer, Long> mapPauseTime = new HashMap<>();
 		private static int defTag = 0 ;
 		public static void begin()
 		{
@@ -425,21 +428,49 @@ public class FileUtil {
 		{
 			mapBeginTime.put(tag, System.currentTimeMillis());
 		}
+
+		public static void pause(String tip)
+		{
+			pause(tip,0);
+		}
+
+		public static void pause(String tip,int tag)
+		{
+			long beginTime ;
+			if(mapPauseTime.containsKey(tag)&&0!=mapPauseTime.get(tag))
+			{
+				beginTime = mapPauseTime.get(tag);
+			}
+			else if(mapBeginTime.containsKey(tag)&&0!=mapBeginTime.get(tag))
+			{
+				beginTime = mapBeginTime.get(tag);
+			}
+			else
+			{
+				LogUtil.e("pause()前应该先调用begin()");
+				return ;
+			}
+			long endTime = System.currentTimeMillis();
+			LogUtil.i(tip+":"+(endTime-beginTime)+"毫秒");
+		}
+
 		public static void stop(String tip)
 		{
 			stop(tip,defTag);
 		}
 		public static void stop(String tip,int tag)
 		{
-			long beginTime = mapBeginTime.get(tag);
-			if(beginTime==0||mapBeginTime.isEmpty())
+			if(mapBeginTime.containsKey(tag)&&0!=mapBeginTime.get(tag))
 			{
-				Tools.printLog("在调用stop()前应该先调用begin()");
-				return ;
+				long beginTime = mapBeginTime.get(tag);
+				long endTime = System.currentTimeMillis();
+				LogUtil.i(tip+":"+(endTime-beginTime)+"毫秒");
+				mapBeginTime.put(tag, (long) 0);
 			}
-			long endTime = System.currentTimeMillis();
-			Tools.printLog(tip+":"+(endTime-beginTime)+"毫秒");
-			mapBeginTime.put(tag, (long) 0);
+			else
+			{
+				LogUtil.e("在调用stop()前应该先调用begin()");
+			}
 		}
 	}
 	
@@ -635,6 +666,7 @@ public class FileUtil {
 		}
 	   return null;
 	}
+
 	public static String getName(String path)
 	{
 		File file = new File(path);
