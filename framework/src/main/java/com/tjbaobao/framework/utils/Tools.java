@@ -41,11 +41,19 @@ import java.util.List;
 @SuppressWarnings("ALL")
 public class Tools {
 	private static Toast toast;
-	private static Context context = BaseApplication.getContext();
+	private static Context context = null;
 	private static SharedPreferences pref ;
 	static{
+		context = BaseApplication.getContext();
 		if(context!=null)
-		pref = context.getSharedPreferences("app", 0);
+		{
+			pref = context.getSharedPreferences("app", 0);
+		}
+		else
+		{
+			LogUtil.e("请调用BaseApplication.init()初始化框架！");
+		}
+
 	}
 	/**
 	 *输出日志
@@ -106,6 +114,7 @@ public class Tools {
 
 	public static void showToast(String text,int duration)
 	{
+		if(context==null) return;
 		if(toast==null)
 		{
 			toast = Toast.makeText(context, text, duration);
@@ -184,8 +193,15 @@ public class Tools {
 	}
 
 	public static int spToPx(float spValue) {
-		final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-		return (int) (spValue * fontScale + 0.5f);
+		if(context!=null)
+		{
+			final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+			return (int) (spValue * fontScale + 0.5f);
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	public static boolean rate()
@@ -195,6 +211,7 @@ public class Tools {
 
 	public static boolean rate(String pkg)
 	{
+		if(context==null) return false;
 		try{
 			Uri uri = Uri.parse("market://details?id="+pkg);
 			Intent intentRate = new Intent(Intent.ACTION_VIEW,uri);
@@ -309,6 +326,7 @@ public class Tools {
     }  
 
     public static int getResourceIdByFilter(String name) {
+		if(context==null) return 0;
         Resources res = context.getResources();  
         return res.getIdentifier(name, "raw", context.getPackageName());  
     }  
@@ -335,6 +353,7 @@ public class Tools {
 	}
 
 	public static boolean feedback(Context context,String email,String content){
+		if(context==null) return false;
 		Intent intent=new Intent(Intent.ACTION_SENDTO);
 		intent.setData(Uri.parse("mailto:"+email));
 		List<ResolveInfo> resInfos = context.getPackageManager().queryIntentActivities(intent, 0);
@@ -391,6 +410,7 @@ public class Tools {
 	@Nullable
 	public static Object getAppMetaData(String key,Object def)
 	{
+		if(context==null) return def;
 		ApplicationInfo appInfo = null;
 		try {
 			appInfo = context.getPackageManager()
