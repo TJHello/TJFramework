@@ -252,6 +252,7 @@ public class FileUtil {
 		 */
 		public static String readTextByInputSteam(InputStream inputStream)
 		{
+			if(inputStream==null) return null;
 			String str ;
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 			StringBuilder stringBuffer = new StringBuilder();
@@ -510,6 +511,7 @@ public class FileUtil {
 
 	public static boolean copyFile(InputStream inputStream,String outPath)
     {
+    	if(inputStream==null) return false;
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(outPath);
             byte[] buffer = new byte[DEF_SIZE_SUFF];

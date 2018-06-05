@@ -1,5 +1,7 @@
 package com.tjbaobao.framework;
 
+import android.graphics.Bitmap;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;

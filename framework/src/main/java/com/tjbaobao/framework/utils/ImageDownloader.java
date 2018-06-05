@@ -1,7 +1,6 @@
 package com.tjbaobao.framework.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
@@ -34,21 +33,19 @@ public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
 	private static int cacheSize = maxMemory / 7;
 	private static LruCache<String, Bitmap> imageLruCache ;
+
 	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(3);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private BaseHandler baseHandler = new BaseHandler();
-    private static final List<Image> imageList = new ArrayList<>();
-    private static final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());
-    private static final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());
+    private final List<Image> imageList = new ArrayList<>();
+    private final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());
+    private final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());
     private boolean isStop;
     private Bitmap defaultBitmap ;
     private int imageWidth,imageHeight;
     private static boolean isStrictMode = false;//严格模式
 
     private ImageDownloader(){
-        Bitmap bitmap = Bitmap.createBitmap(100, 100,Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(Color.parseColor("#FDFDFD"));//填充颜色
-        defaultBitmap = bitmap  ;
         isStop = false;
         imageWidth = 0 ;
         imageHeight = 0;
@@ -595,7 +592,7 @@ public class ImageDownloader {
     }
 
     @NonNull
-    private static Image findImage(ImageView imageView)
+    private Image findImage(ImageView imageView)
     {
         synchronized (imageList)
         {
@@ -621,7 +618,7 @@ public class ImageDownloader {
         }
     }
 
-    private static Image findImage(String url)
+    private Image findImage(String url)
     {
         synchronized (imageList)
         {
@@ -653,7 +650,7 @@ public class ImageDownloader {
         }
     }
 
-    private static void cleanNullImage()
+    private void cleanNullImage()
     {
         synchronized (imageList)
         {
@@ -674,7 +671,7 @@ public class ImageDownloader {
         }
     }
 
-    private static List<Image> findImages(String url)
+    private List<Image> findImages(String url)
     {
         List<Image> images = new ArrayList<>(imageList.size());
         synchronized (imageList)
