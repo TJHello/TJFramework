@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 图片下载器-支持磁盘缓存功能-支持优先下载队列-支持列表图片加载，防止混乱-支持图片压缩裁切-支持设置缓存大小
@@ -34,7 +35,8 @@ public class ImageDownloader {
 	private static int cacheSize = maxMemory / 7;
 	private static LruCache<String, Bitmap> imageLruCache ;
 
-	private ExecutorService cachedThreadPool  = Executors.newFixedThreadPool(3);
+	private ExecutorService downloadThreadPool  = Executors.newFixedThreadPool(3);
+	private ExecutorService localThreadPool = Executors.newFixedThreadPool(3);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private BaseHandler baseHandler = new BaseHandler();
     private final List<Image> imageList = new ArrayList<>();
@@ -146,7 +148,7 @@ public class ImageDownloader {
 
     private void startLoadThread(final String url,final OnProgressListener onImageLoaderListener)
     {
-        cachedThreadPool.execute(new Thread(() -> {
+        localThreadPool.execute(new Thread(() -> {
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
             if(!ImageUtil.isOk(bitmapCache))
             {
@@ -166,7 +168,16 @@ public class ImageDownloader {
                 }
                 else
                 {
-                    runInQueue(url,onImageLoaderListener);
+                    String path = fileDownloader.getCache(url);
+                    Bitmap bitmap = loadLocalImage(path);
+                    if(!ImageUtil.isOk(bitmap))
+                    {
+                        runInQueue(url,onImageLoaderListener);
+                    }
+                    else
+                    {
+                        onSuccess(url,url,bitmap);
+                    }
                 }
             }
             else
@@ -221,7 +232,7 @@ public class ImageDownloader {
                                     if(!mapDownload.containsKey(queueInfo.getUrl())||!mapDownload.get(queueInfo.getUrl()))
                                     {
                                         mapDownload.put(queueInfo.getUrl(),true);
-                                        cachedThreadPool.execute(new LoadRunnable(queueInfo));
+                                        downloadThreadPool.execute(new LoadRunnable(queueInfo));
                                         downloadList.add(queueInfo.getUrl());
                                     }
                                     queuePoolList.remove(i);

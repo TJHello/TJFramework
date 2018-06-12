@@ -27,7 +27,7 @@ class MainActivity : TJActivity() {
 
     override fun onInitView() {
         setContentView(R.layout.activity_main)
-        recyclerView.toGridView(1)
+        recyclerView.toGridView(2)
         recyclerView.addGridAverageCenterDecoration(10,10)
 
         adapter = MyAdapter(infoList,R.layout.main_activity_item_layout)
