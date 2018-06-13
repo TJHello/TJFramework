@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.tjbaobao.framework.ui.BaseRecyclerView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,15 +62,18 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
             return ;
         }
         Info info = infoList.get(position);
-        onBindViewHolder(holder,info,position);
-        Object tag = onGetItemTag(info,position);
-        if(tag!=null)
+        if(info!=null)
         {
-            mapHolder.put(tag,holder);
-        }
-        if(holder.itemView!=null)
-        {
-            holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
+            onBindViewHolder(holder,info,position);
+            Object tag = onGetItemTag(info,position);
+            if(tag!=null)
+            {
+                mapHolder.put(tag,holder);
+            }
+            if(holder.itemView!=null)
+            {
+                holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
+            }
         }
     }
 
@@ -129,7 +131,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      */
     public interface OnItemClickListener<Holder,Info>
     {
-        void onItemClick(Holder holder, Info info, int position);
+        void onItemClick(@NonNull Holder holder,@NonNull Info info, int position);
     }
 
     private class ItemOnClickListener implements View.OnClickListener
@@ -138,7 +140,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         private Info info ;
         private int position;
 
-        ItemOnClickListener(Holder holder, Info info, int position) {
+        ItemOnClickListener(@NonNull Holder holder, @NonNull Info info, int position) {
             mHolder = holder;
             this.info = info;
             this.position = position;

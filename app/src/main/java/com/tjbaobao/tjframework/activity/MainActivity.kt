@@ -11,8 +11,8 @@ import com.tjbaobao.framework.ui.BaseRecyclerView
 import com.tjbaobao.framework.ui.BaseTitleBar
 import com.tjbaobao.framework.utils.ImageDownloader
 import com.tjbaobao.framework.utils.Tools
+import com.tjbaobao.tjframework.dialog.ImageDialog
 import com.tjbaobao.tjframework.R
-import com.tjbaobao.tjframework.R.id.recyclerView
 import com.tjbaobao.tjframework.model.MainActivityTestModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -28,10 +28,10 @@ class MainActivity : TJActivity() {
     override fun onInitView() {
         setContentView(R.layout.activity_main)
         recyclerView.toGridView(2)
-        recyclerView.addGridAverageCenterDecoration(10,10)
-
+        recyclerView.addGridAverageCenterDecoration(Tools.dpToPx(8),Tools.dpToPx(8))
         adapter = MyAdapter(infoList,R.layout.main_activity_item_layout)
         recyclerView.adapter = adapter
+        adapter.setOnItemClickListener(OnItemClickListener())
     }
 
     override fun onInitTitleBar(titleBar: BaseTitleBar?) {
@@ -53,10 +53,10 @@ class MainActivity : TJActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    class MyAdapter(infoList: MutableList <MainActivityTestModel>?, itemLayoutRes: Int) : BaseRecyclerAdapter<MainActivity.Holder, MainActivityTestModel>(infoList, itemLayoutRes),ImageDownloader.OnImageLoaderListener
+    private inner class MyAdapter(infoList: MutableList <MainActivityTestModel>?, itemLayoutRes: Int) : BaseRecyclerAdapter<MainActivity.Holder, MainActivityTestModel>(infoList, itemLayoutRes),ImageDownloader.OnImageLoaderListener
     {
         override fun onBindViewHolder(holder: Holder, info: MainActivityTestModel, position: Int) {
-            imageDownloader.load(info.url,holder.imageView, OnItemProgressListener())
+            imageDownloader.load(info.url,holder.ivImage, OnItemProgressListener())
         }
 
         private var imageDownloader :ImageDownloader = ImageDownloader.getInstance()
@@ -78,7 +78,7 @@ class MainActivity : TJActivity() {
             Tools.printLog("加载失败:$url")
         }
 
-        class OnItemProgressListener : OnProgressListener()
+        inner class OnItemProgressListener : OnProgressListener()
         {
             override fun onProgress(progress: Float, isFinish: Boolean) {
             }
@@ -96,10 +96,23 @@ class MainActivity : TJActivity() {
 
     }
 
-    class Holder(itemView: View?) : BaseRecyclerView.BaseViewHolder(itemView) {
-        var imageView :ImageView ?= null
+    private inner class Holder(itemView: View?) : BaseRecyclerView.BaseViewHolder(itemView) {
+        var ivImage :ImageView ?= null
         override fun onInitView(itemView: View?) {
-            imageView = itemView!!.findViewById(R.id.imageView)
+            ivImage = itemView!!.findViewById(R.id.ivImage)
+        }
+    }
+
+    private var imageDialog : ImageDialog? = null
+
+    private inner class OnItemClickListener : BaseRecyclerAdapter.OnItemClickListener<Holder,MainActivityTestModel>
+    {
+        override fun onItemClick(holder: Holder, info: MainActivityTestModel, position: Int) {
+            if(imageDialog==null)
+            {
+                imageDialog = ImageDialog(context)
+            }
+            imageDialog!!.show(info.url)
         }
     }
 

@@ -204,7 +204,7 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener,
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    sendMessage(Handler_What_Anim_Stop, null);
+                    BaseDialog.super.dismiss();
                     baseView.setVisibility(View.INVISIBLE);
                 }
 
@@ -228,11 +228,6 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener,
 
     @Override
     public void onHandleMessage(Message msg, int what, Object obj) {
-        switch (what) {
-            case Handler_What_Anim_Stop:
-                super.dismiss();
-                break;
-        }
     }
 
     @Override
