@@ -678,6 +678,11 @@ public class FileUtil {
 		}
 		return null;
 	}
+
+	public static boolean rename(File file,File newFile)
+	{
+		return file.renameTo(newFile);
+	}
 	
 	@SuppressWarnings("SimplifiableIfStatement")
     public static boolean exists(String path)

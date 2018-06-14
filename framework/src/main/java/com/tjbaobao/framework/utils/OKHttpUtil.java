@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.tjbaobao.framework.listener.OnProgressListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +31,7 @@ public class OKHttpUtil {
             .connectTimeout(3,TimeUnit.SECONDS)//设置连接超时时间
             .build();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final String CACHE_SUFFIX = ".cache";
     static {
     }
     private static Response execute(Request request){
@@ -114,7 +116,10 @@ public class OKHttpUtil {
                     onProgressListener.length =  body.contentLength();
                 }
                 InputStream inputStream = body.byteStream();
-                return  FileUtil.Writer.writeFile(inputStream,path,onProgressListener);
+                if(FileUtil.Writer.writeFile(inputStream,path+CACHE_SUFFIX,onProgressListener))
+                {
+                    return FileUtil.rename(new File(path+CACHE_SUFFIX), new File(path));
+                }
             }
         }
         return false;

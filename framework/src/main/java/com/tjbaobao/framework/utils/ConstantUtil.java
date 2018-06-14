@@ -7,13 +7,12 @@ import com.tjbaobao.framework.base.BaseApplication;
 import java.io.File;
 
 /**
- * 常量数据组件
- * @author lyzyjoyo 
+ * 常量工具类(获取常用路径)
+ * @author tjbaobao
  */
 @SuppressWarnings("WeakerAccess")
 public class ConstantUtil
 {
-
 	private static final String SEPARATOR = File.separator;
 	private static final String FILES_PATH = getFilesPath();
 	private static final String CACHE_PATH = getCachePath();

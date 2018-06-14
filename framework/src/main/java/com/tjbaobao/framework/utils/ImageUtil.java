@@ -147,7 +147,7 @@ public class ImageUtil {
 
 	/**
 	 * 压缩图片
-	 * @param path
+	 * @param path path
 	 */
 	public static Bitmap compressImage(String path)
 	{
