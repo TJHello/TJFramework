@@ -73,6 +73,9 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder, In
     }
 
     public abstract static class BaseViewHolder extends RecyclerView.ViewHolder {
+
+        public Object tag ;
+
         public BaseViewHolder(View itemView) {
             super(itemView);
             onInitView(itemView);

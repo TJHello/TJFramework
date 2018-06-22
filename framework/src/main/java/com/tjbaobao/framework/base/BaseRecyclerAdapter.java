@@ -51,8 +51,9 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
     @Override
     public void onViewRecycled(@NonNull Holder holder) {
+        mapHolder.put(holder.tag,null);
+        holder.tag = null;
         super.onViewRecycled(holder);
-        mapHolder.put(holder.itemView.getTag(),null);
     }
 
     @Override
@@ -64,16 +65,17 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         Info info = infoList.get(position);
         if(info!=null)
         {
-            onBindViewHolder(holder,info,position);
             Object tag = onGetItemTag(info,position);
             if(tag!=null)
             {
+                holder.tag = tag;
                 mapHolder.put(tag,holder);
             }
             if(holder.itemView!=null)
             {
                 holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
             }
+            onBindViewHolder(holder,info,position);
         }
     }
 
@@ -121,7 +123,11 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     @Nullable
     protected Holder findHolder(Object tag)
     {
-        return mapHolder.get(tag);
+        if(mapHolder.containsKey(tag))
+        {
+            return mapHolder.get(tag);
+        }
+        return null;
     }
 
     /**
