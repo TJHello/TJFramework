@@ -3,6 +3,10 @@ package com.tjbaobao.framework.utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 日志本地存储工具类
+ */
+@SuppressWarnings("unused")
 public class ExecuteLog {
 	private static final String logPath = ConstantUtil.getLogFilesPath();
 	private static final String TYPE_NET = "network";

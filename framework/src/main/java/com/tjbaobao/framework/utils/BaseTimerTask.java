@@ -5,9 +5,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
+ * 定时器封装类，使用简单，解决了timer有时不能停止的问题。
+ * 使用方法:
+ * BaseTimerTask timerTask = new BaseTimerTask();
+ * timerTask.startTimer(...);//启动
+ * timerTask.stopTimer();//停止
+ *
  * Created by TJbaobao on 2017/8/13.
  */
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class BaseTimerTask {
     private Timer timer ;
     private MyTimerTask mTimerTask ;

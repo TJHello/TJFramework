@@ -196,7 +196,7 @@ public class ImageDownloader {
         {
             downloaderQueuePool = new DownloaderQueuePool();
         }
-        downloaderQueuePool.startTimer(0,100);
+        downloaderQueuePool.startTimer();
     }
 
     private DownloaderQueuePool downloaderQueuePool ;
@@ -266,6 +266,14 @@ public class ImageDownloader {
                 }
             }
         }
+    }
+
+    /**
+     * 刷新下载队列
+     */
+    private void refQueuePool()
+    {
+        downloaderQueuePool.startTimer();
     }
 
     /**
@@ -468,6 +476,7 @@ public class ImageDownloader {
                 downloadList.remove(url);
             }
             mapDownload.put(url,false);
+            refQueuePool();
         }
 
 

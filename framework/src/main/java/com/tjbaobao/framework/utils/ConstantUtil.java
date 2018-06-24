@@ -10,7 +10,7 @@ import java.io.File;
  * 常量工具类(获取常用路径)
  * @author tjbaobao
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ConstantUtil
 {
 	private static final String SEPARATOR = File.separator;

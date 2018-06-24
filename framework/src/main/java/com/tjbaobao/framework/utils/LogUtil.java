@@ -2,14 +2,17 @@ package com.tjbaobao.framework.utils;
 
 import android.util.Log;
 
-import com.tjbaobao.framework.BuildConfig;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 /**
  * Log封装类
- * 发布时自动停止日志输出
+ * 可以通过在AndroidManifest.xml-application中配置<meta-data android:name="FW_IS_DEBUG" android:value="true" />来决定日志输出的开关
  * Created by TJbaobao on 2018/3/8.
  */
 
+@SuppressWarnings("unused")
 public class LogUtil {
     private static boolean IS_DEBUG = false;
     private static final String TAG = "TJFramework";
@@ -38,6 +41,11 @@ public class LogUtil {
     public static void d(String log)
     {
         util(log,TYPE_D);
+    }
+
+    public static void exception(Exception e)
+    {
+        util(getStackTrace(e),TYPE_E);
     }
 
     private static void util(String msg,int type)
@@ -91,6 +99,19 @@ public class LogUtil {
                 Log.d(tag,msg);
                 break;
         }
+    }
+
+    /**
+     * 获取详细的异常链信息--精准定位异常位置
+     *
+     * @param aThrowable {@link Throwable}
+     * @return String
+     */
+    public static String getStackTrace(Throwable aThrowable) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        aThrowable.printStackTrace(printWriter);
+        return result.toString();
     }
 
     public static void setDebug(boolean isDebug)

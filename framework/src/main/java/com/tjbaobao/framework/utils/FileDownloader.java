@@ -23,6 +23,7 @@ public class FileDownloader {
 	private static final Map<String,String> downLoadHosts = new HashMap<>();//连接与本地地址映射
 	private static BaseHandler baseHandler ;
 	private static boolean isStop = false;
+	private static final int Threads_Num = 3;
 
 
 	private FileDownloader(){
@@ -127,7 +128,7 @@ public class FileDownloader {
 		return outPath;
 	}
 
-	private static final ExecutorService executorService = Executors.newFixedThreadPool(3);
+	private static final ExecutorService executorService = Executors.newFixedThreadPool(Threads_Num);
 	private void startDownloadThread(String url,String path,OnProgressListener onProgressListener)
 	{
 		QueueInfo queueInfo = new QueueInfo(url,path,onProgressListener);
@@ -137,7 +138,7 @@ public class FileDownloader {
 		{
 			downloaderQueuePool = new DownloaderQueuePool();
 		}
-		downloaderQueuePool.startTimer(0,100);
+		downloaderQueuePool.startTimer();
 	}
 
 	private DownloaderQueuePool downloaderQueuePool ;
@@ -163,7 +164,7 @@ public class FileDownloader {
 					{
 						for (int i = length-1; i >= 0; i--)
 						{
-							if(downloadList.size()<3&&i<queuePoolList.size())
+							if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
 							{
 								QueueInfo queueInfo = queuePoolList.get(i);
 								if(!downloadList.contains(queueInfo.getUrl()))
@@ -182,6 +183,14 @@ public class FileDownloader {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 刷新下载队列
+	 */
+	private void refQueuePool()
+	{
+		downloaderQueuePool.startTimer();
 	}
 
 	public void stop()
@@ -270,6 +279,7 @@ public class FileDownloader {
 			{
 				onFail(url);
 			}
+			refQueuePool();
 		}
 	}
 

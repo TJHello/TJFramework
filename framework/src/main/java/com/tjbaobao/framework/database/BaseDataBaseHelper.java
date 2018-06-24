@@ -12,6 +12,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.tjbaobao.framework.imp.DataBaseImp;
 import com.tjbaobao.framework.utils.DeviceUtil;
 
+import java.util.List;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
+
 /**
  * 数据库管理
  * Created by TJbaobao on 2017/9/12.
@@ -148,6 +153,26 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
             return mDataBaseHelper.getReadableDatabase().insert(tbName,nullColumnHack,cValue);
         }
         return 0;
+    }
+
+    /**
+     * 通过事务插入数据
+     * @param tbName 表名
+     * @param nullColumnHack 插入字段 可为null,null代表全部字段
+     * @param cValueList 插入values
+     */
+    public static void insertTransaction(@NonNull String tbName, @Nullable String nullColumnHack, @NonNull List<ContentValues> cValueList)
+    {
+        if(mDataBaseHelper!=null)
+        {
+            SQLiteDatabase db = mDataBaseHelper.getWritableDatabase();
+            db.beginTransaction();
+            for(ContentValues contentValues:cValueList)
+            {
+                db.insert(tbName,nullColumnHack,contentValues);
+            }
+            db.setTransactionSuccessful();
+        }
     }
 
     public void close()

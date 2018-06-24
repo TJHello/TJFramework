@@ -1,6 +1,7 @@
 package com.tjbaobao.framework.utils;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 
 import com.tjbaobao.framework.listener.OnProgressListener;
 
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -498,15 +500,38 @@ public class FileUtil {
 		}
 	}
 
-	public static boolean copyFile(String inPath,String outPath)
+	/**
+	 * 快速复制文件
+	 * @param inPath 输入文件路径
+	 * @param outPath 输出文件路径
+	 * @return
+	 */
+	public static boolean copyFile(@NonNull String inPath,@NonNull String outPath)
 	{
 		File inFile = new File(inPath);
-		if(inFile.exists())
+		File outFile = new File(outPath);
+		return copyFile(inFile,outFile);
+	}
+
+	public static boolean copyFile(@NonNull File inFile,@NonNull File outFile)
+	{
+		if(!inFile.exists())
 		{
-			copyFile(0, (int) inFile.length(),inPath,outPath);
-			return true;
+			return false;
 		}
-		return false;
+		FileChannel fileIn = null;
+		FileChannel fileOut = null;
+		try {
+			fileIn = new FileInputStream(inFile).getChannel();
+			fileOut = new FileOutputStream(outFile).getChannel();
+			fileIn.transferTo(0, fileIn.size(), fileOut);
+		} catch (IOException e) {
+			LogUtil.exception(e);
+			return false;
+		} finally {
+			CloseUtil.closeIO(fileIn, fileOut);
+		}
+		return true;
 	}
 
 	public static boolean copyFile(InputStream inputStream,String outPath)
@@ -560,9 +585,9 @@ public class FileUtil {
 				randomAccessFile.close();
 				return true;
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				LogUtil.exception(e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LogUtil.exception(e);
 			}
 		}
 		return false;
