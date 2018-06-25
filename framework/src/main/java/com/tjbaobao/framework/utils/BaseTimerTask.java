@@ -16,8 +16,8 @@ import java.util.TimerTask;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class BaseTimerTask {
-    private Timer timer ;
-    private MyTimerTask mTimerTask ;
+    private volatile Timer timer ;
+    private volatile MyTimerTask mTimerTask ;
     protected volatile boolean isCancel = true;
 
     private class MyTimerTask extends TimerTask
@@ -31,7 +31,7 @@ public abstract class BaseTimerTask {
         }
     }
 
-    public BaseTimerTask startTimer(long delay)
+    public synchronized BaseTimerTask startTimer(long delay)
     {
         stopTimer();
         isCancel = false;
@@ -40,11 +40,11 @@ public abstract class BaseTimerTask {
         timer.schedule(mTimerTask,delay);
         return this;
     }
-    public BaseTimerTask startTimer()
+    public synchronized BaseTimerTask startTimer()
     {
         return startTimer(0);
     }
-    public BaseTimerTask startTimer(Date time)
+    public synchronized BaseTimerTask startTimer(Date time)
     {
         stopTimer();
         isCancel = false;
@@ -53,7 +53,7 @@ public abstract class BaseTimerTask {
         timer.schedule(mTimerTask,time);
         return this;
     }
-    public BaseTimerTask startTimer(long delay,long period)
+    public synchronized BaseTimerTask startTimer(long delay,long period)
     {
         stopTimer();
         isCancel = false;
@@ -62,7 +62,7 @@ public abstract class BaseTimerTask {
         timer.schedule(mTimerTask,delay,period);
         return this;
     }
-    public BaseTimerTask startTimer(Date firstTime,long period)
+    public synchronized BaseTimerTask startTimer(Date firstTime,long period)
     {
         stopTimer();
         timer = new Timer();
@@ -71,7 +71,7 @@ public abstract class BaseTimerTask {
         return this;
     }
 
-    public void stopTimer()
+    public synchronized void stopTimer()
     {
         isCancel = true;
         if(timer!=null)

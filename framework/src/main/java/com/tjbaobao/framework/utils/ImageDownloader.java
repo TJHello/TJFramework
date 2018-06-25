@@ -46,6 +46,7 @@ public class ImageDownloader {
     private Bitmap defaultBitmap ;
     private int imageWidth,imageHeight;
     private static boolean isStrictMode = false;//严格模式
+    private static boolean isSizeStrictMode = false;//尺寸严格模式
 
     private ImageDownloader(){
         isStop = false;
@@ -498,24 +499,31 @@ public class ImageDownloader {
         Bitmap bitmap ;
         if(imageWidth!=0&&imageHeight!=0)
         {
-            bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
-            if(ImageUtil.isOk(bitmap))
+            if(isSizeStrictMode)
             {
-                float width = (float)imageWidth*0.8f;
+                bitmap = ImageUtil.getBitmap(path);
+                float width = (float)imageWidth;
                 float height = width*(float)bitmap.getHeight()/(float)bitmap.getWidth();
-                Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,width,height);
-                if(!bitmap.equals(bitmap2))
+                if(width<bitmap.getWidth()||height<bitmap.getHeight())
                 {
-                    ImageUtil.recycled(bitmap);
+                    Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,width,height);
+                    if(!bitmap.equals(bitmap2))
+                    {
+                        ImageUtil.recycled(bitmap);
+                    }
+                    bitmap = bitmap2;
                 }
-                bitmap = bitmap2;
+            }
+            else
+            {
+                bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
             }
         }
         else
         {
             bitmap = ImageUtil.getBitmap(path);
         }
-        if(bitmap==null||bitmap.isRecycled()||!ImageUtil.isOk(path))
+        if(bitmap==null||bitmap.isRecycled())
         {
             FileUtil.delFileIfExists(path);
             return null;
@@ -736,6 +744,15 @@ public class ImageDownloader {
      */
     public static void setIsStrictMode(boolean isStrictMode) {
         ImageDownloader.isStrictMode = isStrictMode;
+    }
+
+    /**
+     * 是否启动尺寸严格模式-启动之后会将图片按照比例裁剪到指定的最小尺寸
+     * @param isSizeStrictMode boolean
+     */
+    public static void setIsSizeStrictMode(boolean isSizeStrictMode)
+    {
+        ImageDownloader.isSizeStrictMode = isSizeStrictMode;
     }
 
     public OnImageLoaderListener onImageLoaderListener ;

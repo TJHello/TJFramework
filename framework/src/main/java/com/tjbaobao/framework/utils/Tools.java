@@ -290,13 +290,15 @@ public class Tools {
 	{
 		if(context!=null)
 		{
+			AssetManager assetManager = null;
 			try {
-				AssetManager assetManager = context.getAssets();
+				assetManager = context.getAssets();
 				if(assetManager!=null)
 				{
 					return assetManager.open(fileName);
 				}
 			} catch (IOException e) {
+				LogUtil.exception(e);
 			}
 		}
 		return null;

@@ -22,19 +22,22 @@ public class TbFileDAO extends TbBaseDAO {
         Cursor cursor = rawQuery(sql);
         if(cursor!=null)
         {
-            files = new ArrayList<>();
-            while (cursor.moveToNext())
-            {
-                TbFileObj filesObj = new TbFileObj();
-                filesObj.setCode(getStringByColumn(cursor,"code"));
-                filesObj.setUrl(getStringByColumn(cursor,"url"));
-                filesObj.setPath(getStringByColumn(cursor,"path"));
-                filesObj.setPrefix(getStringByColumn(cursor,"prefix"));
-                filesObj.setCreateTime(getStringByColumn(cursor,"create_time"));
-                filesObj.setChangeTime(getStringByColumn(cursor,"change_time"));
-                files.add(filesObj);
+            try{
+                files = new ArrayList<>();
+                while (cursor.moveToNext())
+                {
+                    TbFileObj filesObj = new TbFileObj();
+                    filesObj.setCode(getStringByColumn(cursor,"code"));
+                    filesObj.setUrl(getStringByColumn(cursor,"url"));
+                    filesObj.setPath(getStringByColumn(cursor,"path"));
+                    filesObj.setPrefix(getStringByColumn(cursor,"prefix"));
+                    filesObj.setCreateTime(getStringByColumn(cursor,"create_time"));
+                    filesObj.setChangeTime(getStringByColumn(cursor,"change_time"));
+                    files.add(filesObj);
+                }
+            }finally {
+                cursor.close();
             }
-            cursor.close();
         }
         return files;
     }
