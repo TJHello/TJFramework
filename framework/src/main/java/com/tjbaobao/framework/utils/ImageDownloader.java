@@ -502,16 +502,19 @@ public class ImageDownloader {
             if(isSizeStrictMode)
             {
                 bitmap = ImageUtil.getBitmap(path);
-                float width = (float)imageWidth;
-                float height = width*(float)bitmap.getHeight()/(float)bitmap.getWidth();
-                if(width<bitmap.getWidth()||height<bitmap.getHeight())
+                if(ImageUtil.isOk(bitmap))
                 {
-                    Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,width,height);
-                    if(!bitmap.equals(bitmap2))
+                    float width = (float)imageWidth;
+                    float height = width*(float)bitmap.getHeight()/(float)bitmap.getWidth();
+                    if((width<bitmap.getWidth()||height<bitmap.getHeight())&&width!=0&&height!=0)
                     {
-                        ImageUtil.recycled(bitmap);
+                        Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,width,height);
+                        if(!bitmap.equals(bitmap2))
+                        {
+                            ImageUtil.recycled(bitmap);
+                        }
+                        bitmap = bitmap2;
                     }
-                    bitmap = bitmap2;
                 }
             }
             else
