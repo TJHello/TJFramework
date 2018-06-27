@@ -302,6 +302,10 @@ public class FileDownloader {
 
 	private void onSuccess(String url,String path)
 	{
+		if(isStop)
+		{
+			return;
+		}
 		baseHandler.post(() -> {
 			if(onFileDownloadListener!=null)
 			{
@@ -313,6 +317,10 @@ public class FileDownloader {
 
 	private void onFail(String url)
 	{
+		if(isStop)
+		{
+			return;
+		}
 		baseHandler.post(() -> {
 			if(onFileDownloadListener!=null)
 			{

@@ -536,6 +536,10 @@ public class ImageDownloader {
 
     private void onFail(String url)
     {
+        if(isStop)
+        {
+            return;
+        }
         baseHandler.post(() -> {
             if(onImageLoaderListener!=null)
             {
@@ -546,6 +550,10 @@ public class ImageDownloader {
 
     private void onSuccess(String url,String path,Bitmap bitmap)
     {
+        if(isStop)
+        {
+            return;
+        }
         setCacheImage(url,bitmap);
         final List<Image> images = findImages(url);
         for(Image image:images)
