@@ -22,7 +22,7 @@ public class FileDownloader {
 	private static final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());//等待队列
 	private static final Map<String,String> downLoadHosts = new HashMap<>();//连接与本地地址映射
 	private static BaseHandler baseHandler ;
-	private static boolean isStop = false;
+	private boolean isStop = false;
 	private static final int Threads_Num = 3;
 
 
@@ -33,8 +33,7 @@ public class FileDownloader {
 	public static FileDownloader getInstance()
 	{
 		baseHandler = new BaseHandler();
-		isStop = false;
-		return new FileDownloader();
+        return new FileDownloader();
 	}
 
 	public String download(String url,String path)
@@ -193,6 +192,9 @@ public class FileDownloader {
 		downloaderQueuePool.startTimer();
 	}
 
+    /**
+     *
+     */
 	public void stop()
 	{
 		isStop = true;
@@ -200,14 +202,31 @@ public class FileDownloader {
 		{
 			downloaderQueuePool.stopTimer();
 		}
-		queuePoolList.clear();
-		downloadList.clear();
 	}
 
-	public static boolean isStop()
-	{
-		return isStop;
-	}
+    /**
+     * 清除下载队列，清除之后等待队列的任务户重新加入下载队列
+     */
+	public static void cleanDownloadList()
+    {
+        downloadList.clear();
+    }
+
+    /**
+     * 清除等待队列
+     */
+    public static void cleanQueuePoolList()
+    {
+        queuePoolList.clear();
+    }
+
+    /**
+     * 清除监听器
+     */
+	public void cleanListener()
+    {
+        onFileDownloadListener = null;
+    }
 
 	private class QueueInfo
 	{

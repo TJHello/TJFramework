@@ -291,6 +291,14 @@ public class ImageDownloader {
         downloadList.clear();
     }
 
+    /**
+     * 清除监听器
+     */
+    public void cleanListener()
+    {
+        onImageLoaderListener = null;
+    }
+
     public boolean isStop() {
         return isStop;
     }
