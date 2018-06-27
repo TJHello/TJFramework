@@ -679,7 +679,8 @@ public class ImageDownloader {
                         Image image = imageList.get(i);
                         if(image!=null)
                         {
-                            if(image.getUrl()!=null&&image.getUrl().equals(url))
+                            String urlTemp = image.getUrl();
+                            if(urlTemp!=null&&urlTemp.equals(url))
                             {
                                 return image;
                             }
