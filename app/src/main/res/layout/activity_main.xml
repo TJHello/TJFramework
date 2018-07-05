@@ -15,6 +15,7 @@
         android:background="@color/fw_white"
         >
         <com.tjbaobao.framework.ui.BaseTitleBar
+            android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 

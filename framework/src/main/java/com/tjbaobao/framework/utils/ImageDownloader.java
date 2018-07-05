@@ -149,7 +149,7 @@ public class ImageDownloader {
 
     private void startLoadThread(final String url,final OnProgressListener onImageLoaderListener)
     {
-        localThreadPool.execute(new Thread(() -> {
+        localThreadPool.execute(() -> {
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
             if(!ImageUtil.isOk(bitmapCache))
             {
@@ -185,7 +185,7 @@ public class ImageDownloader {
             {
                 onSuccess(url,null,bitmapCache);
             }
-        }));
+        });
     }
 
     private void runInQueue(String url,OnProgressListener onImageLoaderListener)

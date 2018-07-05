@@ -1,28 +1,30 @@
 package com.tjbaobao.tjframework.activity
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import com.tjbaobao.framework.base.BaseRecyclerAdapter
+import com.tjbaobao.framework.entity.ui.TitleBarInfo
 import com.tjbaobao.framework.listener.OnProgressListener
 import com.tjbaobao.framework.tjbase.TJActivity
 import com.tjbaobao.framework.ui.BaseRecyclerView
 import com.tjbaobao.framework.ui.BaseTitleBar
-import com.tjbaobao.framework.utils.ImageDownloader
-import com.tjbaobao.framework.utils.Tools
+import com.tjbaobao.framework.utils.*
 import com.tjbaobao.tjframework.dialog.ImageDialog
 import com.tjbaobao.tjframework.R
 import com.tjbaobao.tjframework.model.MainActivityTestModel
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.InputStream
 
 class MainActivity : TJActivity() {
 
     private lateinit var adapter : MyAdapter
     private val infoList : MutableList <MainActivityTestModel> = ArrayList()
+    private var resourcesGetTools : ResourcesGetTools ?= null
 
     override fun onInitValues(savedInstanceState: Bundle?) {
-
     }
 
     override fun onInitView() {
@@ -32,10 +34,22 @@ class MainActivity : TJActivity() {
         adapter = MyAdapter(infoList,R.layout.main_activity_item_layout)
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(OnItemClickListener())
+        resourcesGetTools = ResourcesGetTools(this)
+        resourcesGetTools!!.onResourcesGetListener = OnResourcesGetListener()
     }
 
     override fun onInitTitleBar(titleBar: BaseTitleBar?) {
+        titleBar!!.addTextToRight("导入相片")
+    }
 
+    override fun <V : TitleBarInfo.BaseView<*>?> onTitleBarClick(layoutType: Int, position: Int, info: V) {
+        if(layoutType==BaseTitleBar.LAYOUT_RIGHT)
+        {
+            if(position==0)
+            {
+                resourcesGetTools!!.getImgByGallery()
+            }
+        }
     }
 
     override fun onLoadData() {
@@ -113,6 +127,26 @@ class MainActivity : TJActivity() {
                 imageDialog = ImageDialog(context)
             }
             imageDialog!!.show(info.url)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        resourcesGetTools!!.onActivityResult(requestCode,resultCode,data)
+    }
+
+    private inner class OnResourcesGetListener : ResourcesGetTools.OnResourcesGetListener
+    {
+        override fun onSuccess(requestCode: Int, inputStream: InputStream?, data: Intent?) {
+            val outPath = ConstantUtil.getImageCachePath()+"test.jpg"
+            FileUtil.copyFile(inputStream,outPath)
+            if(FileUtil.exists(outPath))
+            {
+                Tools.showToast("获取图片成功")
+            }
+        }
+
+        override fun onFail(requestCode: Int, resultCode: Int) {
         }
     }
 

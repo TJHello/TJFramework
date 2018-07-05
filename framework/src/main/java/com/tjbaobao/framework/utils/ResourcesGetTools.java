@@ -186,7 +186,7 @@ public class ResourcesGetTools {
 			case RequestCode.IMG_GALLERY_GET:
 				if(onResourcesGetListener!=null)
 				{
-					onResourcesGetListener.onSuccess(requestCode, pathRes, data);
+					onResourcesGetListener.onSuccess(requestCode, uri, data);
 				}
 				break;
 			case RequestCode.IMG_FILE_GET:

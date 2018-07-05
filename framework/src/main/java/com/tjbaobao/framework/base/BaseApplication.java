@@ -25,6 +25,7 @@ public class BaseApplication extends Application {
 	private MyUncaughtExceptionHandler handler;
 	private static boolean isDebug ;
 	private static UncaughtExceptionHandler defHandler ;
+	public static String dexPage = null;
 
 	/**
 	 * 初始化框架
@@ -152,5 +153,10 @@ public class BaseApplication extends Application {
 			//让默认未捕获异常处理器来处理未捕获异常
 			defHandler.uncaughtException(thread, ex);
 		}
+	}
+
+	public static void setDexPage(String page)
+	{
+		dexPage = page;
 	}
 }
