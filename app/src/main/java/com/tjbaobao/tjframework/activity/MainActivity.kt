@@ -2,7 +2,9 @@ package com.tjbaobao.tjframework.activity
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.support.v4.content.FileProvider
 import android.view.View
 import android.widget.ImageView
 import com.tjbaobao.framework.base.BaseRecyclerAdapter
@@ -16,6 +18,7 @@ import com.tjbaobao.tjframework.dialog.ImageDialog
 import com.tjbaobao.tjframework.R
 import com.tjbaobao.tjframework.model.MainActivityTestModel
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 import java.io.InputStream
 
 class MainActivity : TJActivity() {
@@ -138,11 +141,22 @@ class MainActivity : TJActivity() {
     private inner class OnResourcesGetListener : ResourcesGetTools.OnResourcesGetListener
     {
         override fun onSuccess(requestCode: Int, inputStream: InputStream?, data: Intent?) {
-            val outPath = ConstantUtil.getImageCachePath()+"test.jpg"
-            FileUtil.copyFile(inputStream,outPath)
-            if(FileUtil.exists(outPath))
+            val inPath = ConstantUtil.getImageCachePath()+"test_in.jpg"
+            val outPath = ConstantUtil.getImageCachePath()+"test_out.jpg"
+            FileUtil.copyFile(inputStream,inPath)
+            val uriIn = FileProvider.getUriForFile(context,getString(R.string.authorities), File(inPath))
+            val uriOut = FileProvider.getUriForFile(context,getString(R.string.authorities), File(outPath))
+            resourcesGetTools!!.startCutFromGallery(uriIn,uriOut)
+        }
+
+        override fun onSuccess(requestCode: Int, path: String?, data: Intent?) {
+            if(requestCode==105)
             {
-                Tools.showToast("获取图片成功")
+                if(imageDialog==null)
+                {
+                    imageDialog = ImageDialog(context)
+                }
+                imageDialog!!.show(path)
             }
         }
 

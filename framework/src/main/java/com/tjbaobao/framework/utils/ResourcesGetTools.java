@@ -2,6 +2,8 @@ package com.tjbaobao.framework.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -11,6 +13,8 @@ import com.tjbaobao.framework.base.BaseApplication;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -146,7 +150,7 @@ public class ResourcesGetTools {
 	/**
 	 * 从相机启动剪切图片
 	 */
-	private void startCutFromCamera()
+	public void startCutFromCamera()
 	{
 		File file = new File(pathRes);
 		Intent intent = new Intent("com.android.camera.action.CROP");
@@ -159,18 +163,36 @@ public class ResourcesGetTools {
 	}
 	/**
 	 * 从图库启动剪切图片
-	 * @param data Intent
 	 */
-	private void startCutFromGallery(Intent data)
+	public void startCutFromGallery(Uri outUri)
 	{
 		File file = new File(pathRes);
-		Intent intent = new Intent("com.android.camera.action.CROP");
-		intent.setDataAndType(data.getData(), "image/*");
-		intent.putExtra("output", Uri.fromFile(file));
-		intent.putExtra("outputFormat", "JPEG");
-		intent.putExtra("crop", "true");
-		intent.putExtra("return-data", false);
+		startCutFromGallery(Uri.fromFile(file),outUri);
+	}
+
+    public void startCutFromGallery(Uri inUri,Uri outUri)
+    {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(inUri, "image/*");
+        intent.putExtra("output", outUri);
+        intent.putExtra("outputFormat", "JPEG");
+        intent.putExtra("crop", "true");
+        intent.putExtra("return-data", false);
+		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION );
+		List<ResolveInfo> resInfoList = queryActivityByIntent(intent);
+		if (resInfoList.size() == 0) {
+			return;
+		}
+		for (ResolveInfo resolveInfo : resInfoList) {
+			String packageName = resolveInfo.activityInfo.packageName;
+			activity.grantUriPermission(packageName, outUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+		}
 		activity.startActivityForResult(intent, RequestCode.IMG_GALLERY_CUT);
+    }
+
+	private List<ResolveInfo> queryActivityByIntent(Intent intent){
+		return activity.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -296,5 +318,9 @@ public class ResourcesGetTools {
 
 	public void setOnResourcesGetListener(OnResourcesGetListener onResourcesGetListener) {
 		this.onResourcesGetListener = onResourcesGetListener;
+	}
+
+	public String getPathRes() {
+		return pathRes;
 	}
 }

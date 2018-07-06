@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">TJFramework</string>
+    <string name="app_name" translatable="false">TJFramework</string>
+    <string name="authorities" translatable="false">com.tjbaobao.tjframework.provider</string>
 </resources>

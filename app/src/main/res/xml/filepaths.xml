@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths >
+    <external-path path="No_Diamond/" name="extApp" />
+    <cache-path
+        name="share_images"
+        path="share/images/" />
+    <cache-path
+        name="share_videos"
+        path="share/videos/" />
+    <cache-path
+        name="image"
+        path="image/." />
+</paths>
