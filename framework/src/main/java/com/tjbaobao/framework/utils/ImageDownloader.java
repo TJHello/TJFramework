@@ -732,13 +732,13 @@ public class ImageDownloader {
                         Image image = imageList.get(i);
                         if(image!=null)
                         {
-                            if (image.getUrl().equals(url)) {
+                            if (image.getUrl()!=null&&image.getUrl().equals(url)) {
                                 images.add(image);
                             }
                         }
                     }catch (Exception ignored)
                     {
-
+                        LogUtil.exception(ignored);
                     }
                 }
             }

@@ -2,6 +2,7 @@ package com.tjbaobao.framework.ui;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -84,7 +85,7 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder, In
         public abstract void onInitView(View itemView);
     }
 
-    public void setAdapter(BaseRecyclerAdapter<Holder, Info> adapter) {
+    public void setAdapter(@NonNull BaseRecyclerAdapter<Holder, Info> adapter) {
         adapter.setOnItemClickListener(mOnItemClickListener);
         super.setAdapter(adapter);
     }
