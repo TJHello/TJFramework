@@ -383,13 +383,17 @@ public class Tools {
 	}
 
 	private static long lastClickTime=0 ;
-	public static boolean canOnclik() {
-		long time = System.currentTimeMillis();
-		long timeD = time - lastClickTime;
-		if ( 0 < timeD && timeD < 550) {
+	private static final long CAN_ONCLICK_TIME = 550L;
+	public static boolean cantOnclik() {
+		return cantOnclik(CAN_ONCLICK_TIME);
+	}
+	public static boolean cantOnclik(long time) {
+		long timeN = System.currentTimeMillis();
+		long timeD = timeN - lastClickTime;
+		if ( 0 < timeD && timeD < time) {
 			return true;
 		}
-		lastClickTime = time;
+		lastClickTime = timeN;
 		return false;
 	}
 

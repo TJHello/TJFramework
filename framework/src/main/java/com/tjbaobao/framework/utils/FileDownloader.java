@@ -21,7 +21,7 @@ public class FileDownloader {
 	private static final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());//下载列表
 	private static final List<QueueInfo> queuePoolList = Collections.synchronizedList(new ArrayList<>());//等待队列
 	private static final Map<String,String> downLoadHosts = new HashMap<>();//连接与本地地址映射
-	private static BaseHandler baseHandler ;
+	private BaseHandler baseHandler = new BaseHandler();
 	private boolean isStop = false;
 	private static final int Threads_Num = 3;
 
@@ -32,7 +32,6 @@ public class FileDownloader {
 
 	public static FileDownloader getInstance()
 	{
-		baseHandler = new BaseHandler();
         return new FileDownloader();
 	}
 
@@ -133,55 +132,7 @@ public class FileDownloader {
 		QueueInfo queueInfo = new QueueInfo(url,path,onProgressListener);
 		queuePoolList.remove(queueInfo);
 		queuePoolList.add(queueInfo);
-		if(downloaderQueuePool==null)
-		{
-			downloaderQueuePool = new DownloaderQueuePool();
-		}
-		downloaderQueuePool.startTimer();
-	}
-
-	private DownloaderQueuePool downloaderQueuePool ;
-	private class DownloaderQueuePool extends BaseTimerTask
-	{
-		@Override
-		public BaseTimerTask startTimer(long delay, long period) {
-			if(isCancel)
-			{
-				return super.startTimer(delay, period);
-			}
-			return this;
-		}
-
-		@Override
-		public void run() {
-			synchronized (queuePoolList)
-			{
-				synchronized (downloadList)
-				{
-					int length = queuePoolList.size();
-					if(length>0)
-					{
-						for (int i = length-1; i >= 0; i--)
-						{
-							if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
-							{
-								QueueInfo queueInfo = queuePoolList.get(i);
-								if(!downloadList.contains(queueInfo.getUrl()))
-								{
-									executorService.execute(new DownloadRunnable(queueInfo));
-									downloadList.add(queueInfo.getUrl());
-									queuePoolList.remove(queueInfo);
-								}
-							}
-						}
-					}
-					else
-					{
-						this.stopTimer();
-					}
-				}
-			}
-		}
+		refQueuePool();
 	}
 
 	/**
@@ -189,19 +140,37 @@ public class FileDownloader {
 	 */
 	private void refQueuePool()
 	{
-		downloaderQueuePool.startTimer();
+		synchronized (queuePoolList)
+		{
+			synchronized (downloadList)
+			{
+				int length = queuePoolList.size();
+				if(length>0)
+				{
+					for (int i = length-1; i >= 0; i--)
+					{
+						if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
+						{
+							QueueInfo queueInfo = queuePoolList.get(i);
+							if(!downloadList.contains(queueInfo.getUrl()))
+							{
+								executorService.execute(new DownloadRunnable(queueInfo));
+								downloadList.add(queueInfo.getUrl());
+								queuePoolList.remove(queueInfo);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
     /**
-     *
+     *停止下载(如果新创建任务，会重新激活下载)
      */
 	public void stop()
 	{
 		isStop = true;
-		if(downloaderQueuePool!=null)
-		{
-			downloaderQueuePool.stopTimer();
-		}
 	}
 
     /**

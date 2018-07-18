@@ -1,8 +1,9 @@
 package com.tjbaobao.tjframework
 
+import com.tjbaobao.framework.listener.RxTimerTaskListener
+import com.tjbaobao.framework.utils.RxTimerTask
 import org.junit.Test
 
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,6 +13,19 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        val rxTimerTask = RxTimerTask()
+        rxTimerTask.setRxTimerTaskListener(object : RxTimerTaskListener() {
+            override fun run(time: Long) {
+                System.out.println("run$time")
+                if(time==5L)
+                {
+                    rxTimerTask.stop()
+                }
+            }
+            override fun runUI(time: Long) {
+                System.out.println("run$time")
+            }
+        })
+        rxTimerTask.start(0,1000)
     }
 }

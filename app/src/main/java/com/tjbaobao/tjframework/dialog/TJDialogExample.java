@@ -5,26 +5,31 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.tjbaobao.framework.dialog.BaseDialog;
+import com.tjbaobao.framework.dialog.TJDialog;
 import com.tjbaobao.framework.utils.ImageDownloader;
-import com.tjbaobao.framework.utils.RxTimerTask;
 import com.tjbaobao.tjframework.R;
 
-public class ImageDialog extends BaseDialog {
-
-    public ImageDialog(@NonNull Context context) {
-        super(context, R.layout.dialog_main_activity_image_layout);
-    }
+/**
+ * 作者:TJbaobao
+ * 时间:2018/7/18  19:54
+ * 说明:
+ * 使用：
+ */
+public class TJDialogExample extends TJDialog {
 
     private ImageView ivImage;
     private ImageDownloader imageDownloader = ImageDownloader.getInstance();
-    @Override
-    public void onInitView(View view) {
-        ivImage = view.findViewById(R.id.ivImage);
+
+    public TJDialogExample(@NonNull Context context) {
+        super(context, R.layout.dialog_tj_dialog_example_layout);
     }
 
-    public void show(String url)
-    {
+    @Override
+    protected void onInitView(View baseView) {
+        ivImage = baseView.findViewById(R.id.ivImage);
+    }
+
+    public void show(String url) {
         super.show();
         imageDownloader.load(url,ivImage);
     }

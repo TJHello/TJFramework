@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/fw_dialog_win_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fw_window_bg"
+    >
+    <LinearLayout
+        android:id="@id/fw_dialog_win_box"
+        android:layout_width="@dimen/fw_window_width"
+        android:layout_height="wrap_content"
+        android:background="@color/fw_white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/fw_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <com.tjbaobao.framework.ui.base.BaseImageView
+            android:id="@+id/ivImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

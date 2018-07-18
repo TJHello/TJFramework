@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="fw_dialog_win_bg" type="id">false</item>
+    <item name="fw_dialog_win_box" type="id">false</item>
+    <item name="fw_dialog_win_title" type="id">false</item>
+    <item name="fw_dialog_win_bt_continue" type="id">false</item>
+    <item name="fw_dialog_win_bt_cancel" type="id">false</item>
+    <item name="fw_dialog_win_bt_close" type="id">false</item>
+</resources>

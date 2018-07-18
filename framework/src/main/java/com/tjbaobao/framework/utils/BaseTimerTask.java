@@ -62,6 +62,7 @@ public abstract class BaseTimerTask {
         timer.schedule(mTimerTask,delay,period);
         return this;
     }
+
     public synchronized BaseTimerTask startTimer(Date firstTime,long period)
     {
         stopTimer();

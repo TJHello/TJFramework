@@ -16,6 +16,7 @@ import com.tjbaobao.framework.ui.BaseTitleBar
 import com.tjbaobao.framework.utils.*
 import com.tjbaobao.tjframework.dialog.ImageDialog
 import com.tjbaobao.tjframework.R
+import com.tjbaobao.tjframework.dialog.TJDialogExample
 import com.tjbaobao.tjframework.model.MainActivityTestModel
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
@@ -39,6 +40,7 @@ class MainActivity : TJActivity() {
         adapter.setOnItemClickListener(OnItemClickListener())
         resourcesGetTools = ResourcesGetTools(this)
         resourcesGetTools!!.onResourcesGetListener = OnResourcesGetListener()
+
     }
 
     override fun onInitTitleBar(titleBar: BaseTitleBar?) {
@@ -120,14 +122,14 @@ class MainActivity : TJActivity() {
         }
     }
 
-    private var imageDialog : ImageDialog? = null
+    private var imageDialog : TJDialogExample? = null
 
     private inner class OnItemClickListener : BaseRecyclerAdapter.OnItemClickListener<Holder,MainActivityTestModel>
     {
         override fun onItemClick(holder: Holder, info: MainActivityTestModel, position: Int) {
             if(imageDialog==null)
             {
-                imageDialog = ImageDialog(context)
+                imageDialog = TJDialogExample(context)
             }
             imageDialog!!.show(info.url)
         }
@@ -154,13 +156,14 @@ class MainActivity : TJActivity() {
             {
                 if(imageDialog==null)
                 {
-                    imageDialog = ImageDialog(context)
+                    imageDialog = TJDialogExample(context)
                 }
                 imageDialog!!.show(path)
             }
         }
 
         override fun onFail(requestCode: Int, resultCode: Int) {
+
         }
     }
 
