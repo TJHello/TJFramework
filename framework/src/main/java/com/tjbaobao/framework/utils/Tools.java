@@ -17,12 +17,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Looper;
 import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,7 +28,6 @@ import android.widget.Toast;
 
 import com.tjbaobao.framework.R;
 import com.tjbaobao.framework.base.BaseApplication;
-import com.tjbaobao.framework.database.BaseDataBaseHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -182,12 +179,12 @@ public class Tools {
 	 * @param dip
 	 * @return
 	 */
-	public static int dpToPx(int dip)
+	public int dpToPx(float dip)
 	{
 		if(context!=null)
 		{
 			final float scale = context.getResources().getDisplayMetrics().density;
-			return (int) (dip * scale + 0.5f);
+			return (int)(dip * scale + 0.5f);
 		}
 		return 0;
 	}
@@ -196,7 +193,7 @@ public class Tools {
 		if(context!=null)
 		{
 			final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-			return (int) (spValue * fontScale + 0.5f);
+			return (int)(spValue * fontScale + 0.5f);
 		}
 		else
 		{

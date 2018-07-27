@@ -15,6 +15,7 @@ import com.tjbaobao.framework.utils.Tools;
  * 规范Activity编程习惯及提供多能TitleBar的快捷集成
  * Created by TJbaobao on 2018/1/10.
  */
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public abstract class TJActivity extends BaseActivity implements BaseTitleBar.OnTitleBarClickListener{
 
     protected BaseTitleBar titleBar ;
