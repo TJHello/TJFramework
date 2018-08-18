@@ -1,6 +1,8 @@
 package com.tjbaobao.framework.tjbase;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,7 @@ public abstract class TJFragment extends BaseFragment implements BaseTitleBar.On
     protected BaseTitleBar titleBar ;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         onInitValue(savedInstanceState);
         baseView = onCreateView(inflater,container);
         initTitleBar();
@@ -43,13 +45,13 @@ public abstract class TJFragment extends BaseFragment implements BaseTitleBar.On
         }
     }
 
-    protected abstract void onInitValue(Bundle savedInstanceState);
+    protected abstract void onInitValue(@Nullable Bundle savedInstanceState);
 
-    protected abstract View onCreateView(LayoutInflater inflater, ViewGroup container);
+    protected abstract View onCreateView(@NonNull LayoutInflater inflater,@NonNull ViewGroup container);
 
-    protected abstract void onInitView(View baseView);
+    protected abstract void onInitView(@NonNull View baseView);
 
-    protected abstract void onInitTitleBar(BaseTitleBar titleBar);
+    protected abstract void onInitTitleBar(@NonNull BaseTitleBar titleBar);
 
     protected abstract void onLoadData();
 
