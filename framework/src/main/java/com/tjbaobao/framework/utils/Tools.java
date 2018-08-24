@@ -179,7 +179,7 @@ public class Tools {
 	 * @param dip
 	 * @return
 	 */
-	public int dpToPx(float dip)
+	public static int dpToPx(float dip)
 	{
 		if(context!=null)
 		{
