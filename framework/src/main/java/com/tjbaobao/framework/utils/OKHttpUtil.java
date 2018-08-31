@@ -57,7 +57,7 @@ public class OKHttpUtil {
                 ResponseBody body =  response.body();
                 if(body!=null)
                 {
-                    body.string();
+                    return body.string();
                 }
             }
         } catch (IOException e) {
