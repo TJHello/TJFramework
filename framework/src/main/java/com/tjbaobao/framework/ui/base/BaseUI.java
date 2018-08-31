@@ -48,53 +48,19 @@ public class BaseUI extends View implements HandlerToolsImp{
 		return null;
 	}
 
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		if(getWidth()>0&&getHeight()>0&&viewWidth==0||viewHeight==0)
+		{
+			viewWidth = getWidth();
+			viewHeight = getHeight();
+		}
+	}
+
 	protected int getColorForRes(int resID)
 	{
 		return context.getResources().getColor(resID);
-	}
-
-
-	/**
-	 * 计算xml布局里的view大小
-	 */
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		this.viewWidth = measureWidth(widthMeasureSpec);
-		this.viewHeight = measureHeight(heightMeasureSpec);
-		setMeasuredDimension(viewWidth, viewHeight);
-	}
-	/**
-	 * 计算组件宽度
-	 */
-	private int measureWidth(int measureSpec) {
-		int specMode = MeasureSpec.getMode(measureSpec);
-		int specSize = MeasureSpec.getSize(measureSpec);
-		int result = 500;
-		if (specMode == MeasureSpec.AT_MOST) {
-			result = specSize;
-		}
-		else if (specMode == MeasureSpec.EXACTLY) {
-
-			result = specSize;
-		}
-		return result;
-	}
-
-	/**
-	 * 计算组件高度
-	 */
-	private int measureHeight(int measureSpec) {
-
-		int specMode = MeasureSpec.getMode(measureSpec);
-		int specSize = MeasureSpec.getSize(measureSpec);
-		int result = 500;
-		if (specMode == MeasureSpec.AT_MOST) {
-			result = specSize;
-		} else if (specMode == MeasureSpec.EXACTLY) {
-
-			result = specSize;
-		}
-		return result;
 	}
 
 	/**
@@ -102,7 +68,7 @@ public class BaseUI extends View implements HandlerToolsImp{
 	 * @param dip dip
 	 * @return px
 	 */
-	protected float dpToPx(int dip)
+	protected float dpToPx(float dip)
 	{
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return dip * scale + 0.5f;
