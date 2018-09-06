@@ -179,15 +179,28 @@ public class Tools {
 	 * @param dip
 	 * @return
 	 */
-	public static int dpToPx(float dip)
+	public static float dpToPx(float dip)
 	{
 		if(context!=null)
 		{
 			final float scale = context.getResources().getDisplayMetrics().density;
-			return (int)(dip * scale + 0.5f);
+			return dip * scale + 0.5f;
+		}
+		return 0f;
+	}
+
+	public static int dpToPx(int dip)
+	{
+		if(context!=null)
+		{
+			final float scale = context.getResources().getDisplayMetrics().density;
+			return (int) (dip * scale + 0.5f);
 		}
 		return 0;
 	}
+
+
+
 
 	public static int spToPx(float spValue) {
 		if(context!=null)

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.tjbaobao.framework.R;
 import com.tjbaobao.framework.imp.HandlerToolsImp;
 import com.tjbaobao.framework.imp.TJDialogImp;
+import com.tjbaobao.framework.listener.OnTJDialogListener;
 import com.tjbaobao.framework.utils.LogUtil;
 
 /**
@@ -63,12 +64,17 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     protected boolean isShow = false;//是否已经显示(知道动画完成之后才是隐藏或者显示)
     protected boolean canOutsideClose = true;//是否点击viewWinBg时关闭弹窗
     protected boolean isShowWinBgAnim = true,isShowWinBoxAnim = true;
+    private boolean isBtClickClose = true;//点击任何按钮之后关闭弹窗
+    private int state ;//自定义的状态
     private int windowAnimExitId = R.anim.fw_windows_anim_exit;
     private int windowAnimEnterId = R.anim.fw_windows_anim_enter;
     private int contentAnimEnterId = R.anim.fw_windows_content_anim_enter;
     private int contentAnimExitId = R.anim.fw_windows_content_anim_exit;
+    private OnShowListener onShowListener ;
+    private OnDismissListener onDismissListener ;
+    private OnTJDialogListener onTJDialogListener ;
 
-    private Animation animationWinBgEnter, animationWinBoxEnter,animationWinBgExit,animationWinBoxExit;
+    private Animation animationWinBgEnter,animationWinBoxEnter,animationWinBgExit,animationWinBoxExit;
 
     public TJDialog(@NonNull Context context, @LayoutRes int layoutId) {
         this(context,layoutId,MATCH_PARENT,MATCH_PARENT);
@@ -92,6 +98,26 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     private void initView()
     {
+        super.setOnShowListener(dialog -> {
+            if(onShowListener!=null)
+            {
+                onShowListener.onShow(dialog);
+            }
+            if(onTJDialogListener!=null)
+            {
+                onTJDialogListener.onShow(dialog,state);
+            }
+        });
+        super.setOnDismissListener(dialog -> {
+            if(onDismissListener!=null)
+            {
+                onDismissListener.onDismiss(dialog);
+            }
+            if(onTJDialogListener!=null)
+            {
+                onTJDialogListener.onDismiss(dialog,state);
+            }
+        });
         winBgView = baseView.findViewById(VIEW_WIN_BG_ID);
         winBoxView = baseView.findViewById(VIEW_WIN_BOX_ID);
         winTitleView = baseView.findViewById(VIEW_WIN_TITLE_ID);
@@ -103,8 +129,24 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         setOnClickListener(winBtContinue);
         setOnClickListener(winBtCancel);
         setOnClickListener(winBtClose);
+        int[] ids = onInitClick();
+        if(ids!=null)
+        {
+            for(int id:ids)
+            {
+                View view = baseView.findViewById(id);
+                setOnClickListener(view);
+            }
+        }
         onInitView(baseView);
     }
+
+    /**
+     * 返回需要监听的按钮id数组
+     * @return id数组
+     */
+    @Nullable
+    protected abstract int[] onInitClick();
 
     protected abstract void onInitView(View baseView);
 
@@ -237,6 +279,14 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         {
             onBtCloseClick(v);
         }
+        if(onTJDialogListener!=null)
+        {
+            state = onTJDialogListener.onTJClick(v);
+        }
+        if(id!=VIEW_WIN_BOX_ID&&isBtClickClose)
+        {
+            dismiss();
+        }
     }
 
     @Override
@@ -259,17 +309,15 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     @Override
     public void onBtContinueClick(View view) {
-        dismiss();
+
     }
 
     @Override
     public void onBtCancelClick(View view) {
-        dismiss();
     }
 
     @Override
     public void onBtCloseClick(View view) {
-        dismiss();
     }
 
     @Override
@@ -292,7 +340,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     }
 
-    private void setOnClickListener(View view)
+    private void setOnClickListener(@Nullable View view)
     {
         if(view!=null)
         {
@@ -354,6 +402,16 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         }
     }
 
+    @Override
+    public void setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
+    }
+
+    @Override
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
     public void setCanOutsideClose(boolean canOutsideClose) {
         this.canOutsideClose = canOutsideClose;
     }
@@ -378,4 +436,19 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         windowAnimExitId = animExitId;
     }
 
+    public void setOnTJDialogListener(OnTJDialogListener onTJDialogListener) {
+        this.onTJDialogListener = onTJDialogListener;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public void setBtClickClose(boolean btClickClose) {
+        isBtClickClose = btClickClose;
+    }
 }
