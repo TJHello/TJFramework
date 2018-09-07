@@ -165,6 +165,10 @@ public class ImageDownloader {
                     else
                     {
                         onSuccess(url,url,bitmap);
+                        if(onImageLoaderListener!=null)
+                        {
+                            onImageLoaderListener.onProgress(1f,true);
+                        }
                     }
                 }
                 else
@@ -178,12 +182,20 @@ public class ImageDownloader {
                     else
                     {
                         onSuccess(url,url,bitmap);
+                        if(onImageLoaderListener!=null)
+                        {
+                            onImageLoaderListener.onProgress(1f,true);
+                        }
                     }
                 }
             }
             else
             {
                 onSuccess(url,null,bitmapCache);
+                if(onImageLoaderListener!=null)
+                {
+                    onImageLoaderListener.onProgress(1f,true);
+                }
             }
         });
     }
