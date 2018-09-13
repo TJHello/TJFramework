@@ -13,22 +13,34 @@
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             app:cardCornerRadius="@dimen/fw_margin_small"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
-            app:cardElevation="10dp"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="@dimen/fw_margin_small"
+                android:background="@drawable/fw_ripple_gray"
                 >
-                <com.tjbaobao.framework.ui.base.BaseImageView
-                    android:id="@+id/ivImage"
+                <TextView
+                    android:id="@+id/tvDescription"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:riv_corner_radius="@dimen/fw_margin_small"
-                    android:scaleType="centerCrop"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/app_text_size_x"
+                    android:textColor="@color/fw_black_left"
+                    android:gravity="center"
+                    />
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="8sp"
+                    android:textColor="@color/fw_black_left"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
                     />
             </RelativeLayout>
         </android.support.v7.widget.CardView>

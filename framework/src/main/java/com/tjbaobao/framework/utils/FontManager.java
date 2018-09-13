@@ -24,7 +24,6 @@ import static com.tjbaobao.framework.base.BaseApplication.context;
 public class FontManager {
 
     public static void changeFonts(@NonNull ViewGroup viewGroup, String fontPath) {
-
         Typeface tf = getTypeface(fontPath);
         changeFonts(viewGroup,tf);
     }
