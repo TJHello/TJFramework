@@ -71,6 +71,7 @@ public class TJActivityExampleActivity extends AppActivity {
         adapter.notifyDataSetChanged();
     }
 
+    //需要在布局中使用BaseTitleBar并且添加android:id="@+id/titleBar",当且仅当这个id存在的时候才会调用这个方法
     @Override
     protected void onInitTitleBar(@NonNull BaseTitleBar titleBar) {
         titleBar.addImageToLeft(R.drawable.fw_ic_back);

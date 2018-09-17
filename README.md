@@ -49,6 +49,7 @@
     //在AndroidManifest-Application中增加
     <meta-data android:name="database_name" android:value="TjFramework" />
     <meta-data android:name="database_version" android:value="1"/>
+    <meta-data android:name="FW_IS_DEBUG" android:value="true" />
   ```
 
     
