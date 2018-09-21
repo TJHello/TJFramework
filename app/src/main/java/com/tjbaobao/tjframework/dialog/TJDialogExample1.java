@@ -22,14 +22,13 @@ import java.util.List;
  * 说明:
  * 使用：
  */
-public class TJDialogExample extends TJDialog implements OnTJDialogListener{
+public class TJDialogExample1 extends TJDialog {
 
-    private ImageView ivImage;
-    private ImageDownloader imageDownloader = ImageDownloader.getInstance();
 
-    public TJDialogExample(@NonNull Context context) {
+    public TJDialogExample1(@NonNull Context context) {
         super(context, R.layout.dialog_tj_dialog_example_layout);
     }
+
 
     @Nullable
     @Override
@@ -39,21 +38,6 @@ public class TJDialogExample extends TJDialog implements OnTJDialogListener{
 
     @Override
     protected void onInitView(View baseView) {
-        ivImage = baseView.findViewById(R.id.ivImage);
-    }
 
-    public void show(String url) {
-        super.show();
-        imageDownloader.load(url,ivImage);
-    }
-
-    @Override
-    public int onTJClick(View view) {
-        return 0;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog, int state) {
-        imageDownloader.stop();
     }
 }

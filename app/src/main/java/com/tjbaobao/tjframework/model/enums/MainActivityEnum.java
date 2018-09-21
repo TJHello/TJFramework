@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.tjbaobao.tjframework.activity.example.TJActivityExample1Activity;
 import com.tjbaobao.tjframework.activity.example.TJActivityExample2Activity;
+import com.tjbaobao.tjframework.activity.example.TJDialogExample1Activity;
 
 /**
  * 作者:TJbaobao
@@ -15,6 +16,7 @@ public enum MainActivityEnum {
 
     TJActivity1(TJActivityExample1Activity.class,"TJActivity","普通列表"),
     TJActivity2(TJActivityExample2Activity.class,"TJActivity","高级列表"),
+    TJDialog1(TJDialogExample1Activity.class,"TJDialog","普通弹窗"),
     ;
 
     public Class<? extends Activity> activityClass ;

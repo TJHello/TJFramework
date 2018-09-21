@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.tjbaobao.framework.ui.BaseTitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize" />
+    <LinearLayout
+        android:id="@+id/llTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/fw_margin"
+            android:text="弹窗使用示例"
+            android:textColor="@color/fw_black_left"
+            android:textSize="@dimen/app_text_size_l" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fw_margin_small"
+                android:text="1、TJDialog是全自定义弹窗,使用需要创建布局"
+                android:textColor="@color/fw_black_left"
+                android:textSize="@dimen/app_text_size_s" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fw_margin_small"
+                android:text="2、布局需要给对应的组件设置指定的id"
+                android:textColor="@color/fw_black_left"
+                android:textSize="@dimen/app_text_size_s" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fw_margin_small"
+                android:text="3、TJDialog可以满足复杂弹窗的构建"
+                android:textColor="@color/fw_black_left"
+                android:textSize="@dimen/app_text_size_s" />
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btShow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="简单弹窗"
+        android:textColor="@color/fw_black_left"
+        android:textSize="@dimen/app_text_size_l"
+        app:layout_constraintEnd_toEndOf="@id/btShow2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTip"
+        android:layout_marginRight="@dimen/fw_margin_small"
+        android:layout_marginEnd="@dimen/fw_margin_small"
+        />
+    <Button
+        android:id="@+id/btShow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="复杂弹窗"
+        android:textColor="@color/fw_black_left"
+        android:textSize="@dimen/app_text_size_l"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/btShow1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTip"
+        android:layout_marginLeft="@dimen/fw_margin_small"
+        android:layout_marginStart="@dimen/fw_margin_small"
+        />
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/fw_dialog_win_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fw_window_bg"
+    >
+    <android.support.constraint.ConstraintLayout
+        android:id="@id/fw_dialog_win_box"
+        android:layout_width="@dimen/fw_window_width"
+        android:layout_height="wrap_content"
+        android:background="@drawable/app_dialog_box_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/llTitleBar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:gravity="right">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivDel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fw_ripple_gray"
+                android:padding="@dimen/fw_margin"
+                android:src="@drawable/ic_delete" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fw_ripple_gray"
+                android:padding="@dimen/fw_margin"
+                android:src="@drawable/ic_rate" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fw_ripple_gray"
+                android:padding="@dimen/fw_margin"
+                android:src="@drawable/ic_share_black" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivNew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fw_ripple_gray"
+                android:padding="@dimen/fw_margin"
+                android:src="@drawable/ic_new" />
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivImage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintTop_toBottomOf="@id/llTitleBar" />
+
+        <TextView
+            android:id="@+id/fw_dialog_win_bt_continue"
+            android:layout_width="@dimen/fw_button_width"
+            android:layout_height="@dimen/fw_button_height"
+            android:gravity="center"
+            android:text="继续"
+            android:textColor="@color/fw_black_left"
+            android:textSize="@dimen/app_text_size_l"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivImage"
+            android:background="@drawable/fw_ripple_gray"
+            />
+
+        <TextView
+            android:id="@+id/fw_dialog_win_bt_cancel"
+            android:layout_width="@dimen/fw_button_width"
+            android:layout_height="@dimen/fw_button_height"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/fw_black_left"
+            android:textSize="@dimen/app_text_size_l"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fw_dialog_win_bt_continue"
+            android:background="@drawable/fw_ripple_gray"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
