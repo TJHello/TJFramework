@@ -18,6 +18,7 @@ class MainActivity : AppActivity() {
     private var adapter = MainActivityAdapter(infoList,R.layout.main_activity_item_layout)
 
     override fun onInitValues(savedInstanceState: Bundle?) {
+        isOnclickTwoExit()
     }
 
     override fun onInitView() {
