@@ -2,7 +2,8 @@ package com.tjbaobao.tjframework.model.enums;
 
 import android.app.Activity;
 
-import com.tjbaobao.tjframework.activity.example.TJActivityExampleActivity;
+import com.tjbaobao.tjframework.activity.example.TJActivityExample1Activity;
+import com.tjbaobao.tjframework.activity.example.TJActivityExample2Activity;
 
 /**
  * 作者:TJbaobao
@@ -12,13 +13,17 @@ import com.tjbaobao.tjframework.activity.example.TJActivityExampleActivity;
  */
 public enum MainActivityEnum {
 
-    TJActivity(TJActivityExampleActivity.class,"TJActivity");
+    TJActivity1(TJActivityExample1Activity.class,"TJActivity","普通列表"),
+    TJActivity2(TJActivityExample2Activity.class,"TJActivity","高级列表"),
+    ;
 
     public Class<? extends Activity> activityClass ;
-    public String description ;
+    public String title;
+    public String subTitle ;
 
-    MainActivityEnum(Class<? extends Activity> activityClass,String description) {
+    MainActivityEnum(Class<? extends Activity> activityClass,String title,String subTitle) {
         this.activityClass = activityClass;
-        this.description = description;
+        this.title = title;
+        this.subTitle = subTitle;
     }
 }

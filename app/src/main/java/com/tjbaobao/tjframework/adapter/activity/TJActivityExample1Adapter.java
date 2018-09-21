@@ -3,17 +3,15 @@ package com.tjbaobao.tjframework.adapter.activity;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
 import com.tjbaobao.framework.ui.BaseRecyclerView;
 import com.tjbaobao.framework.utils.DeviceUtil;
 import com.tjbaobao.framework.utils.ImageDownloader;
 import com.tjbaobao.tjframework.R;
-import com.tjbaobao.tjframework.model.TJActivityExampleInfo;
+import com.tjbaobao.tjframework.model.TJActivityExample1Info;
 
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,18 +22,18 @@ import butterknife.ButterKnife;
  * 说明:
  * 使用：
  */
-public class TJActivityExampleAdapter extends BaseRecyclerAdapter<TJActivityExampleAdapter.Holder,TJActivityExampleInfo> {
+public class TJActivityExample1Adapter extends BaseRecyclerAdapter<TJActivityExample1Adapter.Holder,TJActivityExample1Info> {
 
     //使用了ImageDownloader之后，你会发现其已经具备了缓存、列表滑动防止错位、裁剪压缩、防止重复下载等等功能。
     private ImageDownloader imageDownloader = ImageDownloader.getInstance();
 
-    public TJActivityExampleAdapter(List<TJActivityExampleInfo> tjActivityExampleInfos, int itemLayoutRes) {
+    public TJActivityExample1Adapter(List<TJActivityExample1Info> tjActivityExampleInfos, int itemLayoutRes) {
         super(tjActivityExampleInfos, itemLayoutRes);
         imageDownloader.setDefaultImgSize(DeviceUtil.getScreenWidth()/2,DeviceUtil.getScreenWidth()/2);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, @NonNull TJActivityExampleInfo info, int position) {
+    public void onBindViewHolder(@NonNull Holder holder, @NonNull TJActivityExample1Info info, int position) {
         imageDownloader.load(info.imageUrl,holder.ivImage);
     }
 

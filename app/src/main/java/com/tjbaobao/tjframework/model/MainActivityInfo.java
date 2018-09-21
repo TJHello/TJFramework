@@ -8,15 +8,18 @@ import android.app.Activity;
 
 public class MainActivityInfo {
 
-    public String description;
+    public String title;
+
+    public String subTitle ;
 
     public Class<? extends Activity> activityClass ;
 
     public String name;
 
-    public MainActivityInfo(String description,Class<? extends Activity> activityClass) {
-        this.description = description;
+    public MainActivityInfo(String title,String subTitle,Class<? extends Activity> activityClass) {
+        this.title = title;
         this.activityClass = activityClass;
         this.name = activityClass.getSimpleName();
+        this.subTitle = subTitle;
     }
 }

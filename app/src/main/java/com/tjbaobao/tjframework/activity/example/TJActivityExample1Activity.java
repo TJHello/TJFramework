@@ -10,9 +10,9 @@ import com.tjbaobao.framework.ui.BaseRecyclerView;
 import com.tjbaobao.framework.ui.BaseTitleBar;
 import com.tjbaobao.framework.utils.Tools;
 import com.tjbaobao.tjframework.R;
-import com.tjbaobao.tjframework.adapter.activity.TJActivityExampleAdapter;
+import com.tjbaobao.tjframework.adapter.activity.TJActivityExample1Adapter;
 import com.tjbaobao.tjframework.base.AppActivity;
-import com.tjbaobao.tjframework.model.TJActivityExampleInfo;
+import com.tjbaobao.tjframework.model.TJActivityExample1Info;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,20 +23,20 @@ import butterknife.ButterKnife;
 /**
  * 作者:TJbaobao
  * 时间:2018/9/13  10:44
- * 说明:TJActivity的使用示例
+ * 说明:TJActivity的使用示例-配合列表使用
  * 使用：
  * 1、创建一个AppActivity继承TJActivity，定制自己的喜好内容
  * 2、在onInitValues,onInitView,onLoadData里面分别初始化值、初始化组件、加载数据。
  */
-public class TJActivityExampleActivity extends AppActivity {
+public class TJActivityExample1Activity extends AppActivity {
 
     //使用BaseRecyclerView之前需要先创建对应的Adapter，而创建Adapter就需要创建Holder和Info实体
-    private List<TJActivityExampleInfo> infoList = new ArrayList<>();
-    private TJActivityExampleAdapter adapter = new TJActivityExampleAdapter(infoList,R.layout.tj_activity_example_activity_item_layout);
+    private List<TJActivityExample1Info> infoList = new ArrayList<>();
+    private TJActivityExample1Adapter adapter = new TJActivityExample1Adapter(infoList,R.layout.tj_activity_example_1_activity_item_layout);
 
     //其实用了Kotlin之后就不需要findViewById或者butterknife这类的框架了，但我觉得kotlin写出来的代码不够美观，不适合用来做示例
     @BindView(R.id.recyclerView)
-    BaseRecyclerView<TJActivityExampleAdapter.Holder,TJActivityExampleInfo> recyclerView;
+    BaseRecyclerView<TJActivityExample1Adapter.Holder,TJActivityExample1Info> recyclerView;
 
     private String title ;
 
@@ -64,7 +64,7 @@ public class TJActivityExampleActivity extends AppActivity {
         infoList.clear();
         for(int i=0;i<10;i++)
         {
-            TJActivityExampleInfo info = new TJActivityExampleInfo();
+            TJActivityExample1Info info = new TJActivityExample1Info();
             info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-04_m_2.jpg?Expires=1536823171&OSSAccessKeyId=TMP.AQEJyBSvPTdZZJdpbTQXAncNMU0MZFrZ96Kwe5jh_0C0jGUsfsorsvlZ4-OlADAtAhUAhkMvYYd0k9fR-XZiRgn9vm6WHgMCFChRU65jf05kgM1TVRB9tZcqKG3V&Signature=H%2BkeUyFJj8rEOrFiYWqlDdgKekI%3D";
             infoList.add(info);
         }
@@ -87,10 +87,10 @@ public class TJActivityExampleActivity extends AppActivity {
     }
 
     //列表Item点击监听器
-    private class OnItemClickListener implements BaseRecyclerAdapter.OnItemClickListener<TJActivityExampleAdapter.Holder,TJActivityExampleInfo>
+    private class OnItemClickListener implements BaseRecyclerAdapter.OnItemClickListener<TJActivityExample1Adapter.Holder,TJActivityExample1Info>
     {
         @Override
-        public void onItemClick(@NonNull TJActivityExampleAdapter.Holder holder, @NonNull TJActivityExampleInfo info, int position) {
+        public void onItemClick(@NonNull TJActivityExample1Adapter.Holder holder, @NonNull TJActivityExample1Info info, int position) {
             Tools.showToast("点击了:"+position);
         }
     }

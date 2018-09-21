@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tjbaobao.framework.entity.base.BaseListInfo;
 import com.tjbaobao.framework.ui.BaseRecyclerView;
 
 import java.util.HashMap;
@@ -75,6 +76,14 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
             {
                 holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
             }
+            if(info instanceof BaseListInfo)
+            {
+                Adapter adapter = ((BaseListInfo) info).getAdapter();
+                if(adapter!=null)
+                {
+                    holder.onInitAdapter(adapter);
+                }
+            }
             onBindViewHolder(holder,info,position);
         }
     }
@@ -87,13 +96,13 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      */
     public abstract void onBindViewHolder(@NonNull Holder holder,@NonNull Info info, int position);
 
-
     /**
      * 获取Holder,通常是new一个自定义的{@link Holder}
      * @param view 主布局,在new的时候传入{@link Holder}
      * @return 返回自定义的 {@link Holder}
      */
-    public abstract Holder onGetHolder(View view , int type);
+    @NonNull
+    public abstract Holder onGetHolder(View view , int viewType);
 
     @Override
     public int getItemCount() {
@@ -113,6 +122,20 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     protected Object onGetItemTag(Info info,int position)
     {
         return null;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position<0||position>=infoList.size())
+        {
+            return 0;
+        }
+        Info info = infoList.get(position);
+        if(info instanceof BaseListInfo)
+        {
+            return ((BaseListInfo) info).getType();
+        }
+        return super.getItemViewType(position);
     }
 
     /**

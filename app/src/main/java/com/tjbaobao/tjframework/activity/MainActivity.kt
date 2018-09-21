@@ -6,7 +6,6 @@ import com.tjbaobao.framework.ui.BaseTitleBar
 import com.tjbaobao.framework.utils.*
 import com.tjbaobao.tjframework.R
 import com.tjbaobao.tjframework.adapter.activity.MainActivityAdapter
-import com.tjbaobao.tjframework.adapter.activity.TJActivityExampleAdapter
 import com.tjbaobao.tjframework.base.AppActivity
 import com.tjbaobao.tjframework.model.MainActivityInfo
 import com.tjbaobao.tjframework.model.enums.MainActivityEnum
@@ -33,7 +32,7 @@ class MainActivity : AppActivity() {
         infoList.clear()
         for(mainEnum in MainActivityEnum.values())
         {
-            infoList.add(MainActivityInfo(mainEnum.description,mainEnum.activityClass))
+            infoList.add(MainActivityInfo(mainEnum.title,mainEnum.subTitle,mainEnum.activityClass))
         }
         adapter.notifyDataSetChanged()
     }

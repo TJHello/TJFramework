@@ -1,5 +1,6 @@
 package com.tjbaobao.framework.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -17,6 +18,9 @@ import com.tjbaobao.framework.base.BaseItemDecoration;
 import com.tjbaobao.framework.base.BaseLinearLayoutManager;
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
 import com.tjbaobao.framework.base.BaseStaggeredGridLayoutManager;
+import com.tjbaobao.framework.entity.base.BaseListInfo;
+
+import java.util.List;
 
 /**
  * RecyclerView的二次封装
@@ -83,6 +87,11 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder, In
         }
 
         public abstract void onInitView(View itemView);
+
+        public void onInitAdapter(@NonNull Adapter adapter)
+        {
+
+        }
     }
 
     public void setAdapter(@NonNull BaseRecyclerAdapter<Holder, Info> adapter) {
@@ -130,6 +139,28 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder, In
             }
         }
         return 0;
+    }
+
+    public void setSpanSizeConfig(List<? extends BaseListInfo> infoList)
+    {
+        LayoutManager layoutManager = getLayoutManager();
+        if(layoutManager!=null)
+        {
+            if(layoutManager instanceof GridLayoutManager)
+            {
+                GridLayoutManager manager = (GridLayoutManager) layoutManager;
+                manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        if(position>=0&&position<infoList.size())
+                        {
+                            return infoList.get(position).getSpanSize();
+                        }
+                        return 1;
+                    }
+                });
+            }
+        }
     }
 
     @Override

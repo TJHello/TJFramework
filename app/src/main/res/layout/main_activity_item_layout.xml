@@ -24,13 +24,23 @@
                 android:background="@drawable/fw_ripple_gray"
                 >
                 <TextView
-                    android:id="@+id/tvDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/app_name"
                     android:textSize="@dimen/app_text_size_x"
                     android:textColor="@color/fw_black_left"
-                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    />
+                <TextView
+                    android:id="@+id/tvSubTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/app_text_size_s"
+                    android:textColor="@color/fw_black_left"
+                    android:layout_below="@id/tvTitle"
+                    android:layout_centerHorizontal="true"
                     />
                 <TextView
                     android:id="@+id/tvName"
