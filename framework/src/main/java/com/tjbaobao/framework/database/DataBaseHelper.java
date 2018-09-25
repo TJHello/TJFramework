@@ -32,11 +32,11 @@ import io.reactivex.annotations.Nullable;
  *
  */
 
-public class BaseDataBaseHelper extends SQLiteOpenHelper {
+public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static DataBaseImp dataBaseImp ;
-    private static BaseDataBaseHelper mDataBaseHelper = null ;
-    public static BaseDataBaseHelper create(Context context) throws Exception {
+    private static DataBaseHelper mDataBaseHelper = null ;
+    public static DataBaseHelper create(Context context) throws Exception {
         if(mDataBaseHelper==null)
         {
             ApplicationInfo appInfo = null;
@@ -50,7 +50,7 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
                     int dbVersion = appInfo.metaData.getInt("database_version",1);
                     if(dbName!=null)
                     {
-                        mDataBaseHelper = new BaseDataBaseHelper(context,dbName,null,dbVersion);
+                        mDataBaseHelper = new DataBaseHelper(context,dbName,null,dbVersion);
                     }
                     else
                     {
@@ -68,11 +68,11 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
         return mDataBaseHelper;
     }
 
-    private BaseDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    public BaseDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
+    public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
         super(context, name, factory, version, errorHandler);
     }
 
@@ -189,6 +189,6 @@ public class BaseDataBaseHelper extends SQLiteOpenHelper {
     }
 
     public static void setDataBaseImp(DataBaseImp dataBaseImp) {
-        BaseDataBaseHelper.dataBaseImp = dataBaseImp;
+        DataBaseHelper.dataBaseImp = dataBaseImp;
     }
 }

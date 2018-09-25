@@ -772,6 +772,8 @@ public class ImageDownloader {
 
     /**
      * 是否启动严格模式，启动严格模式之后，超出缓存池的图片会被主动recycle
+     * 注意：开启之后，会出现利用了已经回收的Bitmap的错误，所以需要使用我提供的BaseImageView
+     * 然后设置重新加载的接口，当发生崩溃的时候，重新加载图片。
      * @param isStrictMode {true:开启,false:关闭}
      */
     public static void setIsStrictMode(boolean isStrictMode) {

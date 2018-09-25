@@ -7,9 +7,12 @@ import com.tjbaobao.framework.utils.*
 import com.tjbaobao.tjframework.R
 import com.tjbaobao.tjframework.adapter.activity.MainActivityAdapter
 import com.tjbaobao.tjframework.base.AppActivity
+import com.tjbaobao.tjframework.database.dao.TbEventDAO
+import com.tjbaobao.tjframework.database.obj.TbEventObj
 import com.tjbaobao.tjframework.model.MainActivityInfo
 import com.tjbaobao.tjframework.model.enums.MainActivityEnum
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppActivity() {
 
@@ -45,9 +48,13 @@ class MainActivity : AppActivity() {
     private inner class OnItemClickListener : BaseRecyclerAdapter.OnItemClickListener<MainActivityAdapter.Holder, MainActivityInfo>
     {
         override fun onItemClick(holder: MainActivityAdapter.Holder, info: MainActivityInfo, position: Int) {
-
+            val eventObj = TbEventObj()
+            eventObj.code = UUID.randomUUID().toString()
+            eventObj.name = info.title
+            eventObj.event = TbEventObj.EVENT_START_ACTIVITY
+            eventObj.path = info.subTitle
+            TbEventDAO.add(eventObj)
             this@MainActivity.startActivity(info.activityClass, arrayOf("title"),info.name)
-
         }
     }
 }

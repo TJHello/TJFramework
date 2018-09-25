@@ -3,12 +3,8 @@ package com.tjbaobao.framework.base;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.tjbaobao.framework.database.BaseDataBaseHelper;
-import com.tjbaobao.framework.utils.DeviceUtil;
 import com.tjbaobao.framework.utils.ExecuteLog;
 import com.tjbaobao.framework.utils.LogUtil;
 import com.tjbaobao.framework.utils.Tools;

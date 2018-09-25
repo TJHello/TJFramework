@@ -29,8 +29,8 @@ import com.tjbaobao.framework.utils.LogUtil;
  * 使用：
  * 1、创建布局
  * 如果要使用该弹窗的快捷功能，则需要在布局对应地方使用指定的id，当然，也可以通过重写以下方法来自定义id,或者不设置。
- * {@link #getViewWinBgId()} 设置弹窗背景id(例如半透明背景,或者全透明)
- * {@link #getViewWinBoxId()} 设置弹窗窗体id
+ * {@link #getViewWinBgId()} 设置弹窗背景层id，设置了之后会有一个渐变动画
+ * {@link #getViewWinBoxId()} 设置弹窗窗体层id，设置了之后才会有弹窗动画
  * {@link #getViewWinTitleId()} 设置弹窗标题id(设置标题{@link #setTitle(int)},{@link #setTitle(CharSequence)})
  * {@link #getViewWinBtContinue()} 设置继续按钮id(点击监听{@link #onBtContinueClick(View)})
  * {@link #getViewWinBtCancel()} 设置取消按钮id(点击监听{@link #onBtCancelClick(View)})
@@ -61,7 +61,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
      */
     protected View baseView,winBgView,winBoxView,winTitleView,winBtContinue,winBtCancel,winBtClose;
     protected int width ,height;
-    protected boolean isShow = false;//是否已经显示(知道动画完成之后才是隐藏或者显示)
+    protected boolean isShow = false;//是否已经显示(直到动画完成之后才是隐藏或者显示)
     protected boolean canOutsideClose = true;//是否点击viewWinBg时关闭弹窗
     protected boolean isShowWinBgAnim = true,isShowWinBoxAnim = true;
     private boolean isBtClickClose = true;//点击任何按钮之后关闭弹窗

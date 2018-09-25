@@ -34,6 +34,9 @@ import butterknife.ButterKnife;
  * 时间:2018/9/21  10:16
  * 说明:
  * 使用：
+ * 1、创建Adapter，Holder，Info(Info需要继承{@link com.tjbaobao.framework.entity.base.BaseListInfo})
+ * 2、重写Adapter的onCreateViewHolder方法，参考{@link TJActivityExample2Adapter}
+ * 3、其他可选，参考{@link TJActivityExample2Adapter}
  */
 public class TJActivityExample2Activity extends AppActivity {
 

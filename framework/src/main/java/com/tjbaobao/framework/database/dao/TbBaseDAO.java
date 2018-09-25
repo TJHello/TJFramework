@@ -4,9 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.tjbaobao.framework.base.BaseApplication;
-import com.tjbaobao.framework.database.BaseDataBaseHelper;
+import com.tjbaobao.framework.database.DataBaseHelper;
 import com.tjbaobao.framework.utils.LogUtil;
-import com.tjbaobao.framework.utils.Tools;
 
 /**
  * Created by TJbaobao on 2017/9/12.
@@ -14,16 +13,18 @@ import com.tjbaobao.framework.utils.Tools;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class TbBaseDAO {
-    private static BaseDataBaseHelper mDataBaseHelper = null;
+    private static DataBaseHelper mDataBaseHelper = null;
+
     static{
         create();
     }
-    private static BaseDataBaseHelper create()
+
+    private static DataBaseHelper create()
     {
         if(mDataBaseHelper==null)
         {
             try {
-                mDataBaseHelper = BaseDataBaseHelper.create(BaseApplication.getContext());
+                mDataBaseHelper = DataBaseHelper.create(BaseApplication.getContext());
             } catch (Exception e) {
                 LogUtil.e(e.getMessage());
             }
@@ -33,19 +34,19 @@ public class TbBaseDAO {
 
     protected static Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
     {
-        return BaseDataBaseHelper.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+        return DataBaseHelper.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
     public static Cursor query(String table, String[] columns, String selection, String[] selectionArgs)
     {
-        return BaseDataBaseHelper.query(table, columns, selection, selectionArgs,null,null,null,null);
+        return DataBaseHelper.query(table, columns, selection, selectionArgs,null,null,null,null);
     }
     protected static Cursor rawQuery(String sql, String[] selectionArgs)
     {
-        return BaseDataBaseHelper.rawQuery(sql, selectionArgs);
+        return DataBaseHelper.rawQuery(sql, selectionArgs);
     }
     protected static long insert(String tbName, String nullColumnHack, ContentValues cValue)
     {
-        return BaseDataBaseHelper.insert(tbName, nullColumnHack, cValue);
+        return DataBaseHelper.insert(tbName, nullColumnHack, cValue);
     }
 
     protected static int  update(String table, ContentValues values, String whereClause, String[] whereArgs)
@@ -59,7 +60,7 @@ public class TbBaseDAO {
 
     protected static Cursor rawQuery(String sql)
     {
-        return BaseDataBaseHelper.rawQuery(sql, null);
+        return DataBaseHelper.rawQuery(sql, null);
     }
 
     protected static long delete(String table, String whereClause, String[] whereArgs)

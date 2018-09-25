@@ -28,11 +28,12 @@ public class TJDialogExample2 extends TJDialog implements OnTJDialogListener{
     public TJDialogExample2(@NonNull Context context) {
         super(context, R.layout.dialog_tj_dialog_example_2_layout);
         imageDownloader.setDefaultImgSize((int)(DeviceUtil.getScreenWidth()*0.8f),(int)(DeviceUtil.getScreenWidth()*0.8f));
-        this.setOnTJDialogListener(this);
-        setBtClickClose(false);
+        this.setOnTJDialogListener(this);//设置弹窗监听器，这个监听器可以视情况设置到dialog或者activity
+        setBtClickClose(false);//设置点击按钮不关闭弹窗
     }
 
 
+    //设置非指定组件的点击监听队列
     @Nullable
     @Override
     protected int[] onInitClick() {
@@ -44,6 +45,7 @@ public class TJDialogExample2 extends TJDialog implements OnTJDialogListener{
         ivImage = baseView.findViewById(R.id.ivImage);
     }
 
+    //返回你自定义的状态，在一些需要标志状态的场景可以用到。获取:getState
     @Override
     public int onTJClick(View view) {
         switch (view.getId())

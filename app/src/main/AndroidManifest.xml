@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:required="false"/>
 
     <application
-        android:name="com.tjbaobao.framework.base.BaseApplication"
+        android:name=".base.TJApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,6 +32,7 @@
         <activity android:name=".activity.example.TJActivityExample1Activity" />
         <activity android:name=".activity.example.TJActivityExample2Activity" />
         <activity android:name=".activity.example.TJDialogExample1Activity" />
+        <activity android:name=".activity.example.DataBaseExampleActivity" />
 
 
         <provider
