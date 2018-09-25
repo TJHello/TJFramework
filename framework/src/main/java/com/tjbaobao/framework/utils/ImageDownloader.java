@@ -516,6 +516,10 @@ public class ImageDownloader {
 
     private Bitmap loadLocalImage(String path)
     {
+        if(path==null||"".equals(path))
+        {
+            return null;
+        }
         Bitmap bitmap ;
         if(imageWidth!=0&&imageHeight!=0)
         {

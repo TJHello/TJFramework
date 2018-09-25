@@ -48,6 +48,10 @@ public class ImageUtil {
 	
 	public static Bitmap getBitmap(String path)
 	{
+		if(path==null||"".equals(path))
+		{
+			return null;
+		}
 		Bitmap bitmap = null;
 		InputStream is = null ;
 		try {
