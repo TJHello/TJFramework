@@ -65,7 +65,10 @@ public class TJActivityExample1Activity extends AppActivity {
         for(int i=0;i<10;i++)
         {
             TJActivityExample1Info info = new TJActivityExample1Info();
-            info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-04_m_2.jpg?Expires=1536823171&OSSAccessKeyId=TMP.AQEJyBSvPTdZZJdpbTQXAncNMU0MZFrZ96Kwe5jh_0C0jGUsfsorsvlZ4-OlADAtAhUAhkMvYYd0k9fR-XZiRgn9vm6WHgMCFChRU65jf05kgM1TVRB9tZcqKG3V&Signature=H%2BkeUyFJj8rEOrFiYWqlDdgKekI%3D";
+            info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-04_m_2.jpg?" +
+                    "Expires=1536823171" +
+                    "&OSSAccessKeyId=LTAILO7U40Go6DmM" +
+                    "&Signature=H%2BkeUyFJj8rEOrFiYWqlDdgKekI%3D";
             infoList.add(info);
         }
         adapter.notifyDataSetChanged();
