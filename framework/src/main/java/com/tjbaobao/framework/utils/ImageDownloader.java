@@ -29,7 +29,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * imageDownloader.load(String url,ImageView imageView);//加载图片,url可以是本地路径，可以是在线链接，可以是assets路径
  *
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("ALL")
 public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
 	private static int cacheSize = maxMemory / 7;
@@ -114,7 +114,7 @@ public class ImageDownloader {
         }
     }
 
-    @Nullable
+    @NonNull
     private BitmapConfig loadLocalImage(String path, OnProgressListener onProgressListener)
     {
         isStop = false;
@@ -460,6 +460,7 @@ public class ImageDownloader {
                         }
                         else
                         {
+                            LogUtil.w("ImageDownloader.LoadRunnable.run-http-downFail2:"+url+","+path);
                             onFail(url);
                         }
                     }
@@ -479,6 +480,7 @@ public class ImageDownloader {
                         }
                         else
                         {
+                            LogUtil.w("ImageDownloader.LoadRunnable.run-local-load:"+url+","+path);
                             onFail(url);
                         }
                     }
@@ -572,27 +574,47 @@ public class ImageDownloader {
         });
     }
 
-    private void onSuccess(String url,String path,Bitmap bitmap)
+    private void onSuccess(@Nullable String url,@Nullable String path ,@NonNull Bitmap bitmap)
     {
         if(isStop)
         {
             return;
         }
         setCacheImage(url,bitmap);
+        boolean isSetImageSuccess = false;
         final List<Image> images = findImages(url);
         for(Image image:images)
         {
             final ImageView imageView = image.getImageView();
-            if(image.getUrl().equals(url)&&imageView!=null)
+            if(image.getUrl()!=null&&image.getUrl().equals(url))
             {
-                synchronized(this)
+                if(imageView!=null)
                 {
-                    baseHandler.post(() ->
+                    synchronized(this)
                     {
-                        imageView.setImageBitmap(bitmap);
-                        imageList.remove(image);
-                    });
+                        baseHandler.post(() ->
+                        {
+                            imageView.setImageBitmap(bitmap);
+                            imageList.remove(image);
+                            if(onImageLoaderListener!=null)
+                            {
+                                onImageLoaderListener.onSetImageSuccess(url);
+                            }
+                        });
+                        isSetImageSuccess = true;
+                    }
                 }
+                else
+                {
+                    LogUtil.w("ImageDownloader.onSuccess()->imageView==null");
+                }
+            }
+        }
+        if(!isSetImageSuccess)
+        {
+            if(onImageLoaderListener!=null)
+            {
+                onImageLoaderListener.onSetImageFail(url);
             }
         }
         baseHandler.post(() -> {
@@ -793,7 +815,7 @@ public class ImageDownloader {
         ImageDownloader.isSizeStrictMode = isSizeStrictMode;
     }
 
-    public OnImageLoaderListener onImageLoaderListener ;
+    private OnImageLoaderListener onImageLoaderListener ;
 
     public OnImageLoaderListener getOnImageLoaderListener() {
         return onImageLoaderListener;
@@ -805,9 +827,13 @@ public class ImageDownloader {
 
     public interface OnImageLoaderListener
     {
-        void onSuccess(String url,String path,Bitmap bitmap);
+        void onSuccess(@Nullable String url,@Nullable String path,@NonNull Bitmap bitmap);
 
-        void onFail(String url);
+        void onFail(@Nullable String url);
+
+        default void onSetImageFail(@Nullable String url){}
+
+        default void onSetImageSuccess(@Nullable String url){}
     }
 
 }

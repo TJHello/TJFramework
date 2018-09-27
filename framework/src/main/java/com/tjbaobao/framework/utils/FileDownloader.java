@@ -82,20 +82,28 @@ public class FileDownloader {
 		{
 			if(url.indexOf("http")==0)
 			{
-				boolean isContains = downloadList.contains(url);
-				if(!isContains)
-				{
-					downloadList.add(url);
-					boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
-					downloadList.remove(url);
-					if(isOk)
-					{
-						TbFileDAO.addFile(url,path,FileUtil.getPrefix(path));
-						downLoadHosts.put(url,path);
-						onSuccess(url,path);
-						return path;
-					}
-				}
+			    synchronized (downloadList)
+                {
+                    boolean isContains = downloadList.contains(url);
+                    if(!isContains)
+                    {
+                        downloadList.add(url);
+                        boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
+                        downloadList.remove(url);
+                        if(isOk)
+                        {
+                            TbFileDAO.addFile(url,path,FileUtil.getPrefix(path));
+                            downLoadHosts.put(url,path);
+                            onSuccess(url,path);
+                            return path;
+                        }
+                    }
+                    else
+                    {
+//                        LogUtil.w("dFileDownloader.downloadExecute():isContains");
+                        return path;
+                    }
+                }
 			}
 			else
 			{
