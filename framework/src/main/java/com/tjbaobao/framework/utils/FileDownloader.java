@@ -1,6 +1,7 @@
 package com.tjbaobao.framework.utils;
 
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tjbaobao.framework.database.dao.TbFileDAO;
@@ -120,7 +121,8 @@ public class FileDownloader {
 		return null;
 	}
 
-	public String getCache(String url)
+	@Nullable
+	public String getCache(@NonNull String url)
 	{
 		String outPath = downLoadHosts.get(url);
 		if(!FileUtil.exists(outPath))

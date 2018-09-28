@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 图片下载器-支持磁盘缓存功能-支持优先下载队列-支持列表图片加载，防止混乱-支持图片压缩裁切-支持设置缓存大小
@@ -76,11 +75,13 @@ public class ImageDownloader {
         }
     }
 
+    @NonNull
     public static ImageDownloader getInstance()
     {
         return new ImageDownloader();
     }
 
+    @Nullable
     public BitmapConfig load(String url,ImageView imageView)
     {
         return load(url,imageView,null);
@@ -96,15 +97,13 @@ public class ImageDownloader {
     @Nullable
     public BitmapConfig load(String url, ImageView imageView, OnProgressListener onProgressListener)
     {
-        if(url==null)
-        {
-            return null;
-        }
+        if(url==null)  return null;
+
         isStop = false;
         Image image = findImage(imageView);
         image.setUrl(url);
         image.setViewWeakReference(imageView);
-        if(url.indexOf("http")==0)
+        if(isHttp(url))
         {
             return loadHttpImage(url,onProgressListener);
         }
@@ -115,45 +114,36 @@ public class ImageDownloader {
     }
 
     @NonNull
-    private BitmapConfig loadLocalImage(String path, OnProgressListener onProgressListener)
+    private BitmapConfig loadLocalImage(@NonNull String path,@Nullable OnProgressListener onProgressListener)
     {
-        isStop = false;
-        BitmapConfig bitmapConfig = new BitmapConfig();
-        if(defaultBitmap!=null)
-        {
-            bitmapConfig.setWidth(defaultBitmap.getWidth());
-            bitmapConfig.setHeight(defaultBitmap.getHeight());
-        }
-        else
-        {
-            bitmapConfig.setHeight(500);
-            bitmapConfig.setWidth(500);
-        }
         startLoadThread(path,onProgressListener);
-        return bitmapConfig;
+        BitmapConfig config = ImageUtil.getBitmapConfig(path);
+        return config;
     }
 
     @Nullable
-    private BitmapConfig loadHttpImage(String url,OnProgressListener onProgressListener)
+    private BitmapConfig loadHttpImage(@NonNull String url,@Nullable OnProgressListener onProgressListener)
     {
         startLoadThread(url,onProgressListener);
-        BitmapConfig bitmapConfig = new BitmapConfig();
-        if(defaultBitmap!=null)
-        {
-            bitmapConfig.setWidth(defaultBitmap.getWidth());
-            bitmapConfig.setHeight(defaultBitmap.getHeight());
-            return bitmapConfig;
-        }
-        return null;
+        String path = FileDownloader.getFilePath(url);
+        FileUtil.CurrentTime.begin();
+        BitmapConfig config = ImageUtil.getBitmapConfig(path);
+        FileUtil.CurrentTime.stop("getBitmapConfig");
+        return config;
     }
 
-    private void startLoadThread(final String url,final OnProgressListener onImageLoaderListener)
+    private boolean isHttp(@NonNull String url)
+    {
+        return url.indexOf("http")==0;
+    }
+
+    private void startLoadThread(@NonNull final String url,@Nullable final OnProgressListener onImageLoaderListener)
     {
         localThreadPool.execute(() -> {
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
             if(!ImageUtil.isOk(bitmapCache))
             {
-                if(url.indexOf("http")!=0)
+                if(!isHttp(url))
                 {
                     //本地路径
                     Bitmap bitmap = loadLocalImage(url);
@@ -200,7 +190,7 @@ public class ImageDownloader {
         });
     }
 
-    private void runInQueue(String url,OnProgressListener onImageLoaderListener)
+    private void runInQueue(@NonNull String url,@Nullable OnProgressListener onImageLoaderListener)
     {
         QueueInfo queueInfo = new QueueInfo(url,null,onImageLoaderListener);
         queuePoolList.remove(queueInfo);
@@ -378,37 +368,43 @@ public class ImageDownloader {
     @SuppressWarnings("unused")
     private class QueueInfo
     {
+        @NonNull
         String url ;
+        @Nullable
         String path;
+        @Nullable
         OnProgressListener onProgressListener;
 
-        QueueInfo(String url, String path, OnProgressListener onProgressListener) {
+        QueueInfo(@NonNull String url, @Nullable String path,@Nullable OnProgressListener onProgressListener) {
             this.url = url;
             this.path = path;
             this.onProgressListener = onProgressListener;
         }
 
+        @NonNull
         public String getUrl() {
             return url;
         }
 
-        public void setUrl(String url) {
+        public void setUrl(@NonNull String url) {
             this.url = url;
         }
 
+        @Nullable
         public String getPath() {
             return path;
         }
 
-        public void setPath(String path) {
+        public void setPath(@Nullable String path) {
             this.path = path;
         }
 
+        @Nullable
         public OnProgressListener getOnProgressListener() {
             return onProgressListener;
         }
 
-        public void setOnProgressListener(OnProgressListener onProgressListener) {
+        public void setOnProgressListener(@Nullable OnProgressListener onProgressListener) {
             this.onProgressListener = onProgressListener;
         }
     }
@@ -416,7 +412,10 @@ public class ImageDownloader {
     private volatile Map<String ,Boolean> mapDownload = new HashMap<>();
     private class LoadRunnable implements Runnable
     {
+        @NonNull
         private String url ;
+
+        @Nullable
         private OnProgressListener onProgressListener;
 
 
@@ -425,10 +424,11 @@ public class ImageDownloader {
             this(queueInfo.url,queueInfo.onProgressListener);
         }
 
-        LoadRunnable(String url,OnProgressListener onProgressListener) {
+        LoadRunnable(@NonNull String url,@Nullable OnProgressListener onProgressListener) {
             this.url = url;
             this.onProgressListener = onProgressListener;
         }
+
         @Override
         public void run() {
             if(isStop)
@@ -503,8 +503,8 @@ public class ImageDownloader {
         }
 
 
-
-        private String downloadImage(String url,OnProgressListener onProgressListener)
+        @Nullable
+        private String downloadImage(@NonNull String url,@Nullable OnProgressListener onProgressListener)
         {
             String prefix = FileUtil.getPrefix(url);
             if(prefix==null)
@@ -516,7 +516,8 @@ public class ImageDownloader {
         }
     }
 
-    private Bitmap loadLocalImage(String path)
+    @Nullable
+    private Bitmap loadLocalImage(@Nullable String path)
     {
         if(path==null||"".equals(path))
         {
@@ -560,7 +561,7 @@ public class ImageDownloader {
         return bitmap;
     }
 
-    private void onFail(String url)
+    private void onFail(@NonNull String url)
     {
         if(isStop)
         {
@@ -574,7 +575,7 @@ public class ImageDownloader {
         });
     }
 
-    private void onSuccess(@Nullable String url,@Nullable String path ,@NonNull Bitmap bitmap)
+    private void onSuccess(@NonNull String url,@Nullable String path ,@NonNull Bitmap bitmap)
     {
         if(isStop)
         {
@@ -623,10 +624,9 @@ public class ImageDownloader {
                 onImageLoaderListener.onSuccess(url,path,bitmap);
             }
         });
-
     }
 
-    private void setCacheImage(String url,Bitmap bitmap)
+    private void setCacheImage(@NonNull String url,@NonNull Bitmap bitmap)
     {
         if(getCacheImage(url+imageWidth+"_"+imageHeight)==null)
         {
@@ -636,7 +636,9 @@ public class ImageDownloader {
             }
         }
     }
-    private Bitmap getCacheImage(String url)
+
+    @Nullable
+    private Bitmap getCacheImage(@NonNull String url)
     {
         if(imageLruCache!=null&&url!=null)
         {
@@ -677,22 +679,25 @@ public class ImageDownloader {
     }
 
     @NonNull
-    private Image findImage(ImageView imageView)
+    private Image findImage(@Nullable ImageView imageView)
     {
         synchronized (imageList)
         {
             cleanNullImage();
-            for(int i=imageList.size()-1;i>=0;i--)
+            if(imageView!=null)
             {
-                if(i<imageList.size())
+                for(int i=imageList.size()-1;i>=0;i--)
                 {
-                    Image image = imageList.get(i);
-                    if(image!=null)
+                    if(i<imageList.size())
                     {
-                        ImageView iv = image.getImageView();
-                        if(iv!=null&&iv.equals(imageView))
+                        Image image = imageList.get(i);
+                        if(image!=null)
                         {
-                            return image;
+                            ImageView iv = image.getImageView();
+                            if(iv!=null&&iv.equals(imageView))
+                            {
+                                return image;
+                            }
                         }
                     }
                 }
@@ -703,7 +708,8 @@ public class ImageDownloader {
         }
     }
 
-    private Image findImage(String url)
+    @NonNull
+    private Image findImage(@NonNull String url)
     {
         synchronized (imageList)
         {
@@ -757,7 +763,8 @@ public class ImageDownloader {
         }
     }
 
-    private List<Image> findImages(String url)
+    @NonNull
+    private List<Image> findImages(@NonNull String url)
     {
         List<Image> images = new ArrayList<>(imageList.size());
         synchronized (imageList)
@@ -827,13 +834,13 @@ public class ImageDownloader {
 
     public interface OnImageLoaderListener
     {
-        void onSuccess(@Nullable String url,@Nullable String path,@NonNull Bitmap bitmap);
+        void onSuccess(@NonNull String url,@Nullable String path,@NonNull Bitmap bitmap);
 
-        void onFail(@Nullable String url);
+        void onFail(@NonNull String url);
 
-        default void onSetImageFail(@Nullable String url){}
+        default void onSetImageFail(@NonNull String url){}
 
-        default void onSetImageSuccess(@Nullable String url){}
+        default void onSetImageSuccess(@NonNull String url){}
     }
 
 }
