@@ -6,6 +6,7 @@ import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.database.DataBaseHelper;
 import com.tjbaobao.framework.imp.DataBaseImp;
 import com.tjbaobao.framework.utils.ImageDownloader;
+import com.tjbaobao.tjframework.utils.AliyunOOSUtil;
 
 /**
  * 作者:TJbaobao
@@ -37,6 +38,8 @@ public class TJApplication extends BaseApplication implements DataBaseImp {
         ImageDownloader.setCacheSize(useMemory);//自定义缓存池大小
         ImageDownloader.setIsStrictMode(false);//严格模式，开启后会立刻主动回收已经超出了缓存池的图片。(慎用，不建议普通场景使用,详细请进入方法内查看。)
         ImageDownloader.setIsSizeStrictMode(true);//尺寸严格模式，开启后则会根据setDefaultImgSize来将图片按照比例裁剪到指定的最小尺寸
+
+        AliyunOOSUtil.init();
     }
 
     @Override

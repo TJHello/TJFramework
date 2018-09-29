@@ -13,6 +13,7 @@ import com.tjbaobao.tjframework.R;
 import com.tjbaobao.tjframework.adapter.activity.TJActivityExample1Adapter;
 import com.tjbaobao.tjframework.base.AppActivity;
 import com.tjbaobao.tjframework.model.TJActivityExample1Info;
+import com.tjbaobao.tjframework.utils.AliyunOOSUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +66,7 @@ public class TJActivityExample1Activity extends AppActivity {
         for(int i=0;i<10;i++)
         {
             TJActivityExample1Info info = new TJActivityExample1Info();
-            info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-04_m_2.jpg?" +
-                    "Expires=1536823171" +
-                    "&OSSAccessKeyId=LTAILO7U40Go6DmM" +
-                    "&Signature=H%2BkeUyFJj8rEOrFiYWqlDdgKekI%3D";
+            info.imageUrl = AliyunOOSUtil.getUrl("lakes-04_m_2.jpg");
             infoList.add(info);
         }
         adapter.notifyDataSetChanged();

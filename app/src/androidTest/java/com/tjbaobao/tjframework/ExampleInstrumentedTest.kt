@@ -4,6 +4,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.tjbaobao.framework.base.BaseApplication
 import com.tjbaobao.framework.utils.Tools
+import com.tjbaobao.tjframework.utils.AliyunOOSUtil
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,5 +23,7 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("com.tjbaobao.tjframework", appContext.packageName)
+
+        AliyunOOSUtil()
     }
 }

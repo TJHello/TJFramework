@@ -13,6 +13,7 @@ import com.tjbaobao.framework.utils.DeviceUtil;
 import com.tjbaobao.framework.utils.ImageDownloader;
 import com.tjbaobao.framework.utils.Tools;
 import com.tjbaobao.tjframework.R;
+import com.tjbaobao.tjframework.utils.AliyunOOSUtil;
 
 /**
  * 作者:TJbaobao
@@ -73,8 +74,7 @@ public class TJDialogExample2 extends TJDialog implements OnTJDialogListener{
 
     @Override
     public void onShow(DialogInterface dialog, int state) {
-        imageDownloader.load("https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-02_m_2.jpg?Expires=1537505751&OSSAccessKeyId=TMP.AQH4yZtdZeRJKgOqXNEwE6Qx_ZT2pKxgi4PSOIPDw5TK9Olsbh43WoZaHrGjAAAwLAIUUsEYARoIEqatBvwlHduBBAnTZs4CFF3iDvSzxG8iQ418tfjTKEn5R-FZ&Signature=Z1GlU3Ej%2F4CUiuo5Y3U6suntSHI%3D"
-                ,ivImage);
+        imageDownloader.load(AliyunOOSUtil.getUrl("lakes-04_m_2.jpg"),ivImage);
     }
 
 

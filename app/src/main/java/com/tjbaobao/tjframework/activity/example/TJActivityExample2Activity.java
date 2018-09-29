@@ -22,6 +22,7 @@ import com.tjbaobao.tjframework.base.AppActivity;
 import com.tjbaobao.tjframework.model.AppItemTitleInfo;
 import com.tjbaobao.tjframework.model.TJActivityExample1Info;
 import com.tjbaobao.tjframework.model.TJActivityExample2Info;
+import com.tjbaobao.tjframework.utils.AliyunOOSUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +116,7 @@ public class TJActivityExample2Activity extends AppActivity {
         homeInfoList.add(new TJActivityExample2Info(new AppItemTitleInfo("Title"), spanCount));
         for (int i = 0; i < spanCount*2; i++) {
             TJActivityExample1Info info = new TJActivityExample1Info();
-            info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-02_m_2.jpg?Expires=1537505751&OSSAccessKeyId=TMP.AQH4yZtdZeRJKgOqXNEwE6Qx_ZT2pKxgi4PSOIPDw5TK9Olsbh43WoZaHrGjAAAwLAIUUsEYARoIEqatBvwlHduBBAnTZs4CFF3iDvSzxG8iQ418tfjTKEn5R-FZ&Signature=Z1GlU3Ej%2F4CUiuo5Y3U6suntSHI%3D";
+            info.imageUrl = AliyunOOSUtil.getUrl("lakes-02_m_2.jpg");
             homeInfoList.add(new TJActivityExample2Info(info));
         }
         homeInfoList.add(new TJActivityExample2Info(new AppItemTitleInfo("Title"), spanCount));
@@ -123,7 +124,7 @@ public class TJActivityExample2Activity extends AppActivity {
         homeInfoList.add(new TJActivityExample2Info(new AppItemTitleInfo("Title"), spanCount));
         for (int i = 0; i <spanCount*3; i++) {
             TJActivityExample1Info info = new TJActivityExample1Info();
-            info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-02_m_2.jpg?Expires=1537505751&OSSAccessKeyId=TMP.AQH4yZtdZeRJKgOqXNEwE6Qx_ZT2pKxgi4PSOIPDw5TK9Olsbh43WoZaHrGjAAAwLAIUUsEYARoIEqatBvwlHduBBAnTZs4CFF3iDvSzxG8iQ418tfjTKEn5R-FZ&Signature=Z1GlU3Ej%2F4CUiuo5Y3U6suntSHI%3D";
+            info.imageUrl = AliyunOOSUtil.getUrl("lakes-02_m_2.jpg");
             homeInfoList.add(new TJActivityExample2Info(info));
         }
         homeInfoList.add(new TJActivityExample2Info(new AppItemTitleInfo("Title"), spanCount));
@@ -132,7 +133,7 @@ public class TJActivityExample2Activity extends AppActivity {
         homeInfoList.add(new TJActivityExample2Info(new AppItemTitleInfo("Title"), spanCount));
         for (int i = 0; i <spanCount*4; i++) {
             TJActivityExample1Info info = new TJActivityExample1Info();
-            info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-02_m_2.jpg?Expires=1537505751&OSSAccessKeyId=TMP.AQH4yZtdZeRJKgOqXNEwE6Qx_ZT2pKxgi4PSOIPDw5TK9Olsbh43WoZaHrGjAAAwLAIUUsEYARoIEqatBvwlHduBBAnTZs4CFF3iDvSzxG8iQ418tfjTKEn5R-FZ&Signature=Z1GlU3Ej%2F4CUiuo5Y3U6suntSHI%3D";
+            info.imageUrl = AliyunOOSUtil.getUrl("lakes-02_m_2.jpg");
             homeInfoList.add(new TJActivityExample2Info(info));
         }
     }
@@ -142,7 +143,7 @@ public class TJActivityExample2Activity extends AppActivity {
         for(int i=0;i<5;i++)
         {
             TJActivityExample1Info info = new TJActivityExample1Info();
-            info.imageUrl = "https://tjbaobao.oss-cn-shenzhen.aliyuncs.com/TJFramework/lakes-07_2.jpg?Expires=1537506498&OSSAccessKeyId=TMP.AQH4yZtdZeRJKgOqXNEwE6Qx_ZT2pKxgi4PSOIPDw5TK9Olsbh43WoZaHrGjAAAwLAIUUsEYARoIEqatBvwlHduBBAnTZs4CFF3iDvSzxG8iQ418tfjTKEn5R-FZ&Signature=GayAPqcXrnct8I9mcwYtcHtiIdU%3D";
+            info.imageUrl = AliyunOOSUtil.getUrl("lakes-07_2.jpg");
             example1InfoList.add(info);
         }
     }
