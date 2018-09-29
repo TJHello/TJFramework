@@ -83,7 +83,6 @@ public class AliyunOOSUtil {
             for(String name:objectNames)
             {
                 String httpUrl = ServerUrl+"?bucketName="+BucketName+"&objectName="+ObjectNameHome+"/"+name;
-                Tools.printLog("httpUrl="+httpUrl);
                 String imageUrl = OKHttpUtil.doGet(httpUrl);
                 if(imageUrl!=null)
                 {

@@ -80,7 +80,7 @@
             />
 
         <TextView
-            android:id="@id/fw_dialog_win_bt_continue"
+            android:id="@id/fw_dialog_win_bt_cancel"
             android:layout_width="@dimen/fw_button_width"
             android:layout_height="@dimen/fw_button_height"
             android:gravity="center"

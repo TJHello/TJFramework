@@ -126,10 +126,12 @@ public class ImageDownloader {
     {
         startLoadThread(url,onProgressListener);
         String path = FileDownloader.getFilePath(url);
-        FileUtil.CurrentTime.begin();
-        BitmapConfig config = ImageUtil.getBitmapConfig(path);
-        FileUtil.CurrentTime.stop("getBitmapConfig");
-        return config;
+        if(path!=null&&!path.equals(""))
+        {
+            BitmapConfig config = ImageUtil.getBitmapConfig(path);
+            return config;
+        }
+        return null;
     }
 
     private boolean isHttp(@NonNull String url)
