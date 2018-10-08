@@ -325,16 +325,9 @@ public class Tools {
 	}
 
 	public static int getResouseIdByRef(String name){
-        try {  
-            Field field = R.drawable.class.getField(name);
-            return field.getInt(new R.drawable());  
-        } catch (IllegalAccessException e) {  
-            e.printStackTrace();  
-            return 0;  
-        } catch (NoSuchFieldException e) {  
-            e.printStackTrace();  
-            return 0;  
-        }  
+		if(context==null) return 0;
+		ApplicationInfo appInfo = context.getApplicationInfo();
+		return context.getResources().getIdentifier(name, "drawable", appInfo.packageName);
     }  
 
     public static int getResourceIdByFilter(String name) {
