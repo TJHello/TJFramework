@@ -78,6 +78,7 @@ public class FileDownloader {
 		{
 			return null;
 		}
+		String tag = FileUtil.formatUrl(url);
 		String outPath = getCache(url);
 		if(outPath==null)
 		{
@@ -85,16 +86,16 @@ public class FileDownloader {
 			{
 			    synchronized (downloadList)
                 {
-                    boolean isContains = downloadList.contains(url);
+                    boolean isContains = downloadList.contains(tag);
                     if(!isContains)
                     {
-                        downloadList.add(url);
+                        downloadList.add(tag);
                         boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
-                        downloadList.remove(url);
+                        downloadList.remove(tag);
                         if(isOk)
                         {
-                            TbFileDAO.addFile(url,path,FileUtil.getPrefix(path));
-                            downLoadHosts.put(url,path);
+                            TbFileDAO.addFile(tag,path,FileUtil.getPrefix(path));
+                            downLoadHosts.put(tag,path);
                             onSuccess(url,path);
                             return path;
                         }
@@ -124,6 +125,7 @@ public class FileDownloader {
 	@Nullable
 	public String getCache(@NonNull String url)
 	{
+		url = FileUtil.formatUrl(url);
 		String outPath = downLoadHosts.get(url);
 		if(!FileUtil.exists(outPath))
 		{
@@ -162,10 +164,11 @@ public class FileDownloader {
 						if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
 						{
 							QueueInfo queueInfo = queuePoolList.get(i);
-							if(!downloadList.contains(queueInfo.getUrl()))
+							String tag = queueInfo.getUrl();
+							if(!downloadList.contains(tag))
 							{
 								executorService.execute(new DownloadRunnable(queueInfo));
-								downloadList.add(queueInfo.getUrl());
+								downloadList.add(tag);
 								queuePoolList.remove(queueInfo);
 							}
 						}
@@ -260,17 +263,18 @@ public class FileDownloader {
 		}
 		@Override
 		public void run() {
+			String tag = FileUtil.formatUrl(url);
 			if(isStop)
 			{
-				downloadList.remove(url);
+				downloadList.remove(tag);
 				return ;
 			}
 			boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
-			downloadList.remove(url);
+			downloadList.remove(tag);
 			if(isOk)
 			{
-				TbFileDAO.addFile(url,path,FileUtil.getPrefix(path));
-				downLoadHosts.put(url,path);
+				TbFileDAO.addFile(tag,path,FileUtil.getPrefix(path));
+				downLoadHosts.put(tag,path);
 				onSuccess(url,path);
 			}
 			else
@@ -335,6 +339,7 @@ public class FileDownloader {
 		}
 		if(url.indexOf("http://")==0||url.indexOf("https://")==0)
 		{
+			url = FileUtil.formatUrl(url);
 			TbFileObj fileObj = TbFileDAO.getFileByUrl(url);
 			if(fileObj!=null)
 			{
@@ -349,10 +354,8 @@ public class FileDownloader {
 
 	public static void remove(String url)
 	{
-		if(downLoadHosts.containsKey(url))
-		{
-			downLoadHosts.remove(url);
-		}
+		url = FileUtil.formatUrl(url);
+		downLoadHosts.remove(url);
 		TbFileObj fileObj = TbFileDAO.getFileByUrl(url);
 		if(fileObj!=null)
 		{

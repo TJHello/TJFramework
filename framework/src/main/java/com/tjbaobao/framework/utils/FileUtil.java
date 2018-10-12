@@ -694,6 +694,17 @@ public class FileUtil {
 	   return null;
 	}
 
+	@NonNull
+	public static String formatUrl(@NonNull String url)
+	{
+		int index = url.indexOf("?");
+		if(index>0)
+		{
+			return url.substring(0,index);
+		}
+		return url;
+	}
+
 	public static String getName(String path)
 	{
 		File file = new File(path);

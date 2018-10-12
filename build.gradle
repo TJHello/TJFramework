@@ -27,7 +27,7 @@ allprojects {
 
 ext {
     compileSdkVersion = 27
-    supportVersion ="${compileSdkVersion}.+"
+    supportVersion ="${compileSdkVersion}.1.1"
 }
 
 task clean(type: Delete) {

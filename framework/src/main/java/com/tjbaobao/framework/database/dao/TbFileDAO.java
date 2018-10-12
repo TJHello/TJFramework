@@ -2,10 +2,12 @@ package com.tjbaobao.framework.database.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.tjbaobao.framework.database.obj.TbFileObj;
 import com.tjbaobao.framework.utils.DateTimeUtil;
 import com.tjbaobao.framework.utils.FileUtil;
+import com.tjbaobao.framework.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -14,6 +16,7 @@ import java.util.UUID;
  * Created by TJbaobao on 2017/10/25.
  */
 
+@SuppressWarnings("UnusedReturnValue")
 public class TbFileDAO extends TbBaseDAO {
     private static final String tbName = "tb_file";
     private static ArrayList<TbFileObj> getFiles(String sql)
@@ -78,6 +81,7 @@ public class TbFileDAO extends TbBaseDAO {
         fileObj.setUrl(url);
         fileObj.setPath(path);
         fileObj.setPrefix(prefix);
+        Tools.printLog("addFile:"+"url="+url+",prefix="+prefix);
         return addFile(fileObj);
     }
 

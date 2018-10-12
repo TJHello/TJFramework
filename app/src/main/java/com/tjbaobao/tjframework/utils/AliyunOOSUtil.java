@@ -92,8 +92,6 @@ public class AliyunOOSUtil {
                         if(!imageUrl.equals(urlCache))
                         {
                             mapUrl.put(name,imageUrl);
-                            String cacheFilePath = FileDownloader.getFilePath(urlCache);
-                            FileUtil.delFileIfExists(cacheFilePath);
                         }
                     }
                     else

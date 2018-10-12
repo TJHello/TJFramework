@@ -102,6 +102,7 @@ public class ImageDownloader {
         isStop = false;
         Image image = findImage(imageView);
         image.setUrl(url);
+        image.setTag(FileUtil.formatUrl(url));
         image.setViewWeakReference(imageView);
         if(isHttp(url))
         {
@@ -336,6 +337,7 @@ public class ImageDownloader {
         if(imageLruCache!=null)
         {
             try {
+                key = FileUtil.formatUrl(key);
                 Bitmap bitmap = imageLruCache.get(key+imageWidth+"_"+imageHeight);
                 imageLruCache.remove(key+imageWidth+"_"+imageHeight);
                 Image image = findImage(key);
@@ -634,6 +636,7 @@ public class ImageDownloader {
         {
             if(imageLruCache!=null&&bitmap!=null)
             {
+                url = FileUtil.formatUrl(url);
                 imageLruCache.put(url+imageWidth+"_"+imageHeight, bitmap);
             }
         }
@@ -644,6 +647,7 @@ public class ImageDownloader {
     {
         if(imageLruCache!=null&&url!=null)
         {
+            url = FileUtil.formatUrl(url);
             return imageLruCache.get(url+imageWidth+"_"+imageHeight);
         }
         return null;
@@ -652,6 +656,8 @@ public class ImageDownloader {
     private static class Image
     {
         String url;
+        String tag ;
+
         WeakReference<ImageView> viewWeakReference ;
 
         String getUrl() {
@@ -660,6 +666,14 @@ public class ImageDownloader {
 
         void setUrl(String url) {
             this.url = url;
+        }
+
+        public String getTag() {
+            return tag;
+        }
+
+        public void setTag(String tag) {
+            this.tag = tag;
         }
 
         WeakReference<ImageView> getViewWeakReference() {
