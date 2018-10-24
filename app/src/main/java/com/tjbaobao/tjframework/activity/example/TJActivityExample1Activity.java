@@ -58,6 +58,9 @@ public class TJActivityExample1Activity extends AppActivity {
         //recyclerView.addItemDecoration(BaseItemDecoration.getLineVerticalDecoration(Tools.dpToPx(8)));//添加自定义间隔
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener());
+        adapter.setOnItemLongClickListener((holder, tjActivityExample1Info, position) -> {
+            Tools.showToast("OnItemLongClickListener");
+        });
     }
 
     @Override

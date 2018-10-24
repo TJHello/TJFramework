@@ -2,10 +2,12 @@ package com.tjbaobao.framework.base;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.tjbaobao.framework.entity.base.BaseListInfo;
 import com.tjbaobao.framework.ui.BaseRecyclerView;
@@ -26,6 +28,8 @@ import java.util.Map;
 public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends Adapter<Holder> {
 
     private OnItemClickListener<Holder,Info> mOnItemClickListener ;
+    private OnItemLongClickListener<Holder,Info> mOnItemLongClickListener ;
+
     protected List<Info> infoList ;
     protected int itemLayoutRes ;
     private Map<Object,Holder> mapHolder = new HashMap<>();
@@ -44,7 +48,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(itemLayoutRes==-1)
         {
-            return onGetHolder(null,viewType);
+            onGetHolder(null,viewType);
         }
         View view  = LayoutInflater.from(parent.getContext()).inflate(itemLayoutRes, parent,false);
         return onGetHolder(view,viewType);
@@ -75,6 +79,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
             if(holder.itemView!=null)
             {
                 holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
+                holder.itemView.setOnLongClickListener(new ItemOnLongClickListener(holder,info,position));
             }
             if(info instanceof BaseListInfo)
             {
@@ -102,7 +107,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      * @return 返回自定义的 {@link Holder}
      */
     @NonNull
-    public abstract Holder onGetHolder(View view , int viewType);
+    public abstract Holder onGetHolder(@Nullable View view , int viewType);
 
     @Override
     public int getItemCount() {
@@ -163,6 +168,16 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         void onItemClick(@NonNull Holder holder,@NonNull Info info, int position);
     }
 
+    /**
+     * Item长按监听器
+     * @param <Holder> {@link Holder}
+     * @param <Info> 数据实体类
+     */
+    public interface OnItemLongClickListener<Holder,Info>
+    {
+        void onItemLongClick(@NonNull Holder holder,@NonNull Info info, int position);
+    }
+
     private class ItemOnClickListener implements View.OnClickListener
     {
         private Holder mHolder ;
@@ -184,6 +199,29 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         }
     }
 
+    private class ItemOnLongClickListener  implements View.OnLongClickListener{
+
+        private Holder mHolder ;
+        private Info info ;
+        private int position;
+
+        ItemOnLongClickListener(@NonNull Holder holder, @NonNull Info info, int position)
+        {
+            mHolder = holder;
+            this.info = info;
+            this.position = position;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if(mOnItemLongClickListener!=null)
+            {
+                mOnItemLongClickListener.onItemLongClick(mHolder,info,position);
+            }
+            return true;
+        }
+    }
+
     /**
      * 设置监听器
      * @param onItemClickListener {@link OnItemClickListener}
@@ -192,6 +230,17 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         if(onItemClickListener!=null)
         {
             mOnItemClickListener = onItemClickListener;
+        }
+    }
+
+    /**
+     * 设置长按监听器
+     * @param onItemLongClickListener {@link OnItemLongClickListener}
+     */
+    public void setOnItemLongClickListener(BaseRecyclerAdapter.OnItemLongClickListener<Holder,Info> onItemLongClickListener) {
+        if(onItemLongClickListener!=null)
+        {
+            mOnItemLongClickListener = onItemLongClickListener;
         }
     }
 
