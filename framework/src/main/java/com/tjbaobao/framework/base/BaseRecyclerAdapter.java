@@ -48,10 +48,14 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(itemLayoutRes==-1)
         {
-            onGetHolder(null,viewType);
+            return null;
         }
         View view  = LayoutInflater.from(parent.getContext()).inflate(itemLayoutRes, parent,false);
-        return onGetHolder(view,viewType);
+        if(view!=null)
+        {
+            return onGetHolder(view,viewType);
+        }
+        return null;
     }
 
     @Override
@@ -107,7 +111,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
      * @return 返回自定义的 {@link Holder}
      */
     @NonNull
-    public abstract Holder onGetHolder(@Nullable View view , int viewType);
+    public abstract Holder onGetHolder(@NonNull View view , int viewType);
 
     @Override
     public int getItemCount() {

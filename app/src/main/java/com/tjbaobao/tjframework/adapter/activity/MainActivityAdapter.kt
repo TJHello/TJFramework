@@ -22,7 +22,7 @@ class MainActivityAdapter(infoList: MutableList<MainActivityInfo>?, itemLayoutRe
 
     }
 
-    override fun onGetHolder(view: View?, type: Int): Holder {
+    override fun onGetHolder(view: View, type: Int): Holder {
         return Holder(view)
     }
 
