@@ -82,7 +82,12 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     public TJDialog(@NonNull Context context, @LayoutRes int layoutId, int width, int height)
     {
-        super(context, R.style.FW_Dialog);
+        this(context,layoutId,width,height, R.style.FW_Dialog);
+    }
+
+    public TJDialog(@NonNull Context context, @LayoutRes int layoutId, int width, int height,int styleId)
+    {
+        super(context,styleId);
         this.width = width;
         this.height = height;
         VIEW_WIN_BG_ID = getViewWinBgId();
