@@ -288,7 +288,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         {
             state = onTJDialogListener.onTJClick(v);
         }
-        if(id!=VIEW_WIN_BOX_ID&&isBtClickClose)
+        if(id!=VIEW_WIN_BOX_ID&&id!=VIEW_WIN_BG_ID&&isBtClickClose)
         {
             dismiss();
         }
