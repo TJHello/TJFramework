@@ -4,11 +4,14 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.caverock.androidsvg.SVG;
 import com.tjbaobao.framework.entity.BitmapConfig;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,14 +46,15 @@ public class ImageDownloader {
     private final List<String> downloadList = Collections.synchronizedList(new ArrayList<>());
     private boolean isStop;
     private Bitmap defaultBitmap ;
-    private int imageWidth,imageHeight;
+    private int imageWidth ,imageHeight;
     private static boolean isStrictMode = false;//严格模式
     private static boolean isSizeStrictMode = false;//尺寸严格模式
+    private ImageResolver imageResolver = new TJImageResolver();
 
     private ImageDownloader(){
         isStop = false;
-        imageWidth = 0 ;
-        imageHeight = 0;
+        imageWidth  = DeviceUtil.getScreenWidth()/2;
+        imageHeight = DeviceUtil.getScreenWidth()/2;
         if(imageLruCache==null)
         {
             imageLruCache = new LruCache<String, Bitmap>(cacheSize){
@@ -98,7 +102,6 @@ public class ImageDownloader {
     public BitmapConfig load(String url, ImageView imageView, OnProgressListener onProgressListener)
     {
         if(url==null)  return null;
-
         isStop = false;
         Image image = findImage(imageView);
         image.setUrl(url);
@@ -140,55 +143,42 @@ public class ImageDownloader {
         return url.indexOf("http")==0;
     }
 
-    private void startLoadThread(@NonNull final String url,@Nullable final OnProgressListener onImageLoaderListener)
+    private void startLoadThread(@NonNull final String url,@Nullable final OnProgressListener onProgressListener)
     {
         localThreadPool.execute(() -> {
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
             if(!ImageUtil.isOk(bitmapCache))
             {
-                if(!isHttp(url))
+                String path ;
+                if(isHttp(url))
                 {
-                    //本地路径
-                    Bitmap bitmap = loadLocalImage(url);
-                    if(!ImageUtil.isOk(bitmap))
-                    {
-                        //本地图片读取出错
-                        runInQueue(url,onImageLoaderListener);
-                    }
-                    else
-                    {
-                        onSuccess(url,url,bitmap);
-                        if(onImageLoaderListener!=null)
-                        {
-                            onImageLoaderListener.onProgress(1f,true);
-                        }
-                    }
+                    path = fileDownloader.getCache(url);
                 }
                 else
                 {
-                    String path = fileDownloader.getCache(url);
-                    Bitmap bitmap = loadLocalImage(path);
-                    if(!ImageUtil.isOk(bitmap))
-                    {
-                        runInQueue(url,onImageLoaderListener);
-                    }
-                    else
-                    {
-                        onSuccess(url,url,bitmap);
-                        if(onImageLoaderListener!=null)
-                        {
-                            onImageLoaderListener.onProgress(1f,true);
-                        }
-                    }
+                    path = url;
                 }
+                utilRes(url,path,imageWidth,imageHeight,onProgressListener);
             }
             else
             {
                 onSuccess(url,null,bitmapCache);
-                if(onImageLoaderListener!=null)
+                if(onProgressListener!=null)
                 {
-                    onImageLoaderListener.onProgress(1f,true);
+                    onProgressListener.onProgress(1f,true);
                 }
+            }
+        });
+    }
+
+    private void postToUtilRes(String url,String path,ImageView iv,OnProgressListener onProgressListener)
+    {
+        final int width = iv.getWidth();
+        final int height = iv.getHeight();
+        RxJavaUtil.runOnIOThread(new RxJavaUtil.IOTask<Object>() {
+            @Override
+            public void onIOThread() {
+                utilRes(url,path,width,height,onProgressListener);
             }
         });
     }
@@ -446,51 +436,38 @@ public class ImageDownloader {
             final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
             if(!ImageUtil.isOk(bitmapCache))
             {
-                if(url.indexOf("http")==0)
+                String path ;
+                if(isHttp(url))
                 {
-                    //网络连接
-                    String path = downloadImage(url,onProgressListener);
-                    Bitmap bitmap = loadLocalImage(path);
+                    //网络链接
+                    path = downloadImage(url,onProgressListener);
+
+                }
+                else
+                {
+                    path = url;
+                }
+                Image image = findImage(url);
+                if(image!=null)
+                {
+                    Bitmap bitmap = loadLocalImage(url,path,imageWidth,imageHeight);
                     if (ImageUtil.isOk(bitmap)) {
                         onSuccess(url,path,bitmap);
                     }
                     else
                     {
-                        FileUtil.delFileIfExists(path);
-                        path = downloadImage(url,onProgressListener);
-                        bitmap = loadLocalImage(path);
-                        if (ImageUtil.isOk(bitmap)) {
-                            onSuccess(url,path,bitmap);
-                        }
-                        else
-                        {
-                            LogUtil.w("ImageDownloader.LoadRunnable.run-http-downFail2:"+url+","+path);
-                            onFail(url);
-                        }
+                        onFail(url);
                     }
                 }
                 else
                 {
-                    //本地路径
-                    Bitmap bitmap = loadLocalImage(url);
-                    if(!ImageUtil.isOk(bitmapCache))
-                    {
-                        //本地图片读取出错
-                        String path = downloadImage(url, onProgressListener);
-                        Bitmap bitmapTry = loadLocalImage(path);
-                        if (ImageUtil.isOk(bitmapTry))
-                        {
-                            onSuccess(url,path,bitmapTry);
-                        }
-                        else
-                        {
-                            LogUtil.w("ImageDownloader.LoadRunnable.run-local-load:"+url+","+path);
-                            onFail(url);
-                        }
+                    Bitmap bitmap = loadLocalImage(url,path,imageWidth,imageHeight);
+                    if (ImageUtil.isOk(bitmap)) {
+                        onSuccess(url,path,bitmap);
                     }
                     else
                     {
-                        onSuccess(url,url,bitmap);
+                        onFail(url);
                     }
                 }
             }
@@ -521,48 +498,37 @@ public class ImageDownloader {
     }
 
     @Nullable
-    private Bitmap loadLocalImage(@Nullable String path)
+    private Bitmap loadLocalImage(@NonNull String url,@Nullable String path,int width,int height)
     {
         if(path==null||"".equals(path))
         {
             return null;
         }
-        Bitmap bitmap ;
-        if(imageWidth!=0&&imageHeight!=0)
-        {
-            if(isSizeStrictMode)
-            {
-                bitmap = ImageUtil.getBitmap(path);
-                if(ImageUtil.isOk(bitmap))
-                {
-                    float width = (float)imageWidth;
-                    float height = width*(float)bitmap.getHeight()/(float)bitmap.getWidth();
-                    if((width<bitmap.getWidth()||height<bitmap.getHeight())&&width!=0&&height!=0)
-                    {
-                        Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,width,height);
-                        if(!bitmap.equals(bitmap2))
-                        {
-                            ImageUtil.recycled(bitmap);
-                        }
-                        bitmap = bitmap2;
-                    }
-                }
-            }
-            else
-            {
-                bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
-            }
-        }
-        else
-        {
-            bitmap = ImageUtil.getBitmap(path);
-        }
+        Bitmap bitmap = imageResolver.onResolver(url,path,width,height);
         if(bitmap==null||bitmap.isRecycled())
         {
             FileUtil.delFileIfExists(path);
             return null;
         }
         return bitmap;
+    }
+
+    private void utilRes(@NonNull String url,@Nullable String path,int width,int height,@Nullable OnProgressListener onProgressListener)
+    {
+        Bitmap bitmap = loadLocalImage(url,path,width,height);
+        if(!ImageUtil.isOk(bitmap))
+        {
+            //本地图片读取出错
+            runInQueue(url,onProgressListener);
+        }
+        else
+        {
+            onSuccess(url,path,bitmap);
+            if(onProgressListener!=null)
+            {
+                onProgressListener.onProgress(1f,true);
+            }
+        }
     }
 
     private void onFail(@NonNull String url)
@@ -838,6 +804,10 @@ public class ImageDownloader {
         ImageDownloader.isSizeStrictMode = isSizeStrictMode;
     }
 
+    public void setImageResolver(@NonNull ImageResolver imageResolver) {
+        this.imageResolver = imageResolver;
+    }
+
     private OnImageLoaderListener onImageLoaderListener ;
 
     public OnImageLoaderListener getOnImageLoaderListener() {
@@ -859,4 +829,54 @@ public class ImageDownloader {
         default void onSetImageSuccess(@NonNull String url){}
     }
 
+    public interface ImageResolver{
+
+        Bitmap onResolver(@NonNull String url,@Nullable String path,int width,int height);
+    }
+
+    private class TJImageResolver implements ImageResolver{
+
+        @Override
+        public Bitmap onResolver(@NonNull String url,@Nullable String path, int width, int height) {
+            Bitmap bitmap = null;
+            if(width>0&&height>0)
+            {
+                String fix = FileUtil.getPrefix(path);
+                if(fix!=null&&fix.equalsIgnoreCase("svg"))
+                {
+                    bitmap = SVGUtil.getSvgBitmap(path,width,height);
+                }
+                else
+                {
+                    if(isSizeStrictMode)
+                    {
+                        bitmap = ImageUtil.getBitmap(path);
+                        if(ImageUtil.isOk(bitmap))
+                        {
+                            float widthTemp = (float)width;
+                            float heightTemp = widthTemp*(float)bitmap.getHeight()/(float)bitmap.getWidth();
+                            if((widthTemp<bitmap.getWidth()||heightTemp<bitmap.getHeight())&&widthTemp!=0&&heightTemp!=0)
+                            {
+                                Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,widthTemp,heightTemp);
+                                if(!bitmap.equals(bitmap2))
+                                {
+                                    ImageUtil.recycled(bitmap);
+                                }
+                                bitmap = bitmap2;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
+                    }
+                }
+            }
+            else
+            {
+                bitmap = ImageUtil.getBitmap(path);
+            }
+            return bitmap;
+        }
+    }
 }

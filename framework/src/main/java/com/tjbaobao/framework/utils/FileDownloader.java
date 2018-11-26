@@ -84,28 +84,25 @@ public class FileDownloader {
 		{
 			if(url.indexOf("http")==0)
 			{
-			    synchronized (downloadList)
-                {
-                    boolean isContains = downloadList.contains(tag);
-                    if(!isContains)
-                    {
-                        downloadList.add(tag);
-                        boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
-                        downloadList.remove(tag);
-                        if(isOk)
-                        {
-                            TbFileDAO.addFile(tag,path,FileUtil.getPrefix(path));
-                            downLoadHosts.put(tag,path);
-                            onSuccess(url,path);
-                            return path;
-                        }
-                    }
-                    else
-                    {
+				boolean isContains = downloadList.contains(tag);
+				if(!isContains)
+				{
+					downloadList.add(tag);
+					boolean isOk = OKHttpUtil.download(url,path,onProgressListener);
+					downloadList.remove(tag);
+					if(isOk)
+					{
+						TbFileDAO.addFile(tag,path,FileUtil.getPrefix(path));
+						downLoadHosts.put(tag,path);
+						onSuccess(url,path);
+						return path;
+					}
+				}
+				else
+				{
 //                        LogUtil.w("dFileDownloader.downloadExecute():isContains");
-                        return path;
-                    }
-                }
+					return path;
+				}
 			}
 			else
 			{
@@ -142,7 +139,12 @@ public class FileDownloader {
 	private void startDownloadThread(String url,String path,OnProgressListener onProgressListener)
 	{
 		QueueInfo queueInfo = new QueueInfo(url,path,onProgressListener);
-		queuePoolList.remove(queueInfo);
+		for(int i=queuePoolList.size()-1;i>=0;i--){
+			QueueInfo info = queuePoolList.get(i);
+			if(info.url.equals(url)){
+				queuePoolList.remove(i);
+			}
+		}
 		queuePoolList.add(queueInfo);
 		refQueuePool();
 	}
@@ -164,7 +166,7 @@ public class FileDownloader {
 						if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
 						{
 							QueueInfo queueInfo = queuePoolList.get(i);
-							String tag = queueInfo.getUrl();
+							String tag = FileUtil.formatUrl(queueInfo.getUrl());
 							if(!downloadList.contains(tag))
 							{
 								executorService.execute(new DownloadRunnable(queueInfo));
