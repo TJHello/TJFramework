@@ -51,13 +51,13 @@ public class TJDialogExample1Activity extends AppActivity{
 
         tjDialogExample1 = new TJDialogExample1(this){
             @Override
-            public void onBtContinueClick(View view) {
+            public void onBtContinueClick(@NonNull View view) {
                 super.onBtContinueClick(view);
                 Tools.showToast("确定");
             }
 
             @Override
-            public void onBtCancelClick(View view) {
+            public void onBtCancelClick(@NonNull View view) {
                 super.onBtCancelClick(view);
                 Tools.showToast("取消");
             }
@@ -66,13 +66,13 @@ public class TJDialogExample1Activity extends AppActivity{
 
         tjDialogExample2 = new TJDialogExample2(this){
             @Override
-            public void onBtContinueClick(View view) {
+            public void onBtContinueClick(@NonNull View view) {
                 super.onBtContinueClick(view);
                 Tools.showToast("确定");
             }
 
             @Override
-            public void onBtCancelClick(View view) {
+            public void onBtCancelClick(@NonNull View view) {
                 super.onBtCancelClick(view);
                 Tools.showToast("取消");
             }

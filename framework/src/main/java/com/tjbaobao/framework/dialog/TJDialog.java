@@ -20,6 +20,7 @@ import com.tjbaobao.framework.R;
 import com.tjbaobao.framework.imp.HandlerToolsImp;
 import com.tjbaobao.framework.imp.TJDialogImp;
 import com.tjbaobao.framework.listener.OnTJDialogListener;
+import com.tjbaobao.framework.utils.BaseHandler;
 import com.tjbaobao.framework.utils.LogUtil;
 
 /**
@@ -59,6 +60,10 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     /**
      *
      */
+    protected BaseHandler baseHandler = new BaseHandler(message -> {
+        onHandleMessage(message,message.what,message.obj);
+        return false;
+    });
     protected View baseView,winBgView,winBoxView,winTitleView,winBtContinue,winBtCancel,winBtClose;
     protected int width ,height;
     protected boolean isShow = false;//是否已经显示(直到动画完成之后才是隐藏或者显示)
@@ -153,7 +158,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     @Nullable
     protected abstract int[] onInitClick();
 
-    protected abstract void onInitView(View baseView);
+    protected abstract void onInitView(@NonNull View baseView);
 
     @Override
     public void show() {
@@ -255,10 +260,11 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
             }
 
         }
+        baseHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(@NonNull View v) {
         int id = v.getId();
         if(id==VIEW_WIN_BG_ID)
         {
@@ -295,7 +301,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     }
 
     @Override
-    public void onWinBgClick(View view) {
+    public void onWinBgClick(@NonNull View view) {
         if(canOutsideClose)
         {
             dismiss();
@@ -303,30 +309,30 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     }
 
     @Override
-    public void onWinBoxClick(View view) {
+    public void onWinBoxClick(@NonNull View view) {
 
     }
 
     @Override
-    public void onTitleClick(View view) {
+    public void onTitleClick(@NonNull View view) {
 
     }
 
     @Override
-    public void onBtContinueClick(View view) {
+    public void onBtContinueClick(@NonNull View view) {
 
     }
 
     @Override
-    public void onBtCancelClick(View view) {
+    public void onBtCancelClick(@NonNull View view) {
     }
 
     @Override
-    public void onBtCloseClick(View view) {
+    public void onBtCloseClick(@NonNull View view) {
     }
 
     @Override
-    public void onHandleMessage(Message msg, int what, Object obj) {
+    public void onHandleMessage(Message msg, int what, @Nullable Object obj) {
 
     }
 
@@ -336,12 +342,12 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     }
 
     @Override
-    public void sendMessage(int what, Object obj) {
+    public void sendMessage(int what,@Nullable Object obj) {
 
     }
 
     @Override
-    public void sendMessage(int what, Object obj, int arg1) {
+    public void sendMessage(int what,@Nullable Object obj, int arg1) {
 
     }
 

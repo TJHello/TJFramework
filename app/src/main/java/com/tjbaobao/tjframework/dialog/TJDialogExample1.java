@@ -37,7 +37,7 @@ public class TJDialogExample1 extends TJDialog {
     }
 
     @Override
-    protected void onInitView(View baseView) {
+    protected void onInitView(@NonNull View baseView) {
 
     }
 }

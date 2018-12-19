@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.tjbaobao.framework.entity.base.BaseListInfo;
+import com.tjbaobao.framework.listener.OnTJHolderItemClickListener;
 import com.tjbaobao.framework.ui.BaseRecyclerView;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
     private OnItemClickListener<Holder,Info> mOnItemClickListener ;
     private OnItemLongClickListener<Holder,Info> mOnItemLongClickListener ;
+    private OnTJHolderItemClickListener<Info> mOnTJHolderItemClickListener ;
 
     protected List<Info> infoList ;
     protected int itemLayoutRes ;
@@ -93,7 +95,24 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
                     holder.onInitAdapter(adapter);
                 }
             }
+            if(mOnTJHolderItemClickListener!=null){
+                if(holder.itemView instanceof ViewGroup){
+                    setAllViewClickListener((ViewGroup)holder.itemView,info);
+                }
+            }
             onBindViewHolder(holder,info,position);
+        }
+    }
+
+    private void setAllViewClickListener(ViewGroup viewGroup,Info info){
+        int childCount = viewGroup.getChildCount();
+        for(int i=0;i<childCount;i++){
+            View view = viewGroup.getChildAt(i);
+            if(view instanceof ViewGroup){
+                setAllViewClickListener((ViewGroup) view,info);
+            }else{
+                view.setOnClickListener(new HolderItemClickListener(info));
+            }
         }
     }
 
@@ -226,6 +245,23 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         }
     }
 
+    private class HolderItemClickListener implements View.OnClickListener{
+
+        private Info info ;
+
+        public HolderItemClickListener(Info info) {
+            this.info = info;
+        }
+
+        @Override
+        public void onClick(@NonNull View view) {
+            if(mOnTJHolderItemClickListener!=null)
+            {
+                mOnTJHolderItemClickListener.onClick(view,info);
+            }
+        }
+    }
+
     /**
      * 设置监听器
      * @param onItemClickListener {@link OnItemClickListener}
@@ -248,4 +284,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         }
     }
 
+    public void setOnTJHolderItemClickListener(OnTJHolderItemClickListener mOnTJHolderItemClickListener) {
+        this.mOnTJHolderItemClickListener = mOnTJHolderItemClickListener;
+    }
 }

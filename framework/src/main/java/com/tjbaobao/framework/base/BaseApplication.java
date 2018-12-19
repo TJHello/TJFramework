@@ -22,6 +22,7 @@ public class BaseApplication extends Application {
 	private static boolean isDebug ;
 	private static UncaughtExceptionHandler defHandler ;
 	public static String dexPage = null;
+	private static boolean isAutoHandlerException = true;
 
 	/**
 	 * 初始化框架
@@ -33,8 +34,10 @@ public class BaseApplication extends Application {
 		//监听activity生命周期
 		application.registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
 		// 设置未捕获异常处理器
-		defHandler = Thread.getDefaultUncaughtExceptionHandler();
-		Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
+		if(isAutoHandlerException){
+			defHandler = Thread.getDefaultUncaughtExceptionHandler();
+			Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
+		}
 		Boolean isDebug = (Boolean) Tools.getAppMetaData("FW_IS_DEBUG",false);
 		if(isDebug!=null)
 		{
@@ -154,5 +157,9 @@ public class BaseApplication extends Application {
 	public static void setDexPage(String page)
 	{
 		dexPage = page;
+	}
+
+	public static void setIsAutoHandlerException(boolean isAuto){
+		isAutoHandlerException = isAuto;
 	}
 }

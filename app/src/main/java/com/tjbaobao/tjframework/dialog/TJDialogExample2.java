@@ -42,7 +42,7 @@ public class TJDialogExample2 extends TJDialog implements OnTJDialogListener{
     }
 
     @Override
-    protected void onInitView(View baseView) {
+    protected void onInitView(@NonNull View baseView) {
         ivImage = baseView.findViewById(R.id.ivImage);
     }
 
