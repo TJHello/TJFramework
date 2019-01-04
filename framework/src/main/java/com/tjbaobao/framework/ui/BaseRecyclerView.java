@@ -3,6 +3,7 @@ package com.tjbaobao.framework.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -91,6 +92,15 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder, In
         public void onInitAdapter(@NonNull Adapter adapter)
         {
 
+        }
+
+        public void onInitAdapter(@NonNull Adapter adapter,int position)
+        {
+            onInitAdapter(adapter);
+        }
+
+        protected <T extends View> T findViewById(View view,@IdRes int id){
+            return view.findViewById(id);
         }
     }
 

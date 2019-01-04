@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="53dp"
+              android:gravity="center_vertical"
+              android:paddingLeft="@dimen/fw_margin"
+              android:paddingRight="@dimen/fw_margin"
+        >
+    <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_music_sdvanced"
+            />
+    <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/index_advanced_title_music"
+            android:textSize="18sp"
+            android:textColor="@color/fw_black_left"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/fw_margin_small"
+            android:layout_marginStart="@dimen/fw_margin_small"
+            android:layout_weight="1"
+            />
+</LinearLayout>

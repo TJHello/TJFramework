@@ -2,4 +2,15 @@
     <string name="app_name" translatable="false">TJFramework</string>
     <string name="authorities" translatable="false">com.tjbaobao.tjframework.provider</string>
 
+    <string name="index_advanced_title_music">Music</string>
+    <string name="index_advanced_title_animation">Animation</string>
+    <string name="index_advanced_title_sound">Sound</string>
+    <string name="index_advanced_title_vibration">Vibration</string>
+    <string name="index_advanced_title_thumbnail">Thumbnail</string>
+    <string name="index_advanced_title_watermark">Watermark</string>
+    <string name="index_advanced_title_tutorial">Tutorial</string>
+    <string name="index_advanced_title_rate">Rate us</string>
+    <string name="index_advanced_title_feedback">Feedback</string>
+    <string name="index_advanced_title_terms">Terms of service</string>
+    <string name="index_advanced_title_privacy">Privacy Policy</string>
 </resources>

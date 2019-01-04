@@ -156,17 +156,17 @@ public class FileDownloader {
 	{
 		synchronized (queuePoolList)
 		{
-			synchronized (downloadList)
+			int length = queuePoolList.size();
+			if(length>0)
 			{
-				int length = queuePoolList.size();
-				if(length>0)
+				for (int i = length-1; i >= 0; i--)
 				{
-					for (int i = length-1; i >= 0; i--)
+					if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
 					{
-						if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
+						QueueInfo queueInfo = queuePoolList.get(i);
+						String tag = FileUtil.formatUrl(queueInfo.getUrl());
+						synchronized (downloadList)
 						{
-							QueueInfo queueInfo = queuePoolList.get(i);
-							String tag = FileUtil.formatUrl(queueInfo.getUrl());
 							if(!downloadList.contains(tag))
 							{
 								executorService.execute(new DownloadRunnable(queueInfo));

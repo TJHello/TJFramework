@@ -1,5 +1,7 @@
 package com.tjbaobao.framework.base;
 
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import com.tjbaobao.framework.entity.base.BaseListInfo;
 import com.tjbaobao.framework.listener.OnTJHolderItemClickListener;
 import com.tjbaobao.framework.ui.BaseRecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +34,12 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     private OnItemClickListener<Holder,Info> mOnItemClickListener ;
     private OnItemLongClickListener<Holder,Info> mOnItemLongClickListener ;
     private OnTJHolderItemClickListener<Info> mOnTJHolderItemClickListener ;
+    private List<Integer> holderItemTypeList = new ArrayList<>();
 
     protected List<Info> infoList ;
     protected int itemLayoutRes ;
     private Map<Object,Holder> mapHolder = new HashMap<>();
+    private Map<Integer,Integer> layoutMap = new HashMap<>();
 
     public BaseRecyclerAdapter(List<Info> infoList, int itemLayoutRes) {
         this.infoList = infoList;
@@ -48,11 +53,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(itemLayoutRes==-1)
-        {
-            return null;
-        }
-        View view  = LayoutInflater.from(parent.getContext()).inflate(itemLayoutRes, parent,false);
+        View view  = LayoutInflater.from(parent.getContext()).inflate(onGetLayout(viewType), parent,false);
         if(view!=null)
         {
             return onGetHolder(view,viewType);
@@ -92,26 +93,29 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
                 Adapter adapter = ((BaseListInfo) info).getAdapter();
                 if(adapter!=null)
                 {
-                    holder.onInitAdapter(adapter);
+                    holder.onInitAdapter(adapter,position);
                 }
             }
             if(mOnTJHolderItemClickListener!=null){
                 if(holder.itemView instanceof ViewGroup){
-                    setAllViewClickListener((ViewGroup)holder.itemView,info);
+                    if(holderItemTypeList.size()==0||holderItemTypeList.contains(getItemViewType(position)))
+                    {
+                        setAllViewClickListener((ViewGroup)holder.itemView,info,position);
+                    }
                 }
             }
             onBindViewHolder(holder,info,position);
         }
     }
 
-    private void setAllViewClickListener(ViewGroup viewGroup,Info info){
+    private void setAllViewClickListener(ViewGroup viewGroup,Info info,int position){
         int childCount = viewGroup.getChildCount();
         for(int i=0;i<childCount;i++){
             View view = viewGroup.getChildAt(i);
             if(view instanceof ViewGroup){
-                setAllViewClickListener((ViewGroup) view,info);
+                setAllViewClickListener((ViewGroup) view,info,position);
             }else{
-                view.setOnClickListener(new HolderItemClickListener(info));
+                view.setOnClickListener(new HolderItemClickListener(info,position));
             }
         }
     }
@@ -181,6 +185,13 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         return null;
     }
 
+    protected int onGetLayout(int viewType){
+        if(layoutMap.containsKey(viewType)){
+            return layoutMap.get(viewType);
+        }
+        return itemLayoutRes;
+    }
+
     /**
      * Item点击监听器
      * @param <Holder> {@link Holder}
@@ -248,18 +259,24 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     private class HolderItemClickListener implements View.OnClickListener{
 
         private Info info ;
+        private int position;
 
-        public HolderItemClickListener(Info info) {
+        public HolderItemClickListener(Info info,int position) {
             this.info = info;
+            this.position = position;
         }
 
         @Override
         public void onClick(@NonNull View view) {
             if(mOnTJHolderItemClickListener!=null)
             {
-                mOnTJHolderItemClickListener.onClick(view,info);
+                mOnTJHolderItemClickListener.onClick(view,info,position);
             }
         }
+    }
+
+    public void addLayout(int viewType, @LayoutRes int layoutId){
+        layoutMap.put(viewType,layoutId);
     }
 
     /**
@@ -286,5 +303,14 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
     public void setOnTJHolderItemClickListener(OnTJHolderItemClickListener mOnTJHolderItemClickListener) {
         this.mOnTJHolderItemClickListener = mOnTJHolderItemClickListener;
+        holderItemTypeList.clear();
+    }
+
+    public void setOnTJHolderItemClickListener(OnTJHolderItemClickListener mOnTJHolderItemClickListener,int ... listenerType){
+        this.mOnTJHolderItemClickListener = mOnTJHolderItemClickListener;
+        holderItemTypeList.clear();
+        for(int type:listenerType){
+            holderItemTypeList.add(type);
+        }
     }
 }

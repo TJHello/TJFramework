@@ -11,6 +11,6 @@ import android.view.View;
  */
 public interface OnTJHolderItemClickListener<Info> {
 
-    void onClick(@NonNull View view,@NonNull Info info);
+    void onClick(@NonNull View view,@NonNull Info info,int position);
 
 }

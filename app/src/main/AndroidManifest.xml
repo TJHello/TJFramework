@@ -33,6 +33,7 @@
         <activity android:name=".activity.example.TJActivityExample2Activity" />
         <activity android:name=".activity.example.TJDialogExample1Activity" />
         <activity android:name=".activity.example.DataBaseExampleActivity" />
+        <activity android:name=".activity.example.TJActivityExample3Activity"/>
 
 
         <provider
