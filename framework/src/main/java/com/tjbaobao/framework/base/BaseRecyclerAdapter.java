@@ -1,5 +1,7 @@
 package com.tjbaobao.framework.base;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -12,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.tjbaobao.framework.entity.base.BaseListInfo;
+import com.tjbaobao.framework.imp.HandlerToolsImp;
 import com.tjbaobao.framework.listener.OnTJHolderItemClickListener;
 import com.tjbaobao.framework.ui.BaseRecyclerView;
+import com.tjbaobao.framework.utils.BaseHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,22 +28,30 @@ import java.util.Map;
  * RecyclerAdapter
  * 对RecyclerView.Adapter进行封装
  * 将RecyclerView,Adapter,Holder,OnItemClickListener进行连贯统一
+ * 支持对Item内子View的点击事件进行监听
  *
  * Created by TJbaobao on 2018/1/6.
  */
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends Adapter<Holder> {
+public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends Adapter<Holder> implements HandlerToolsImp {
+
+    protected BaseHandler handler = new BaseHandler(message -> {
+        onHandleMessage(message,message.what,message.obj);
+        return false;
+    });
 
     private OnItemClickListener<Holder,Info> mOnItemClickListener ;
     private OnItemLongClickListener<Holder,Info> mOnItemLongClickListener ;
     private OnTJHolderItemClickListener<Info> mOnTJHolderItemClickListener ;
     private List<Integer> holderItemTypeList = new ArrayList<>();
+    private List<Integer> holderItemIdList = new ArrayList<>();
 
     protected List<Info> infoList ;
     protected int itemLayoutRes ;
     private Map<Object,Holder> mapHolder = new HashMap<>();
     private Map<Integer,Integer> layoutMap = new HashMap<>();
+
 
     public BaseRecyclerAdapter(List<Info> infoList, int itemLayoutRes) {
         this.infoList = infoList;
@@ -115,7 +127,9 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
             if(view instanceof ViewGroup){
                 setAllViewClickListener((ViewGroup) view,info,position);
             }else{
-                view.setOnClickListener(new HolderItemClickListener(info,position));
+                if(holderItemIdList.size()==0||holderItemIdList.contains(view.getId())){
+                    view.setOnClickListener(new HolderItemClickListener(info,position));
+                }
             }
         }
     }
@@ -301,16 +315,62 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         }
     }
 
-    public void setOnTJHolderItemClickListener(OnTJHolderItemClickListener mOnTJHolderItemClickListener) {
+    /**
+     * 监听所有子项View的点击事件
+     * 注意：设置该方法会监听所有组件，可能会阻挡item的点击事件的监听,解决方法是通过另外的两个方法，进行选择性监听
+     * @param mOnTJHolderItemClickListener  {@link OnTJHolderItemClickListener }
+     */
+    public void setOnTJHolderItemClickListener(OnTJHolderItemClickListener<Info> mOnTJHolderItemClickListener) {
         this.mOnTJHolderItemClickListener = mOnTJHolderItemClickListener;
         holderItemTypeList.clear();
+        holderItemIdList.clear();
     }
 
-    public void setOnTJHolderItemClickListener(OnTJHolderItemClickListener mOnTJHolderItemClickListener,int ... listenerType){
+    /**
+     * 监听指定类型的子项View的点击事件
+     * @param mOnTJHolderItemClickListener {@link OnTJHolderItemClickListener }
+     * @param listenerType viewType
+     */
+    public void setOnTJHolderItemClickListener(OnTJHolderItemClickListener<Info> mOnTJHolderItemClickListener,int ... listenerType){
         this.mOnTJHolderItemClickListener = mOnTJHolderItemClickListener;
         holderItemTypeList.clear();
+        holderItemIdList.clear();
         for(int type:listenerType){
             holderItemTypeList.add(type);
         }
+    }
+
+    /**
+     * 监听指定id的子项View的点击事件
+     * @param onTJHolderItemClickListener {@link OnTJHolderItemClickListener }
+     * @param listenerId viewId
+     */
+    public void setOnTJHolderItemIdClickListener(OnTJHolderItemClickListener<Info> onTJHolderItemClickListener,@IdRes int ... listenerId){
+        this.mOnTJHolderItemClickListener = onTJHolderItemClickListener;
+        holderItemTypeList.clear();
+        holderItemIdList.clear();
+        for(int id:listenerId){
+            holderItemIdList.add(id);
+        }
+    }
+
+    @Override
+    public void onHandleMessage(Message msg, int what, Object obj) {
+
+    }
+
+    @Override
+    public void sendMessage(int what) {
+        handler.sendMessage(what);
+    }
+
+    @Override
+    public void sendMessage(int what, Object obj) {
+        handler.sendMessage(what,obj);
+    }
+
+    @Override
+    public void sendMessage(int what, Object obj, int arg1) {
+        handler.sendMessage(what,obj,arg1);
     }
 }

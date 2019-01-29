@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import com.tjbaobao.framework.dialog.BaseDialog;
 import com.tjbaobao.framework.utils.ImageDownloader;
-import com.tjbaobao.framework.utils.RxTimerTask;
 import com.tjbaobao.tjframework.R;
 
 public class ImageDialog extends BaseDialog {

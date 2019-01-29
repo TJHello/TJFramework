@@ -12,7 +12,7 @@ import java.io.Writer;
  * Created by TJbaobao on 2018/3/8.
  */
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LogUtil {
     private static boolean IS_DEBUG = false;
     private static final String TAG = "TJFramework";

@@ -281,14 +281,23 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         else if(id==VIEW_WIN_BT_CONTINUE_ID)
         {
             onBtContinueClick(v);
+            if(onTJDialogListener!=null){
+                onTJDialogListener.onBtContinueClick(v);
+            }
         }
         else if(id==VIEW_WIN_BT_CANCEL_ID)
         {
             onBtCancelClick(v);
+            if(onTJDialogListener!=null){
+                onTJDialogListener.onBtCancelClick(v);
+            }
         }
         else if(id==VIEW_WIN_BT_CLOSE_ID)
         {
             onBtCloseClick(v);
+            if(onTJDialogListener!=null){
+                onTJDialogListener.onBtCloseClick(v);
+            }
         }
         if(onTJDialogListener!=null)
         {

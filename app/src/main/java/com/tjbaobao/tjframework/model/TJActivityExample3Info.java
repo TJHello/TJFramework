@@ -1,6 +1,7 @@
 package com.tjbaobao.tjframework.model;
 
 import com.tjbaobao.framework.entity.base.BaseListInfo;
+import com.tjbaobao.tjframework.model.enums.TJActivityExample3Enum;
 
 /**
  * 作者:TJbaobao
@@ -18,8 +19,7 @@ public class TJActivityExample3Info extends BaseListInfo {
     public static final int LAYOUT_TUTORIAL = 5;
     public static final int MARGIN = 6;
 
-    public int iconResId ;
-    public int titleResId ;
+    public TJActivityExample3Enum example3Enum ;
     public boolean isSelect ;
 
     public TJActivityExample3Info(int type) {

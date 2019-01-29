@@ -3,20 +3,11 @@ package com.tjbaobao.framework.utils;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
+import android.support.annotation.Nullable;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +22,7 @@ import java.util.Map;
 @SuppressWarnings({"JavaDoc", "UnusedReturnValue", "unused", "WeakerAccess", "SameParameterValue"})
 public class FileUtil {
 	private static final String DEF_CHARSET_NAME = "iso8859-1";
-	private static final int DEF_SIZE_SUFF=1024*1024;//默认缓存区字节大小
+	private static final int DEF_SIZE_BUFF =1024*4;//默认缓存区字节大小
 	//--------------------------Write
 	@SuppressWarnings({"JavaDoc", "WeakerAccess", "UnusedReturnValue", "unused"})
 	public static class Writer{
@@ -170,7 +161,7 @@ public class FileUtil {
 				return false;
 			}
 			createFolder(path);
-			byte[] byteBuff = new byte[DEF_SIZE_SUFF];
+			byte[] byteBuff = new byte[DEF_SIZE_BUFF];
 			try {
 				FileUtil.delFileIfExists(path);
 				FileOutputStream fileOutputStream = new FileOutputStream(new File(path));
@@ -201,6 +192,104 @@ public class FileUtil {
 	//--------------------------Read
 	@SuppressWarnings({"JavaDoc", "WeakerAccess", "unused"})
 	public static class Reader{
+
+		@Nullable
+		public static byte[] readToBytes(@NonNull InputStream inStream){
+			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			try{
+				byte[] buffer = new byte[DEF_SIZE_BUFF];
+				int len ;
+				while ((len=inStream.read(buffer))!=-1){
+					outStream.write(buffer,0,len);
+				}
+				return outStream.toByteArray();
+			}catch (IOException e){
+				e.printStackTrace();
+				return null;
+			}finally {
+				CloseUtil.closeIO(outStream);
+			}
+		}
+
+		@Nullable
+		public static byte[] readToBytes(@NonNull File file){
+			FileInputStream inStream = null;
+			FileChannel inChannel;
+			try{
+				inStream = new FileInputStream(file);
+				inChannel = inStream.getChannel();
+				ByteBuffer buffer = ByteBuffer.allocate((int) inChannel.size());
+				inChannel.read(buffer);
+				return buffer.array();
+			}catch (IOException e){
+				e.printStackTrace();
+				return null;
+			}finally {
+				CloseUtil.closeIO(inStream);
+			}
+		}
+
+		@Nullable
+		public static byte[] readToBytes(@NonNull String path){
+			return readToBytes(new File(path));
+		}
+
+		@Nullable
+		public static String readToText(@NonNull InputStream inputStream,String charsetName){
+			byte[] bytes = readToBytes(inputStream);
+			if(bytes!=null){
+				try {
+					return new String(bytes,charsetName);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+			return null;
+		}
+
+		@Nullable
+		public static String readToText(@NonNull File file,String charsetName){
+			byte[] bytes = readToBytes(file);
+			if(bytes!=null){
+				try {
+					return new String(bytes,charsetName);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+			return null;
+		}
+
+		@Nullable
+		public static String readToText(@NonNull String path,String charsetName){
+			return readToText(new File(path),charsetName);
+		}
+
+		@Nullable
+		public static String readToText(@NonNull InputStream inputStream){
+			byte[] bytes = readToBytes(inputStream);
+			if(bytes!=null){
+				return new String(bytes);
+			}
+			return null;
+		}
+
+		@Nullable
+		public static String readToText(@NonNull File file){
+			byte[] bytes = readToBytes(file);
+			if(bytes!=null){
+				return new String(bytes);
+			}
+			return null;
+		}
+
+		@Nullable
+		public static String readToText(@NonNull String path){
+			return readToText(new File(path));
+		}
+
 		/**
 		 * 在指定文件的指定位置读取指定大小的内容到字节数组
 		 * @param position 开始读取的位置
@@ -237,7 +326,13 @@ public class FileUtil {
 			return byteBuffer;
 		}
 
-		public static byte[] readFileToBytes(String path)
+		/**
+		 * @deprecated 建议使用@{{@link #readToBytes(String)}}
+		 * @param path
+		 * @return
+		 */
+		@Deprecated
+		public static byte[] readFileToBytes(@NonNull String path)
 		{
 			File file = new File(path);
 			if(file.exists())
@@ -248,10 +343,11 @@ public class FileUtil {
 		}
 
 		/**
-		 * 通过inputStream读取字符串
+		 * @deprecated 建议使用@{@link #readToText(InputStream)}
 		 * @param inputStream
-		 * @return
+		 * @return String
 		 */
+		@Deprecated
 		public static String readTextByInputSteam(InputStream inputStream)
 		{
 			if(inputStream==null) return null;
@@ -273,10 +369,11 @@ public class FileUtil {
 		}
 
 		/**
-		 * 通过文本地址读取文本文件
-		 * @param path inPath
-		 * @return String
+		 * @deprecated @{@link #readToText(String)}
+		 * @param path
+		 * @return
 		 */
+		@Deprecated
 		public static String readTextByPath(String path)
 		{
 			File file = new File(path);
@@ -308,7 +405,7 @@ public class FileUtil {
 		/**
 		 * 一行一行的将文本读取出来
 		 * @param path inPath
-		 * @return lineString
+		 * @return lineStringList
 		 */
 		public static ArrayList<String> readTextLineListByPath(String path)
 		{
@@ -487,7 +584,7 @@ public class FileUtil {
 	public static void copyFile(long position, int size, String inPath, String outPath) {
 		delFileIfExists(outPath);
 		long sizeNow = 0;
-		int sizeBase = DEF_SIZE_SUFF;
+		int sizeBase = DEF_SIZE_BUFF;
 		while (sizeNow < size) {
 
 			if (sizeNow + sizeBase > size) {
@@ -539,7 +636,7 @@ public class FileUtil {
     	if(inputStream==null) return false;
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(outPath);
-            byte[] buffer = new byte[DEF_SIZE_SUFF];
+            byte[] buffer = new byte[DEF_SIZE_BUFF];
             int byteCount;
             while((byteCount = inputStream.read(buffer)) > 0) {
                 fileOutputStream.write(buffer, 0, byteCount);
@@ -565,7 +662,7 @@ public class FileUtil {
 	 */
 	public static boolean coverFile(long position, String inFilePath, String outFilePath) {
 		File inFile = new File(inFilePath);
-		int sizeBuff = DEF_SIZE_SUFF;
+		int sizeBuff = DEF_SIZE_BUFF;
 		if (inFile.exists()) {
 			try {
 				RandomAccessFile randomAccessFile = new RandomAccessFile(outFilePath, "rw");
@@ -605,7 +702,7 @@ public class FileUtil {
 			randomAccessFile = new RandomAccessFile(path, "rw");
 			long position = 0 ;
 			long nowSize = 0;
-			int sizeBuff = DEF_SIZE_SUFF;
+			int sizeBuff = DEF_SIZE_BUFF;
 			while(nowSize<size)
 			{
 				if(nowSize+sizeBuff>size)

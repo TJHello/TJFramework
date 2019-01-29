@@ -19,7 +19,7 @@ public class TbBaseDAO {
         create();
     }
 
-    private static DataBaseHelper create()
+    public static DataBaseHelper create()
     {
         if(mDataBaseHelper==null)
         {

@@ -2,12 +2,13 @@ package com.tjbaobao.framework.utils;
 
 import java.io.UnsupportedEncodingException;
 
+@SuppressWarnings("WeakerAccess")
 public class HexConvertTools {
 	private static final String DEF_CHARSET_NAME = "iso8859-1";
 	/**
 	 * 将字节数组转为Int
-	 * @param bytes
-	 * @param offset 
+	 * @param bytes bytes
+	 * @param offset  offset
 	 * @return
 	 */
 	public static int bytesToInt(byte[] bytes, int offset) {

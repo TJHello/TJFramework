@@ -13,17 +13,23 @@ import android.widget.TextView;
 
 import com.tjbaobao.framework.base.BaseApplication;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.tjbaobao.framework.base.BaseApplication.context;
 
 /**
  * 字体管理器
+ * 自带缓存管理，避免生成多个typeface对象，造成内存泄漏。
  * Created by TJbaobao on 2017/6/22.
  */
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class FontManager {
 
-    public static void changeFonts(@NonNull ViewGroup viewGroup, String fontPath) {
+    private static final Map<String,Typeface> typefaceMap = new HashMap<>();
+
+    public static void changeFonts(@NonNull ViewGroup viewGroup,@NonNull String fontPath) {
         Typeface tf = getTypeface(fontPath);
         changeFonts(viewGroup,tf);
     }
@@ -40,27 +46,17 @@ public class FontManager {
         }
     }
 
-    public static void changeFont(View view,String fontPath)
+    public static void changeFont(@NonNull View view,@NonNull String fontPath)
     {
         Typeface tf = getTypeface(fontPath);
         changeFont(view,tf);
     }
 
-    public static void changeFont(View view,Typeface typeface)
+    public static void changeFont(@NonNull View view,Typeface typeface)
     {
         if (view instanceof TextView) {
             ((TextView) view).setTypeface(typeface);
         }
-    }
-
-    public static Typeface getTypeface(String fontPath)
-    {
-        Context context = BaseApplication.getContext();
-        if(context!=null)
-        {
-            return  Typeface.createFromAsset(context.getAssets(),fontPath);
-        }
-        return null;
     }
 
     public static void changeFonts(@NonNull Activity activity, String fontPath)
@@ -95,6 +91,21 @@ public class FontManager {
             }
         }
         catch (Exception ignored){}
+    }
+
+    public static Typeface getTypeface(@NonNull String fontPath)
+    {
+        Context context = BaseApplication.getContext();
+        if(context!=null)
+        {
+            if(typefaceMap.containsKey(fontPath)){
+                return typefaceMap.get(fontPath);
+            }
+            Typeface typeface = Typeface.createFromAsset(context.getAssets(),fontPath);
+            typefaceMap.put(fontPath,typeface);
+            return typeface;
+        }
+        return null;
     }
 
 }

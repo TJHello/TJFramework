@@ -79,19 +79,19 @@ public class TJActivityExample3Adapter extends BaseRecyclerAdapter<TJActivityExa
     }
 
     private void bindTitleSwitch(@NonNull Holder holder, @NonNull TJActivityExample3Info info, int position){
-        holder.ivIcon.setImageResource(info.iconResId);
-        holder.tvTitle.setText(info.titleResId);
+        holder.ivIcon.setImageResource(info.example3Enum.iconResId);
+        holder.tvTitle.setText(info.example3Enum.titleResId);
         holder.switchView.setChecked(info.isSelect);
     }
 
     private void bindTitleMenu(@NonNull Holder holder, @NonNull TJActivityExample3Info info, int position){
-        holder.ivIcon.setImageResource(info.iconResId);
-        holder.tvTitle.setText(info.titleResId);
+        holder.ivIcon.setImageResource(info.example3Enum.iconResId);
+        holder.tvTitle.setText(info.example3Enum.titleResId);
     }
 
     private void bindTitleNone(@NonNull Holder holder, @NonNull TJActivityExample3Info info, int position){
-        holder.ivIcon.setImageResource(info.iconResId);
-        holder.tvTitle.setText(info.titleResId);
+        holder.ivIcon.setImageResource(info.example3Enum.iconResId);
+        holder.tvTitle.setText(info.example3Enum.titleResId);
     }
 
     public class Holder extends BaseRecyclerView.BaseViewHolder {

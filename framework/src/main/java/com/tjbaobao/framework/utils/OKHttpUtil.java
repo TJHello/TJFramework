@@ -8,18 +8,18 @@ import com.tjbaobao.framework.listener.OnProgressListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Callback;
-import okhttp3.Interceptor;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
 /**
+ *对OKHttp的封装
+ * 1、支持文件下载上传进度条。
+ * 2、支持文件下载二级缓存，避免文件损坏
+ * 3、接入cookie功能。
  *
  * Created by TJbaobao on 2018/1/12.
  */
@@ -27,13 +27,40 @@ import okhttp3.ResponseBody;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class OKHttpUtil {
 
-    private static final OkHttpClient mOkHttpClient =  new OkHttpClient.Builder()
+    private static CookieJar userCookieJar = null;
+    private static OkHttpClient.Builder builder = new OkHttpClient.Builder();
+    private static final OkHttpClient mOkHttpClient = builder
+            .cookieJar(new TJCookieJar())
             .connectTimeout(3,TimeUnit.SECONDS)//设置连接超时时间
             .build();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static final String CACHE_SUFFIX = ".cache";
     static {
     }
+
+    private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+    private static class TJCookieJar implements CookieJar {
+
+        @Override
+        public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
+            if(userCookieJar==null){
+                cookieStore.put(url.host(), cookies);
+            }else{
+                userCookieJar.saveFromResponse(url,cookies);
+            }
+        }
+
+        @Override
+        public List<Cookie> loadForRequest(@NonNull HttpUrl url) {
+            if(userCookieJar==null){
+                List<Cookie> cookies = cookieStore.get(url.host());
+                return cookies != null ? cookies : new ArrayList<>();
+            }else{
+                return userCookieJar.loadForRequest(url);
+            }
+        }
+    }
+
     private static Response execute(Request request){
         try {
             return  mOkHttpClient.newCall(request).execute();
@@ -136,7 +163,6 @@ public class OKHttpUtil {
         }
     }
 
-
     public static String upload(String url, String path)
     {
         return upload(url,path,null);
@@ -148,6 +174,15 @@ public class OKHttpUtil {
         TJRequestBody tjRequestBody = new TJRequestBody(fileBody,onProgressListener);
         Request request = new Request.Builder().url(url).post(tjRequestBody).build();
        return executeString(request);
+    }
+
+    public static OkHttpClient.Builder getBuilder(){
+        return builder;
+    }
+
+    public static OkHttpClient.Builder setCookieJar(CookieJar jar){
+        builder.cookieJar(jar);
+        return builder;
     }
 
 }
