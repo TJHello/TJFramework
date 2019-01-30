@@ -13,9 +13,9 @@
     <dimen name="fw_margin">16dp</dimen>
     <dimen name="fw_margin_big">20dp</dimen>
 
-    <dimen name="app_text_size_s">14sp</dimen>
-    <dimen name="app_text_size_m">16sp</dimen>
-    <dimen name="app_text_size_l">18sp</dimen>
-    <dimen name="app_text_size_x">22sp</dimen>
+    <dimen name="fw_text_size_s">14sp</dimen>
+    <dimen name="fw_text_size_m">16sp</dimen>
+    <dimen name="fw_text_size_l">18sp</dimen>
+    <dimen name="fw_text_size_x">22sp</dimen>
 
 </resources>
