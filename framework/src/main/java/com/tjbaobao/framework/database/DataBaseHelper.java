@@ -39,7 +39,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static DataBaseHelper create(Context context) throws Exception {
         if(mDataBaseHelper==null)
         {
-            ApplicationInfo appInfo = null;
+            ApplicationInfo appInfo;
             try {
                 appInfo = context.getPackageManager()
                         .getApplicationInfo(DeviceUtil.getPackageName(),

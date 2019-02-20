@@ -94,7 +94,9 @@ public class DeviceUtil {
 	public static int getScreenWidth() {
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics dm = new DisplayMetrics();
-		wm.getDefaultDisplay().getMetrics(dm);
+		if(wm!=null){
+			wm.getDefaultDisplay().getMetrics(dm);
+		}
 		return dm.widthPixels;
 	}
 

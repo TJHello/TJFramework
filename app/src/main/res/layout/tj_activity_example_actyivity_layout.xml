@@ -6,7 +6,9 @@
     <com.tjbaobao.framework.ui.BaseTitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"/>
+        android:layout_height="?actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+            />
     <com.tjbaobao.framework.ui.BaseRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

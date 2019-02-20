@@ -18,11 +18,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/llTitleBar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:gravity="right">
+            android:gravity="right"
+                app:layout_constraintTop_toTopOf="parent"
+                >
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ivDel"
@@ -55,7 +57,7 @@
                 android:background="@drawable/fw_ripple_gray"
                 android:padding="@dimen/fw_margin"
                 android:src="@drawable/ic_new" />
-        </LinearLayout>
+        </android.support.v7.widget.LinearLayoutCompat>
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/ivImage"
@@ -71,7 +73,7 @@
             android:gravity="center"
             android:text="继续"
             android:textColor="@color/fw_black_left"
-            android:textSize="@dimen/app_text_size_l"
+            android:textSize="@dimen/fw_text_size_l"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,7 +88,7 @@
             android:gravity="center"
             android:text="取消"
             android:textColor="@color/fw_black_left"
-            android:textSize="@dimen/app_text_size_l"
+            android:textSize="@dimen/fw_text_size_l"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

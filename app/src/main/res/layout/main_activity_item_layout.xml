@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1"
+        app:layout_constraintTop_toTopOf="parent"
         >
         <android.support.v7.widget.CardView
             android:id="@+id/cardView"
@@ -28,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
-                    android:textSize="@dimen/app_text_size_x"
+                    android:textSize="@dimen/fw_text_size_x"
                     android:textColor="@color/fw_black_left"
                     android:layout_centerInParent="true"
                     />
@@ -37,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
-                    android:textSize="@dimen/app_text_size_s"
+                    android:textSize="@dimen/fw_text_size_s"
                     android:textColor="@color/fw_black_left"
                     android:layout_below="@id/tvTitle"
                     android:layout_centerHorizontal="true"

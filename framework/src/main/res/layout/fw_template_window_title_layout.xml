@@ -9,7 +9,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/app_text_size_x"
+        android:textSize="@dimen/fw_text_size_x"
         android:textColor="@color/fw_black_left"
         android:layout_centerInParent="true"
         android:text="Title"

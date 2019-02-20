@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1"
         android:background="@drawable/database_item_bg"
         android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -34,8 +36,8 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textColor="@color/fw_black_left"
-            android:textSize="@dimen/app_text_size_s"
+            android:textSize="@dimen/fw_text_size_s"
             android:layout_marginTop="@dimen/fw_margin"
             />
-    </LinearLayout>
+    </android.support.v7.widget.LinearLayoutCompat>
 </android.support.constraint.ConstraintLayout>

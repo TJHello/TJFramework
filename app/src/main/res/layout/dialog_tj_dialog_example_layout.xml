@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/fw_window_bg"
     >
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:id="@id/fw_dialog_win_box"
         android:layout_width="@dimen/fw_window_width"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="我是一个简单的弹窗"
             android:textColor="@color/fw_black_left"
-            android:textSize="@dimen/app_text_size_l"
+            android:textSize="@dimen/fw_text_size_l"
             android:layout_marginTop="?actionBarSize"
             android:layout_marginBottom="?actionBarSize"
             />
@@ -44,7 +44,7 @@
                 android:layout_height="@dimen/fw_button_height"
                 android:text="确定"
                 android:textColor="@color/fw_black_left"
-                android:textSize="@dimen/app_text_size_l"
+                android:textSize="@dimen/fw_text_size_l"
                 android:background="@drawable/fw_ripple_gray"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -56,12 +56,12 @@
                 android:layout_height="@dimen/fw_button_height"
                 android:text="取消"
                 android:textColor="@color/fw_black_left"
-                android:textSize="@dimen/app_text_size_l"
+                android:textSize="@dimen/fw_text_size_l"
                 android:background="@drawable/fw_ripple_gray"
                 android:layout_weight="1"
                 android:gravity="center"
                 />
         </LinearLayout>
-    </LinearLayout>
+    </android.support.v7.widget.LinearLayoutCompat>
 
 </android.support.constraint.ConstraintLayout>

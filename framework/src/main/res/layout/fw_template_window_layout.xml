@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/ll_index"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/fw_window_bg"
               android:gravity="center_vertical|center_horizontal">
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/ll_windows_index"
         android:layout_width="@dimen/fw_window_width"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         <include
             layout="@layout/fw_template_window_title_layout"
             />
-        <LinearLayout
+        <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/bt_continue"
             android:layout_width="@dimen/fw_button_width"
             android:layout_height="@dimen/fw_button_height"
@@ -33,10 +33,11 @@
                 android:textSize="16sp"
                 android:textColor="@color/fw_blue_on"
                 android:layout_marginLeft="@dimen/fw_margin_small"
+                android:layout_marginStart="@dimen/fw_margin_small"
                 android:gravity="center"
                 />
-        </LinearLayout>
-        <LinearLayout
+        </android.support.v7.widget.LinearLayoutCompat>
+        <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/bt_cancel"
             android:layout_width="@dimen/fw_button_width"
             android:layout_height="@dimen/fw_button_height"
@@ -52,8 +53,9 @@
                 android:textSize="16sp"
                 android:textColor="@color/fw_black_left"
                 android:layout_marginLeft="@dimen/fw_margin_small"
+                android:layout_marginStart="@dimen/fw_margin_small"
                 android:gravity="center"
                 />
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+        </android.support.v7.widget.LinearLayoutCompat>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.v7.widget.LinearLayoutCompat>
