@@ -7,6 +7,7 @@ import android.support.annotation.AnimRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,10 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     public TJDialog(@NonNull Context context, @LayoutRes int layoutId) {
         this(context,layoutId,MATCH_PARENT,MATCH_PARENT);
+    }
+
+    public TJDialog(@NonNull Context context, @LayoutRes int layoutId,@StyleRes int styleId) {
+        this(context,layoutId,MATCH_PARENT,MATCH_PARENT,styleId);
     }
 
     public TJDialog(@NonNull Context context, @LayoutRes int layoutId, int width, int height)
