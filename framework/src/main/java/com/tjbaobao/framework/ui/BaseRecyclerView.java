@@ -1,15 +1,11 @@
 package com.tjbaobao.framework.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.*;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -181,5 +177,25 @@ public class BaseRecyclerView<Holder extends BaseRecyclerView.BaseViewHolder, In
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(state);
+    }
+
+    /**
+     * 关闭Item被改变时的渐变动画
+     */
+    public void closeChangeAnimations(){
+        ItemAnimator animator = getItemAnimator();
+        if(animator instanceof DefaultItemAnimator){
+            ((DefaultItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
+    }
+
+    /**
+     * 打开Item被改变时的渐变动画
+     */
+    public void openChangeAnimations(){
+        ItemAnimator animator = getItemAnimator();
+        if(animator instanceof DefaultItemAnimator){
+            ((DefaultItemAnimator) animator).setSupportsChangeAnimations(true);
+        }
     }
 }

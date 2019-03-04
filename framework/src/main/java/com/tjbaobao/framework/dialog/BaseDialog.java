@@ -32,10 +32,13 @@ import com.tjbaobao.framework.utils.BaseHandler;
  * 2、创建实例，传入布局id
  * 3、show()
  *
+ * @deprecated 建议使用 {@link TJDialog}
+ *
  * Created by TJbaobao on 2017/7/24.
  */
 
 @SuppressWarnings({"unused", "WeakerAccess"})
+@Deprecated
 public abstract class BaseDialog extends Dialog implements View.OnClickListener,HandlerToolsImp {
 
     private static final int Handler_What_Anim_Stop = 1001;

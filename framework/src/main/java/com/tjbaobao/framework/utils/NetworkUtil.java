@@ -20,7 +20,10 @@ import java.net.URLEncoder;
 /**
  * 网络组件
  * @author lyzyjoyo
+ *
+ * @deprecated 已经弃用，建议使用 {@link OKHttpUtil}
  */
+@Deprecated
 public class NetworkUtil
 {
 

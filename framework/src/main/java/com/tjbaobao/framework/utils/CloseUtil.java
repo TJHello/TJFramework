@@ -3,6 +3,7 @@ package com.tjbaobao.framework.utils;
 import java.io.Closeable;
 import java.io.IOException;
 
+@SuppressWarnings("WeakerAccess")
 public class CloseUtil {
     /**
      * 关闭IO(静默操作)

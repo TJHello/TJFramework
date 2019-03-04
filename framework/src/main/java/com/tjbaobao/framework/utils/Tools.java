@@ -42,12 +42,9 @@ public class Tools {
 	private static SharedPreferences pref ;
 	static{
 		context = BaseApplication.getContext();
-		if(context!=null)
-		{
+		if(context!=null) {
 			pref = context.getSharedPreferences("app", 0);
-		}
-		else
-		{
+		} else {
 			LogUtil.e("请调用BaseApplication.init()初始化框架！");
 		}
 
@@ -68,7 +65,8 @@ public class Tools {
 	{
 		try {
 			Thread.sleep(time);
-		} catch (InterruptedException ignored) {
+		} catch (InterruptedException e) {
+			LogUtil.exception(e);
 		}
 	}
 	public static void setOnclickBackground(final View view)

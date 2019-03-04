@@ -15,9 +15,11 @@ public interface OnTJDialogListener {
     /**
      * 按钮点击监听
      * @param view view
-     * @return 自定义的状态，入不需要可返回任何数字，例如0
+     * @return 自定义的状态，如不需要可返回任何数字，例如0
      */
-    int onTJClick(@NonNull View view);
+    default int onTJClick(@NonNull View view){
+        return 0;
+    }
 
     default void onDismiss(DialogInterface dialog, int state){}
 

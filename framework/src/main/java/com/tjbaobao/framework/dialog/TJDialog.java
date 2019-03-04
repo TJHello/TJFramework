@@ -47,8 +47,9 @@ import com.tjbaobao.framework.utils.LogUtil;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class TJDialog extends Dialog  implements View.OnClickListener,HandlerToolsImp,TJDialogImp {
 
-    private static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
-    private static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
+    public static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
+    public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private static final int DEF_STYLE_ID = R.style.FW_Dialog;
 
     private final int VIEW_WIN_BG_ID;
     private final int VIEW_WIN_BOX_ID;
@@ -87,9 +88,17 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     public TJDialog(@NonNull Context context, @LayoutRes int layoutId, int width, int height)
     {
-        this(context,layoutId,width,height, R.style.FW_Dialog);
+        this(context,layoutId,width,height, DEF_STYLE_ID);
     }
 
+    /**
+     *
+     * @param context content
+     * @param layoutId 布局
+     * @param width 可以指定具体数值，也可以用 {@link #WRAP_CONTENT} {@link #MATCH_PARENT}
+     * @param height 可以指定具体数值，也可以用 {@link #WRAP_CONTENT} {@link #MATCH_PARENT}
+     * @param styleId 默认style见 {@link #DEF_STYLE_ID},注意，默认style是全屏的。
+     */
     public TJDialog(@NonNull Context context, @LayoutRes int layoutId, int width, int height,int styleId)
     {
         super(context,styleId);
@@ -360,8 +369,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     }
 
-    private void setOnClickListener(@Nullable View view)
-    {
+    private void setOnClickListener(@Nullable View view) {
         if(view!=null)
         {
             view.setOnClickListener(this);

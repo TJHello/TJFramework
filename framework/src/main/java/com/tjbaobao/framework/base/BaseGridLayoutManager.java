@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import com.tjbaobao.framework.utils.LogUtil;
 
 public class BaseGridLayoutManager extends GridLayoutManager {
     public BaseGridLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -29,7 +30,7 @@ public class BaseGridLayoutManager extends GridLayoutManager {
         try {
             super.onLayoutChildren(recycler, state);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.exception(e);
         }
     }
 }

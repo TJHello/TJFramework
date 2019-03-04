@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import com.tjbaobao.framework.utils.LogUtil;
 
 public class BaseStaggeredGridLayoutManager extends StaggeredGridLayoutManager {
 
@@ -26,7 +27,7 @@ public class BaseStaggeredGridLayoutManager extends StaggeredGridLayoutManager {
         try {
             super.onLayoutChildren(recycler, state);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.exception(e);
         }
     }
 }

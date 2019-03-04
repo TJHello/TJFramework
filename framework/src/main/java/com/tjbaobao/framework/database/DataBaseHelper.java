@@ -167,11 +167,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         {
             SQLiteDatabase db = mDataBaseHelper.getWritableDatabase();
             db.beginTransaction();
-            for(ContentValues contentValues:cValueList)
-            {
-                db.insert(tbName,nullColumnHack,contentValues);
+            try{
+                for(ContentValues contentValues:cValueList)
+                {
+                    db.insert(tbName,nullColumnHack,contentValues);
+                }
+            }finally {
+                db.setTransactionSuccessful();
+                db.endTransaction();
             }
-            db.setTransactionSuccessful();
         }
     }
 

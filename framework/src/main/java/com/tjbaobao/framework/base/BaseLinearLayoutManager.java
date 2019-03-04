@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import com.tjbaobao.framework.utils.LogUtil;
 
 public class BaseLinearLayoutManager extends LinearLayoutManager {
     public BaseLinearLayoutManager(Context context) {
@@ -29,7 +30,7 @@ public class BaseLinearLayoutManager extends LinearLayoutManager {
         try {
             super.onLayoutChildren(recycler, state);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.exception(e);
         }
     }
 
@@ -38,7 +39,7 @@ public class BaseLinearLayoutManager extends LinearLayoutManager {
         try {
             super.layoutDecoratedWithMargins(child, left, top, right, bottom);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.exception(e);
         }
     }
 
@@ -47,7 +48,7 @@ public class BaseLinearLayoutManager extends LinearLayoutManager {
         try {
             super.layoutDecorated(child, left, top, right, bottom);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.exception(e);
         }
     }
 

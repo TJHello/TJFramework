@@ -131,23 +131,20 @@ public class BaseApplication extends Application {
 		@Override
 		public void uncaughtException(Thread thread, Throwable ex)
 		{
-			try
-			{
+			try {
 				//获取并记录异常日志
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				PrintStream ps = new PrintStream(baos);
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				PrintStream ps = new PrintStream(bos);
 				ex.printStackTrace(ps);
-				byte[] data = baos.toByteArray();
+				byte[] data = bos.toByteArray();
 				String sLog = "程序出错："+new String(data);
-				Tools.printLog(sLog);
+				LogUtil.e(sLog);
 				ExecuteLog.writeErrorException(sLog);
-				data = null;
 				ps.close();
-				baos.close();
+				bos.close();
 			}
-			catch (Exception ignored)
-			{
-
+			catch (Exception e) {
+				LogUtil.exception(e);
 			}
 			//让默认未捕获异常处理器来处理未捕获异常
 			defHandler.uncaughtException(thread, ex);

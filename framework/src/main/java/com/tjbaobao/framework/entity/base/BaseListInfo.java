@@ -14,7 +14,7 @@ public class BaseListInfo {
     private int type ;
     private Object info ;
     private int spanSize ;
-    private RecyclerView.Adapter adapter ;
+    private transient RecyclerView.Adapter adapter ;
 
     public int getType() {
         return type;
