@@ -197,9 +197,6 @@ public class Tools {
 		return 0;
 	}
 
-
-
-
 	public static int spToPx(float spValue) {
 		if(context!=null)
 		{
