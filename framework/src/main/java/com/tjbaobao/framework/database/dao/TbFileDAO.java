@@ -81,7 +81,7 @@ public class TbFileDAO extends TbBaseDAO {
         fileObj.setUrl(url);
         fileObj.setPath(path);
         fileObj.setPrefix(prefix);
-        Tools.printLog("addFile:"+"url="+url+",prefix="+prefix);
+//        Tools.printLog("addFile:"+"url="+url+",prefix="+prefix);
         return addFile(fileObj);
     }
 

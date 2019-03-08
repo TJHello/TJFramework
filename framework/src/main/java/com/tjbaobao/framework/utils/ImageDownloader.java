@@ -4,14 +4,11 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.caverock.androidsvg.SVG;
 import com.tjbaobao.framework.entity.BitmapConfig;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,9 +33,11 @@ public class ImageDownloader {
 	private final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() );
 	private static int cacheSize = maxMemory / 7;
 	private static LruCache<String, Bitmap> imageLruCache ;
+	private static int downloadThreadNum = 3;
+    private static int loadThreadNum = 3;
 
-	private ExecutorService downloadThreadPool  = Executors.newFixedThreadPool(3);
-	private ExecutorService localThreadPool = Executors.newFixedThreadPool(3);
+	private ExecutorService downloadThreadPool  = Executors.newFixedThreadPool(downloadThreadNum);
+	private ExecutorService localThreadPool = Executors.newFixedThreadPool(loadThreadNum);
 	private static FileDownloader fileDownloader = FileDownloader.getInstance();
     private BaseHandler baseHandler = new BaseHandler();
     private final List<Image> imageList = new ArrayList<>();
@@ -121,7 +120,9 @@ public class ImageDownloader {
     private BitmapConfig loadLocalImage(@NonNull String path,@Nullable OnProgressListener onProgressListener)
     {
         startLoadThread(path,onProgressListener);
+        FileUtil.CurrentTime.begin();
         BitmapConfig config = ImageUtil.getBitmapConfig(path);
+        FileUtil.CurrentTime.stop("getBitmapConfig");
         return config;
     }
 
@@ -158,7 +159,9 @@ public class ImageDownloader {
                 {
                     path = url;
                 }
+                FileUtil.CurrentTime.begin(2);
                 utilRes(url,path,imageWidth,imageHeight,onProgressListener);
+                FileUtil.CurrentTime.stop("utilRes:"+imageWidth+","+imageHeight,2);
             }
             else
             {
@@ -504,13 +507,36 @@ public class ImageDownloader {
         {
             return null;
         }
-        Bitmap bitmap = imageResolver.onResolver(url,path,width,height);
-        if(bitmap==null||bitmap.isRecycled())
-        {
-            FileUtil.delFileIfExists(path);
-            return null;
+        String prefix = "."+FileUtil.getPrefix(path);
+        String tempSizeBitmapPath = path.replace(prefix,"")+"_"+width+"_"+height+prefix;
+        if(FileUtil.exists(tempSizeBitmapPath)){
+            Bitmap bitmap = imageResolver.onResolver(url,tempSizeBitmapPath,width,height);
+            if(bitmap==null||bitmap.isRecycled())
+            {
+                FileUtil.delFileIfExists(tempSizeBitmapPath);
+                bitmap = imageResolver.onResolver(url,path,width,height);
+                if(bitmap==null||bitmap.isRecycled())
+                {
+                    FileUtil.delFileIfExists(path);
+                    return null;
+                }else{
+                    ImageUtil.saveBitmap(bitmap,tempSizeBitmapPath);
+                }
+            }
+            return bitmap;
         }
-        return bitmap;
+        else
+        {
+            Bitmap bitmap = imageResolver.onResolver(url,path,width,height);
+            if(bitmap==null||bitmap.isRecycled())
+            {
+                FileUtil.delFileIfExists(path);
+                return null;
+            }else{
+                ImageUtil.saveBitmap(bitmap,tempSizeBitmapPath);
+            }
+            return bitmap;
+        }
     }
 
     private void utilRes(@NonNull String url,@Nullable String path,int width,int height,@Nullable OnProgressListener onProgressListener)
@@ -804,6 +830,14 @@ public class ImageDownloader {
         ImageDownloader.isSizeStrictMode = isSizeStrictMode;
     }
 
+    public static void setDownloadThreadNum(int num){
+        downloadThreadNum = num;
+    }
+
+    public static void setLoadThreadNum(int num){
+        loadThreadNum = num;
+    }
+
     public void setImageResolver(@NonNull ImageResolver imageResolver) {
         this.imageResolver = imageResolver;
     }
@@ -850,7 +884,9 @@ public class ImageDownloader {
                 {
                     if(isSizeStrictMode)
                     {
-                        bitmap = ImageUtil.getBitmap(path);
+                        FileUtil.CurrentTime.begin();
+                        bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
+                        FileUtil.CurrentTime.pause("compressImageRGB");
                         if(ImageUtil.isOk(bitmap))
                         {
                             float widthTemp = (float)width;
@@ -864,6 +900,7 @@ public class ImageDownloader {
                                 }
                                 bitmap = bitmap2;
                             }
+                            FileUtil.CurrentTime.pause("matrixBitmapRGB");
                         }
                     }
                     else
