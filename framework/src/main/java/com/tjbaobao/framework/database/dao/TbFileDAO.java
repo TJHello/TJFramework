@@ -22,7 +22,7 @@ public class TbFileDAO extends TbBaseDAO {
     private static ArrayList<TbFileObj> getFiles(String sql)
     {
         ArrayList<TbFileObj> files = null;
-        Cursor cursor = rawQuery(sql);
+        Cursor cursor = rawQueryCursor(sql);
         if(cursor!=null)
         {
             try{

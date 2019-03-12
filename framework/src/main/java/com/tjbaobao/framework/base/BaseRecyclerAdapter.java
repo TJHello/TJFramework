@@ -376,6 +376,9 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
     public void destroy() {
         handler.removeCallbacksAndMessages(null);
+        setOnItemClickListener(null);
+        setOnItemLongClickListener(null);
+        setOnTJHolderItemClickListener(null);
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 
+import com.tjbaobao.framework.database.DataSet;
 import com.tjbaobao.framework.database.dao.TbBaseDAO;
 import com.tjbaobao.framework.utils.DateTimeUtil;
 import com.tjbaobao.tjframework.database.obj.TbEventObj;
@@ -27,7 +28,7 @@ public class TbEventDAO extends TbBaseDAO {
     private static List<TbEventObj> getEvents(String sql)
     {
         List<TbEventObj> list = null;
-        Cursor cursor = rawQuery(sql);
+        Cursor cursor = rawQueryCursor(sql);
         if(cursor!=null)
         {
             try{
@@ -51,10 +52,39 @@ public class TbEventDAO extends TbBaseDAO {
     }
 
     @Nullable
+    private static List<TbEventObj> getEventsNew(String sql)
+    {
+        List<TbEventObj> list = null;
+        List<DataSet> dataSetList = rawQuery(sql);
+        if(dataSetList!=null)
+        {
+            list = new ArrayList<>();
+            for(DataSet dataSet : dataSetList){
+                TbEventObj obj = new TbEventObj();
+                obj.setCode(dataSet.getString("code"));
+                obj.setName(dataSet.getString("name"));
+                obj.setPath(dataSet.getString("path"));
+                obj.setEvent(dataSet.getString("event"));
+                obj.setCreateTime(dataSet.getString("create_time"));
+                obj.setChangeTime(dataSet.getString("change_time"));
+                list.add(obj);
+            }
+        }
+        return list;
+    }
+
+    @Nullable
     public static List<TbEventObj> getDataList()
     {
         String sql = "Select * From "+tbName ;
         return getEvents(sql);
+    }
+
+    @Nullable
+    public static List<TbEventObj> getDataListNew()
+    {
+        String sql = "Select * From "+tbName ;
+        return getEventsNew(sql);
     }
 
     @Nullable
@@ -74,6 +104,25 @@ public class TbEventDAO extends TbBaseDAO {
         values.put("create_time", DateTimeUtil.getNowMsTime());
         values.put("change_time", DateTimeUtil.getNowMsTime());
         return insert(tbName,null,values);
+    }
+
+    public static void addTransaction(List<TbEventObj> objList){
+        List<ContentValues> contentValuesList = new ArrayList<>();
+        for(TbEventObj obj : objList){
+            ContentValues values = new ContentValues();
+            values.put("code", obj.getCode());
+            values.put("name",obj.getName());
+            values.put("path",obj.getPath());
+            values.put("event",obj.getEvent());
+            values.put("create_time", DateTimeUtil.getNowMsTime());
+            values.put("change_time", DateTimeUtil.getNowMsTime());
+            contentValuesList.add(values);
+        }
+        insertTransaction(tbName,null,contentValuesList);
+    }
+
+    public static void delAll(){
+        delete(tbName,null,null);
     }
 
     public static long change(TbEventObj obj)

@@ -3,9 +3,15 @@ package com.tjbaobao.framework.database.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.database.DataBaseHelper;
+import com.tjbaobao.framework.database.DataSet;
+import com.tjbaobao.framework.database.TJDataBaseHelper;
 import com.tjbaobao.framework.utils.LogUtil;
+
+import java.util.List;
 
 /**
  * Created by TJbaobao on 2017/9/12.
@@ -13,18 +19,18 @@ import com.tjbaobao.framework.utils.LogUtil;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class TbBaseDAO {
-    private static DataBaseHelper mDataBaseHelper = null;
+    private static TJDataBaseHelper mDataBaseHelper = null;
 
     static{
         create();
     }
 
-    public static DataBaseHelper create()
+    public static TJDataBaseHelper create()
     {
         if(mDataBaseHelper==null)
         {
             try {
-                mDataBaseHelper = DataBaseHelper.create(BaseApplication.getContext());
+                mDataBaseHelper = TJDataBaseHelper.create(BaseApplication.getContext());
             } catch (Exception e) {
                 LogUtil.e(e.getMessage());
             }
@@ -34,38 +40,52 @@ public class TbBaseDAO {
 
     protected static Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
     {
-        return DataBaseHelper.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+        return TJDataBaseHelper.queryCursor(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
+
     public static Cursor query(String table, String[] columns, String selection, String[] selectionArgs)
     {
-        return DataBaseHelper.query(table, columns, selection, selectionArgs,null,null,null,null);
+        return TJDataBaseHelper.queryCursor(table, columns, selection, selectionArgs,null,null,null,null);
     }
-    protected static Cursor rawQuery(String sql, String[] selectionArgs)
+
+    protected static Cursor rawQueryCursor(String sql, String[] selectionArgs)
     {
-        return DataBaseHelper.rawQuery(sql, selectionArgs);
+        return TJDataBaseHelper.rawQueryCursor(sql, selectionArgs);
     }
+
+    protected static Cursor rawQueryCursor(String sql)
+    {
+        return TJDataBaseHelper.rawQueryCursor(sql, null);
+    }
+
     protected static long insert(String tbName, String nullColumnHack, ContentValues cValue)
     {
-        return DataBaseHelper.insert(tbName, nullColumnHack, cValue);
+        return TJDataBaseHelper.insert(tbName, nullColumnHack, cValue);
+    }
+
+    protected static void insertTransaction(@Nullable String tbName, @Nullable String nullColumnHack, @NonNull List<ContentValues> cValueList){
+        TJDataBaseHelper.insertTransaction(tbName,nullColumnHack,cValueList);
     }
 
     protected static int  update(String table, ContentValues values, String whereClause, String[] whereArgs)
     {
-        return create().getWritableDatabase().update(table, values, whereClause, whereArgs);
-    }
-    protected static void execSQL(String sql)
-    {
-         create().getWritableDatabase().execSQL(sql);
+        return TJDataBaseHelper.update(table, values, whereClause, whereArgs);
     }
 
-    protected static Cursor rawQuery(String sql)
+    protected static void execSQL(String sql)
     {
-        return DataBaseHelper.rawQuery(sql, null);
+        TJDataBaseHelper.execSQL(sql);
     }
+
+    protected static List<DataSet> rawQuery(String sql)
+    {
+        return TJDataBaseHelper.rawQuery(sql, null);
+    }
+
 
     protected static long delete(String table, String whereClause, String[] whereArgs)
     {
-        return create().getWritableDatabase().delete(table, whereClause, whereArgs);
+        return TJDataBaseHelper.delete(table, whereClause, whereArgs);
     }
 
     protected static int getIntByColumn(Cursor cursor, String column)
@@ -88,7 +108,6 @@ public class TbBaseDAO {
     {
         return cursor.getLong(cursor.getColumnIndex(column));
     }
-
 
     public static void close()
     {

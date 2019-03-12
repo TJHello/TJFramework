@@ -10,6 +10,8 @@ public class TbEventObj {
 
     public static final String EVENT_START_ACTIVITY = "startActivity";
 
+    public static final String EVENT_TEST = "test";
+
     private String code ;
     private String name ;
     private String path ;

@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.tjbaobao.framework.R;
 import com.tjbaobao.framework.base.BaseActivity;
+import com.tjbaobao.framework.database.TJDataBaseHelper;
 import com.tjbaobao.framework.entity.ui.TitleBarInfo;
 import com.tjbaobao.framework.ui.BaseTitleBar;
 import com.tjbaobao.framework.utils.Tools;
@@ -79,6 +80,12 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
     @Override
     public <V extends TitleBarInfo.BaseView> void onTitleBarClick(int layoutType, int position, V info) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TJDataBaseHelper.destroy();
     }
 
     //region ***************双击退出应用开始*************

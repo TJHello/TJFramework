@@ -29,13 +29,13 @@ import java.lang.ref.WeakReference;
  */
 @SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener,ActivityToolsImp,HandlerToolsImp {
-	private WeakReference<BaseActivity> activityWeakReference ;
+	private BaseActivity activity ;
 	private boolean isDestroy = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setWeakReferenceActivity(this);
+        activity = this;
 	}
 
 	protected BaseHandler handler = new BaseHandler(new HandlerCallback());
@@ -51,13 +51,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
-	private void setWeakReferenceActivity(BaseActivity activity){
-		activityWeakReference = new WeakReference<>(activity);
-	}
 
-	@Nullable
 	public BaseActivity getActivity(){
-		return activityWeakReference.get();
+		return activity;
 	}
 
 	@Override

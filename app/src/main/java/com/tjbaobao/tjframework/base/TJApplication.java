@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.database.DataBaseHelper;
+import com.tjbaobao.framework.database.TJDataBaseHelper;
 import com.tjbaobao.framework.imp.DataBaseImp;
 import com.tjbaobao.framework.utils.ImageDownloader;
 import com.tjbaobao.tjframework.utils.AliyunOOSUtil;
@@ -25,12 +26,13 @@ public class TJApplication extends BaseApplication implements DataBaseImp {
             <meta-data android:name="database_name" android:value="TjFramework" />
             <meta-data android:name="database_version" android:value="1"/>
          */
-        DataBaseHelper.setDataBaseImp(this);//设置数据库初始化接口
+//        DataBaseHelper.setDataBaseImp(this);//设置数据库初始化接口
+        TJDataBaseHelper.setDataBaseImp(this);
 
         //配置图片加载器
         long maxMemory = Runtime.getRuntime().maxMemory();
         int useMemory = (int) (maxMemory/7);
-        int bestMemory = 40*1024*1024;
+        int bestMemory = 60*1024*1024;
         if(useMemory>bestMemory)
         {
             useMemory = bestMemory;

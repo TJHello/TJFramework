@@ -57,9 +57,10 @@ public class TJActivityExample1Adapter extends BaseRecyclerAdapter<TJActivityExa
         }
     }
 
-    public void destroy()
-    {
+
+    @Override
+    public void destroy() {
+        super.destroy();
         imageDownloader.stop();
     }
-
 }

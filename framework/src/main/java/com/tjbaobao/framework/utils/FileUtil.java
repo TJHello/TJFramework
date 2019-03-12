@@ -529,12 +529,12 @@ public class FileUtil {
 			mapBeginTime.put(tag, System.currentTimeMillis());
 		}
 
-		public static void pause(String tip)
+		public static long pause(String tip)
 		{
-			pause(tip,0);
+			return pause(tip,0);
 		}
 
-		public static void pause(String tip,int tag)
+		public static long pause(String tip,int tag)
 		{
 			long beginTime ;
 			if(mapPauseTime.containsKey(tag)&&0!=mapPauseTime.get(tag))
@@ -548,17 +548,18 @@ public class FileUtil {
 			else
 			{
 				LogUtil.e("pause()前应该先调用begin()");
-				return ;
+				return 0;
 			}
 			long endTime = System.currentTimeMillis();
 			LogUtil.i(tip+":"+(endTime-beginTime)+"毫秒");
+			return endTime-beginTime;
 		}
 
-		public static void stop(String tip)
+		public static long stop(String tip)
 		{
-			stop(tip,defTag);
+			return stop(tip,defTag);
 		}
-		public static void stop(String tip,int tag)
+		public static long stop(String tip,int tag)
 		{
 			if(mapBeginTime.containsKey(tag)&&0!=mapBeginTime.get(tag))
 			{
@@ -566,11 +567,13 @@ public class FileUtil {
 				long endTime = System.currentTimeMillis();
 				LogUtil.i(tip+":"+(endTime-beginTime)+"毫秒");
 				mapBeginTime.put(tag, (long) 0);
+				return endTime-beginTime;
 			}
 			else
 			{
 				LogUtil.e("在调用stop()前应该先调用begin()");
 			}
+			return 0;
 		}
 	}
 	

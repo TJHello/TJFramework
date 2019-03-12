@@ -16,4 +16,48 @@
         app:layout_constraintTop_toBottomOf="@id/titleBar"
         app:layout_constraintBottom_toBottomOf="parent"
         />
+    <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center_horizontal"
+            >
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="性能测试"
+                />
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+            <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btInset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="插入1000条数据"
+                    />
+            <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btSelect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="查询所有数据"
+                    />
+            <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btClean"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="清空所有数据"
+                    />
+        </LinearLayout>
+        <TextView
+                android:id="@+id/tvResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试结果:"
+                />
+    </android.support.v7.widget.LinearLayoutCompat>
+
 </android.support.constraint.ConstraintLayout>

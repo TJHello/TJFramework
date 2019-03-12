@@ -50,7 +50,7 @@ public class TJActivityExample1Activity extends AppActivity {
     @Override
     protected void onInitView() {
         setContentView(R.layout.tj_activity_example_actyivity_layout);
-        ButterKnife.bind(this);
+        ButterKnife.bind(getActivity());
         recyclerView.toGridView(2);
         //recyclerView.toListView();//普通列表
         //recyclerView.toStaggeredGridView();//瀑布列表
