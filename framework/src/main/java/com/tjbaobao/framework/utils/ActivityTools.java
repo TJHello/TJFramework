@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.View;
 import android.view.Window;
@@ -25,8 +26,9 @@ public class  ActivityTools{
      * @param id 颜色资源id
      * @return 颜色值
      */
-    public static int getColorById(Activity activity,@ColorRes int id)
+    public static int getColorById(@Nullable Activity activity,@ColorRes int id)
     {
+        if(activity==null) return -1;
         return activity.getResources().getColor(id);
     }
 
@@ -35,8 +37,9 @@ public class  ActivityTools{
      * @param id 字符串资源id
      * @return 字符串
      */
-    public static String getStringById(Activity activity,@StringRes int id)
+    public static String getStringById(@Nullable Activity activity,@StringRes int id)
     {
+        if(activity==null) return null;
         return activity.getResources().getString(id);
     }
 
@@ -44,8 +47,9 @@ public class  ActivityTools{
      * 带resultCode的finish
      * @param resultCode 返回结果
      */
-    public static void finish(Activity activity,int resultCode)
+    public static void finish(@Nullable Activity activity, int resultCode)
     {
+        if(activity==null) return ;
         activity.setResult(resultCode);
         activity.finish();
     }
@@ -54,8 +58,9 @@ public class  ActivityTools{
      * 快捷启动Activity
      * @param mClass Activity.class
      */
-    public static void startActivity(Activity activity,Class<? extends Activity> mClass)
+    public static void startActivity(@Nullable Activity activity,Class<? extends Activity> mClass)
     {
+        if(activity==null) return ;
         Intent intent = new Intent(activity,mClass);
         activity.startActivity(intent);
     }
@@ -64,8 +69,9 @@ public class  ActivityTools{
      * 快捷启动Activity并且finish当前Activity
      * @param mClass Activity.class
      */
-    public static void startActivityAndFinish(Activity activity,Class<? extends Activity> mClass)
+    public static void startActivityAndFinish(@Nullable Activity activity,Class<? extends Activity> mClass)
     {
+        if(activity==null) return ;
         startActivity(activity,mClass);
         activity.finish();
     }
@@ -76,8 +82,9 @@ public class  ActivityTools{
      * @param keys keys
      * @param values values
      */
-    public static void startActivity(Activity activity,Class<? extends Activity> mClass,String[] keys,Object ... values)
+    public static void startActivity(@Nullable Activity activity,Class<? extends Activity> mClass,String[] keys,Object ... values)
     {
+        if(activity==null) return ;
         Intent intent = new Intent(activity,mClass);
         int i=0;
         for(String name:keys)
@@ -173,8 +180,9 @@ public class  ActivityTools{
      * @param keys keys
      * @param values values
      */
-    public static void startActivityAndFinish(Activity activity,Class<? extends Activity> mClass,String[] keys,Object ... values)
+    public static void startActivityAndFinish(@Nullable Activity activity,Class<? extends Activity> mClass,String[] keys,Object ... values)
     {
+        if(activity==null) return ;
         startActivity(activity,mClass,keys,values);
         activity.finish();
     }
@@ -183,8 +191,9 @@ public class  ActivityTools{
      * 快捷启动Activity并且finish
      * @param intent intent
      */
-    public static void startActivityAndFinish(Activity activity,Intent intent)
+    public static void startActivityAndFinish(@Nullable Activity activity,Intent intent)
     {
+        if(activity==null) return ;
         activity.startActivity(intent);
         activity.finish();
     }
@@ -194,8 +203,9 @@ public class  ActivityTools{
      * @param mClass Activity.class
      * @param requestCode 请求码
      */
-    public static void startActivityForResult(Activity activity,Class<? extends Activity> mClass,int requestCode)
+    public static void startActivityForResult(@Nullable Activity activity,Class<? extends Activity> mClass,int requestCode)
     {
+        if(activity==null) return ;
         Intent intent = new Intent(activity,mClass);
         activity.startActivityForResult(intent, requestCode);
     }
@@ -207,8 +217,9 @@ public class  ActivityTools{
      * @param keys keys
      * @param values values
      */
-    public static void startActivityForResult(Activity activity,Class<? extends Activity> mClass,int requestCode,String[] keys,Object ... values)
+    public static void startActivityForResult(@Nullable Activity activity,Class<? extends Activity> mClass,int requestCode,String[] keys,Object ... values)
     {
+        if(activity==null) return ;
         Intent intent = new Intent(activity,mClass);
         int i=0;
         for(String name:keys)
@@ -303,8 +314,9 @@ public class  ActivityTools{
      * 获取状态栏高度
      * @return 返回高度 -1代表失败
      */
-    public static int getBarHeight(Activity activity)
+    public static int getBarHeight(@Nullable Activity activity)
     {
+        if(activity==null) return -1;
         int statusBarHeight = -1;
         //获取status_bar_height资源的ID
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -323,8 +335,9 @@ public class  ActivityTools{
      * android:fitsSystemWindows="true"
      *
      */
-    public static void immersiveStatusBar(Activity activity)
+    public static void immersiveStatusBar(@Nullable Activity activity)
     {
+        if(activity==null) return ;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
         {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -335,8 +348,9 @@ public class  ActivityTools{
     /**
      * 设置全屏
      */
-    public static void fullScreen(Activity activity)
+    public static void fullScreen(@Nullable Activity activity)
     {
+        if(activity==null) return ;
         // 隐藏状态栏
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -345,8 +359,9 @@ public class  ActivityTools{
     /**
      * 隐藏虚拟按键以及全屏
      */
-    public static void hideVirtualKey(Activity activity)
+    public static void hideVirtualKey(@Nullable Activity activity)
     {
+        if(activity==null) return ;
         Window window = activity.getWindow();
         int uiOptions = 0;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {

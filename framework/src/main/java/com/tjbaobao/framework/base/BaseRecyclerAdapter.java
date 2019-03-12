@@ -373,4 +373,9 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     public void sendMessage(int what, Object obj, int arg1) {
         handler.sendMessage(what,obj,arg1);
     }
+
+    public void destroy() {
+        handler.removeCallbacksAndMessages(null);
+    }
+
 }

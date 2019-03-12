@@ -23,6 +23,8 @@ public interface TJDialogImp {
 
     void onBtCloseClick(View view);
 
+    void destroy();
+
     @IdRes
     int getViewWinBgId();
 

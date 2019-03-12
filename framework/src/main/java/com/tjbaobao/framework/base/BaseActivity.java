@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import com.tjbaobao.framework.imp.HandlerToolsImp;
 import com.tjbaobao.framework.utils.ActivityTools;
 import com.tjbaobao.framework.utils.BaseHandler;
 
+import java.lang.ref.WeakReference;
 
 
 /**
@@ -27,14 +29,13 @@ import com.tjbaobao.framework.utils.BaseHandler;
  */
 @SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener,ActivityToolsImp,HandlerToolsImp {
-	protected Context context ;
-	protected Activity activity ;
+	private WeakReference<BaseActivity> activityWeakReference ;
+	private boolean isDestroy = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.context = this;
-		this.activity = this ;
+		setWeakReferenceActivity(this);
 	}
 
 	protected BaseHandler handler = new BaseHandler(new HandlerCallback());
@@ -42,9 +43,21 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 	private class HandlerCallback implements Handler.Callback {
 		@Override
 		public boolean handleMessage(Message message) {
+			if(isFinishing()||isDestroy){
+				return false;
+			}
 			onHandleMessage(message,message.what,message.obj);
 			return false;
 		}
+	}
+
+	private void setWeakReferenceActivity(BaseActivity activity){
+		activityWeakReference = new WeakReference<>(activity);
+	}
+
+	@Nullable
+	public BaseActivity getActivity(){
+		return activityWeakReference.get();
 	}
 
 	@Override
@@ -59,42 +72,42 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 	@Override
 	public void finish(int resultCode) {
-		ActivityTools.finish(activity,resultCode);
+		ActivityTools.finish(getActivity(),resultCode);
 	}
 
 	@Override
 	public void startActivity(Class<? extends Activity> mClass) {
-		ActivityTools.startActivity(activity,mClass);
+		ActivityTools.startActivity(getActivity(),mClass);
 	}
 
 	@Override
 	public void startActivityAndFinish(Class<? extends Activity> mClass) {
-		ActivityTools.startActivityAndFinish(activity,mClass);
+		ActivityTools.startActivityAndFinish(getActivity(),mClass);
 	}
 
 	@Override
 	public void startActivity(Class<? extends Activity> mClass, String[] keys, Object... values) {
-		ActivityTools.startActivity(activity,mClass,keys,values);
+		ActivityTools.startActivity(getActivity(),mClass,keys,values);
 	}
 
 	@Override
 	public void startActivityAndFinish(Class<? extends Activity> mClass, String[] keys, Object... values) {
-		ActivityTools.startActivityAndFinish(activity,mClass,keys,values);
+		ActivityTools.startActivityAndFinish(getActivity(),mClass,keys,values);
 	}
 
 	@Override
 	public void startActivityAndFinish(Intent intent) {
-		ActivityTools.startActivityAndFinish(activity,intent);
+		ActivityTools.startActivityAndFinish(getActivity(),intent);
 	}
 
 	@Override
 	public void startActivityForResult(Class<? extends Activity> mClass, int requestCode) {
-		ActivityTools.startActivityForResult(activity,mClass,requestCode);
+		ActivityTools.startActivityForResult(getActivity(),mClass,requestCode);
 	}
 
 	@Override
 	public void startActivityForResult(Class<? extends Activity> mClass, int requestCode, String[] keys, Object... values) {
-		ActivityTools.startActivityForResult(activity,mClass,requestCode,keys,values);
+		ActivityTools.startActivityForResult(getActivity(),mClass,requestCode,keys,values);
 	}
 
 	/**
@@ -122,24 +135,39 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 	@Override
 	public int getBarHeight() {
-		return ActivityTools.getBarHeight(activity);
+		return ActivityTools.getBarHeight(getActivity());
 	}
 
 	@Override
 	public void immersiveStatusBar() {
-		ActivityTools.immersiveStatusBar(activity);
+		ActivityTools.immersiveStatusBar(getActivity());
 	}
 
 	@Override
 	public void fullScreen() {
-		ActivityTools.fullScreen(activity);
+		ActivityTools.fullScreen(getActivity());
 	}
 
 	@Override
 	public void hideVirtualKey() {
-		ActivityTools.hideVirtualKey(activity);
+		ActivityTools.hideVirtualKey(getActivity());
 	}
 
 	@Override
 	public void onClick(View v) {}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		isDestroy = true;
+		handler.removeCallbacksAndMessages(null);
+	}
+
+	/**
+	 * 判断Activity是否已经走到了onDestroy生命周期
+	 * @return boolean
+	 */
+	public boolean isDestroy() {
+		return isDestroy;
+	}
 }

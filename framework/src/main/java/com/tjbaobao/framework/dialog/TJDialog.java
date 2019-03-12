@@ -2,6 +2,7 @@ package com.tjbaobao.framework.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.AnimRes;
 import android.support.annotation.LayoutRes;
@@ -80,6 +81,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     private OnShowListener onShowListener ;
     private OnDismissListener onDismissListener ;
     private OnTJDialogListener onTJDialogListener ;
+    private static final int DISMISS = 0x43;
 
     private Animation animationWinBgEnter,animationWinBoxEnter,animationWinBgExit,animationWinBoxExit;
 
@@ -272,8 +274,15 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
             {
                 super.dismiss();
             }
-
         }
+    }
+
+    @Override
+    public void destroy() {
+        setOnDismissListener(null);
+        setOnShowListener(null);
+        setOnTJDialogListener(null);
+        baseHandler.removeMessages(DISMISS);
         baseHandler.removeCallbacksAndMessages(null);
     }
 
