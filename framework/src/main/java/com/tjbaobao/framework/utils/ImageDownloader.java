@@ -48,6 +48,8 @@ public class ImageDownloader {
     private int imageWidth ,imageHeight;
     private static boolean isStrictMode = false;//严格模式
     private static boolean isSizeStrictMode = false;//尺寸严格模式
+    private static boolean isCacheTempSizeBitmap = false;//是否缓存临时的尺寸图
+    private static boolean isAutoDelErrorBitmap = false;//是否自动删除读取失败的图片(防止图片损坏)
     private ImageResolver imageResolver = new TJImageResolver();
 
     private ImageDownloader(){
@@ -509,15 +511,19 @@ public class ImageDownloader {
         }
         String prefix = "."+FileUtil.getPrefix(path);
         String tempSizeBitmapPath = path.replace(prefix,"")+"_"+width+"_"+height+prefix;
-        if(FileUtil.exists(tempSizeBitmapPath)){
+        if(isCacheTempSizeBitmap&&FileUtil.exists(tempSizeBitmapPath)){
             Bitmap bitmap = imageResolver.onResolver(url,tempSizeBitmapPath,width,height);
             if(bitmap==null||bitmap.isRecycled())
             {
-                FileUtil.delFileIfExists(tempSizeBitmapPath);
+                if(isAutoDelErrorBitmap){
+                    FileUtil.delFileIfExists(tempSizeBitmapPath);
+                }
                 bitmap = imageResolver.onResolver(url,path,width,height);
                 if(bitmap==null||bitmap.isRecycled())
                 {
-                    FileUtil.delFileIfExists(path);
+                    if(isAutoDelErrorBitmap){
+                        FileUtil.delFileIfExists(tempSizeBitmapPath);
+                    }
                     return null;
                 }else{
                     ImageUtil.saveBitmap(bitmap,tempSizeBitmapPath);
@@ -530,7 +536,9 @@ public class ImageDownloader {
             Bitmap bitmap = imageResolver.onResolver(url,path,width,height);
             if(bitmap==null||bitmap.isRecycled())
             {
-                FileUtil.delFileIfExists(path);
+                if(isAutoDelErrorBitmap){
+                    FileUtil.delFileIfExists(tempSizeBitmapPath);
+                }
                 return null;
             }else{
                 ImageUtil.saveBitmap(bitmap,tempSizeBitmapPath);
@@ -840,6 +848,14 @@ public class ImageDownloader {
 
     public void setImageResolver(@NonNull ImageResolver imageResolver) {
         this.imageResolver = imageResolver;
+    }
+
+    public void isCacheTempSizeBitmap(Boolean value){
+        isCacheTempSizeBitmap = value;
+    }
+
+    public void isAutoDelErrorBitmap(boolean value){
+        isAutoDelErrorBitmap = value;
     }
 
     private OnImageLoaderListener onImageLoaderListener ;
