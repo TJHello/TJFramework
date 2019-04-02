@@ -35,7 +35,7 @@ public class OKHttpUtil {
             .build();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static final String CACHE_SUFFIX = ".cache";
-    public static final boolean isUseCacheFile = true;//是否使用缓冲文件来降低文件损坏概率
+    public static boolean isUseCacheFile = true;//是否使用缓冲文件来降低文件损坏概率
     static {
     }
 
