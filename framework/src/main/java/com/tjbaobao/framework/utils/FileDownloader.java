@@ -25,6 +25,7 @@ public class FileDownloader {
 	private BaseHandler baseHandler = new BaseHandler();
 	private boolean isStop = false;
 	private static final int Threads_Num = 3;
+	private static boolean isMergeUrlParameter = false;//是否将不同参数的链接当做同一个文件链接
 
 
 	private FileDownloader(){
@@ -78,7 +79,7 @@ public class FileDownloader {
 		{
 			return null;
 		}
-		String tag = FileUtil.formatUrl(url);
+		String tag = isMergeUrlParameter?FileUtil.formatUrl(url):url;
 		String outPath = getCache(url);
 		if(outPath==null)
 		{
@@ -122,7 +123,9 @@ public class FileDownloader {
 	@Nullable
 	public String getCache(@NonNull String url)
 	{
-		url = FileUtil.formatUrl(url);
+		if(isMergeUrlParameter){
+			url = FileUtil.formatUrl(url);
+		}
 		String outPath = downLoadHosts.get(url);
 		if(!FileUtil.exists(outPath))
 		{
@@ -164,7 +167,7 @@ public class FileDownloader {
 					if(downloadList.size()<Threads_Num&&i<queuePoolList.size())
 					{
 						QueueInfo queueInfo = queuePoolList.get(i);
-						String tag = FileUtil.formatUrl(queueInfo.getUrl());
+						String tag = isMergeUrlParameter?FileUtil.formatUrl(queueInfo.getUrl()):queueInfo.getUrl();
 						synchronized (downloadList)
 						{
 							if(!downloadList.contains(tag))
@@ -265,7 +268,7 @@ public class FileDownloader {
 		}
 		@Override
 		public void run() {
-			String tag = FileUtil.formatUrl(url);
+			String tag = isMergeUrlParameter?FileUtil.formatUrl(url):url;
 			if(isStop)
 			{
 				downloadList.remove(tag);
@@ -341,7 +344,9 @@ public class FileDownloader {
 		}
 		if(url.indexOf("http://")==0||url.indexOf("https://")==0)
 		{
-			url = FileUtil.formatUrl(url);
+			if(isMergeUrlParameter){
+				url = FileUtil.formatUrl(url);
+			}
 			TbFileObj fileObj = TbFileDAO.getFileByUrl(url);
 			if(fileObj!=null)
 			{
@@ -356,7 +361,7 @@ public class FileDownloader {
 
 	public static void remove(String url)
 	{
-		url = FileUtil.formatUrl(url);
+		url = isMergeUrlParameter?FileUtil.formatUrl(url):url;
 		downLoadHosts.remove(url);
 		TbFileObj fileObj = TbFileDAO.getFileByUrl(url);
 		if(fileObj!=null)
@@ -365,4 +370,8 @@ public class FileDownloader {
 		}
 	}
 
+	public FileDownloader setMergeUrlParameter(boolean mergeUrlParameter) {
+		isMergeUrlParameter = mergeUrlParameter;
+		return this;
+	}
 }

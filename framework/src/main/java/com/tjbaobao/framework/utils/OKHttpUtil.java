@@ -35,6 +35,7 @@ public class OKHttpUtil {
             .build();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static final String CACHE_SUFFIX = ".cache";
+    public static final boolean isUseCacheFile = true;//是否使用缓冲文件来降低文件损坏概率
     static {
     }
 
@@ -142,10 +143,15 @@ public class OKHttpUtil {
                 {
                     onProgressListener.length =  body.contentLength();
                 }
+                String outPath = isUseCacheFile?path+CACHE_SUFFIX:path;
                 InputStream inputStream = body.byteStream();
-                if(FileUtil.Writer.writeFile(inputStream,path+CACHE_SUFFIX,onProgressListener))
+                if(FileUtil.Writer.writeFile(inputStream,outPath,onProgressListener))
                 {
-                    return FileUtil.rename(new File(path+CACHE_SUFFIX), new File(path));
+                    if(isUseCacheFile){
+                        return FileUtil.rename(new File(outPath), new File(path));
+                    }else{
+                        return true;
+                    }
                 }
             }
         }
