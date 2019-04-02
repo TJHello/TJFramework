@@ -8,6 +8,7 @@ import com.tjbaobao.framework.database.TJDataBaseHelper;
 import com.tjbaobao.framework.imp.DataBaseImp;
 import com.tjbaobao.framework.utils.ImageDownloader;
 import com.tjbaobao.tjframework.utils.AliyunOOSUtil;
+import io.paperdb.Paper;
 
 /**
  * 作者:TJbaobao
@@ -42,6 +43,8 @@ public class TJApplication extends BaseApplication implements DataBaseImp {
         ImageDownloader.setIsSizeStrictMode(true);//尺寸严格模式，开启后则会根据setDefaultImgSize来将图片按照比例裁剪到指定的最小尺寸
 
         AliyunOOSUtil.init();
+
+        Paper.init(this);
     }
 
     @Override
