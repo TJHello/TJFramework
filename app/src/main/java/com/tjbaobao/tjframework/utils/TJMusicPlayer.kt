@@ -98,6 +98,12 @@ class TJMusicPlayer private constructor() {
         }
     }
 
+    private fun play(position:Int){
+        if(position>=0&&position<musicPlayList.size){
+            play(musicPlayList[position])
+        }
+    }
+
     fun pause(){
         if(isPlaying){
             isPlaying = false
@@ -122,7 +128,9 @@ class TJMusicPlayer private constructor() {
                 musicPlayList.add(musicPlayPosition,info)
                 Paper.book(PAPER_BOOK_LIST).write(info.code,info)
             }
+            //准备好文件之后自动播放
             preThenPlay(info.musicUrl)
+            //记录当前播放的音乐
             musicInfo = MusicInfo().toInfo(info)
             Paper.book(PAPER_BOOK_INFO).write(PAPER_BOOK_INFO_KEY,musicInfo)
         }
@@ -178,6 +186,9 @@ class TJMusicPlayer private constructor() {
             timerTask.startTimer(0,1000)
             isPlaying = true
         }
+        mediaPlayer?.setOnCompletionListener {
+            nextMusic()
+        }
         mediaPlayer?.setOnErrorListener { mp, what, extra ->
             isPlaying = false
             if(musicInfo!=null){
@@ -195,6 +206,29 @@ class TJMusicPlayer private constructor() {
         intent.putExtra("info",info)
         intent.putExtra("isPlaying",isPlaying)
         BaseApplication.context.sendBroadcast(intent)
+    }
+
+    private fun nextMusic(){
+        when(playMode){
+            Companion.PlayMode.LOOP_LIST->{
+                musicPlayPosition++
+                if(musicPlayPosition>=musicPlayList.size){
+                    musicPlayPosition = 0
+                }
+                play(musicPlayPosition)
+            }
+            Companion.PlayMode.LOOP_RANDOM->{
+                val random = (Math.random()*musicPlayList.size).toInt()
+                musicPlayPosition = random
+                play(musicPlayPosition)
+            }
+            Companion.PlayMode.LOOP_ONE->{
+                play(musicPlayPosition)
+            }
+            Companion.PlayMode.ONLY_ONE->{
+                destroy()
+            }
+        }
     }
 
     private fun contains(code:String):Int{
