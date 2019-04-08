@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.tjbaobao.framework.entity.ui.TitleBarInfo;
 import com.tjbaobao.framework.ui.BaseTitleBar;
+import com.tjbaobao.framework.utils.LogUtil;
 import com.tjbaobao.framework.utils.Tools;
 import com.tjbaobao.tjframework.R;
 import com.tjbaobao.tjframework.base.AppActivity;
@@ -63,7 +64,6 @@ public class TJDialogExample1Activity extends AppActivity{
             }
         };
         tjDialogExample1.setTitle("我是一个简单的弹窗");
-
         tjDialogExample2 = new TJDialogExample2(this){
             @Override
             public void onBtContinueClick(@NonNull View view) {
@@ -77,6 +77,9 @@ public class TJDialogExample1Activity extends AppActivity{
                 Tools.showToast("取消");
             }
         };
+        handler.postDelayed(() -> {
+            LogUtil.i("postDelayed-3000");
+        }, 3000);
     }
 
     @Override

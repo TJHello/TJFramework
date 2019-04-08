@@ -284,6 +284,13 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         setOnTJDialogListener(null);
         baseHandler.removeMessages(DISMISS);
         baseHandler.removeCallbacksAndMessages(null);
+        baseView = null;
+        winBgView = null;
+        winBoxView= null;
+        winTitleView= null;
+        winBtContinue= null;
+        winBtCancel= null;
+        winBtClose= null;
     }
 
     @Override
