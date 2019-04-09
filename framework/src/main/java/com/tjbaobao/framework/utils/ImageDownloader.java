@@ -122,9 +122,7 @@ public class ImageDownloader {
     private BitmapConfig loadLocalImage(@NonNull String path,@Nullable OnProgressListener onProgressListener)
     {
         startLoadThread(path,onProgressListener);
-        FileUtil.CurrentTime.begin();
         BitmapConfig config = ImageUtil.getBitmapConfig(path);
-        FileUtil.CurrentTime.stop("getBitmapConfig");
         return config;
     }
 
@@ -161,9 +159,7 @@ public class ImageDownloader {
                 {
                     path = url;
                 }
-                FileUtil.CurrentTime.begin(2);
                 utilRes(url,path,imageWidth,imageHeight,onProgressListener);
-                FileUtil.CurrentTime.stop("utilRes:"+imageWidth+","+imageHeight,2);
             }
             else
             {
@@ -900,9 +896,7 @@ public class ImageDownloader {
                 {
                     if(isSizeStrictMode)
                     {
-                        FileUtil.CurrentTime.begin();
                         bitmap = ImageUtil.compressImageRGB(path,imageWidth,imageHeight);
-                        FileUtil.CurrentTime.pause("compressImageRGB");
                         if(ImageUtil.isOk(bitmap))
                         {
                             float widthTemp = (float)width;
@@ -916,7 +910,6 @@ public class ImageDownloader {
                                 }
                                 bitmap = bitmap2;
                             }
-                            FileUtil.CurrentTime.pause("matrixBitmapRGB");
                         }
                     }
                     else
