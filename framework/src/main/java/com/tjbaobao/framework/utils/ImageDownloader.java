@@ -35,6 +35,7 @@ public class ImageDownloader {
 	private static LruCache<String, Bitmap> imageLruCache ;
 	private static int downloadThreadNum = 3;
     private static int loadThreadNum = 3;
+    private static boolean isMergeUrlParameter = false;//是否将不同参数的链接当做同一个文件链接
 
 	private ExecutorService downloadThreadPool  = Executors.newFixedThreadPool(downloadThreadNum);
 	private ExecutorService localThreadPool = Executors.newFixedThreadPool(loadThreadNum);
@@ -106,7 +107,7 @@ public class ImageDownloader {
         isStop = false;
         Image image = findImage(imageView);
         image.setUrl(url);
-        image.setTag(FileUtil.formatUrl(url));
+        image.setTag(isMergeUrlParameter?FileUtil.formatUrl(url):url);
         image.setViewWeakReference(imageView);
         if(isHttp(url))
         {
@@ -328,7 +329,7 @@ public class ImageDownloader {
         if(imageLruCache!=null)
         {
             try {
-                key = FileUtil.formatUrl(key);
+                key = isMergeUrlParameter?FileUtil.formatUrl(key):key;
                 Bitmap bitmap = imageLruCache.get(key+imageWidth+"_"+imageHeight);
                 imageLruCache.remove(key+imageWidth+"_"+imageHeight);
                 Image image = findImage(key);
@@ -632,7 +633,7 @@ public class ImageDownloader {
         {
             if(imageLruCache!=null&&bitmap!=null)
             {
-                url = FileUtil.formatUrl(url);
+                url = isMergeUrlParameter?FileUtil.formatUrl(url):url;
                 imageLruCache.put(url+imageWidth+"_"+imageHeight, bitmap);
             }
         }
@@ -643,7 +644,7 @@ public class ImageDownloader {
     {
         if(imageLruCache!=null&&url!=null)
         {
-            url = FileUtil.formatUrl(url);
+            url = isMergeUrlParameter?FileUtil.formatUrl(url):url;
             return imageLruCache.get(url+imageWidth+"_"+imageHeight);
         }
         return null;
