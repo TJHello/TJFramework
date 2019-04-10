@@ -107,54 +107,62 @@ public class TJDataBaseHelper extends SQLiteOpenHelper {
 
     public static List<DataSet> query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
     {
-        if(mDataBaseHelper!=null) {
-            try (Cursor cursor = mDataBaseHelper.getDatabase()
-                    .query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)) {
-                return toDataSet(cursor);
-            } catch (Exception e) {
-                LogUtil.exception(e);
+        synchronized (lock){
+            if(mDataBaseHelper!=null) {
+                try (Cursor cursor = mDataBaseHelper.getDatabase()
+                        .query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)) {
+                    return toDataSet(cursor);
+                } catch (Exception e) {
+                    LogUtil.exception(e);
+                }
             }
+            return null;
         }
-        return null;
     }
 
     public static List<DataSet> query(String table, String[] columns, String selection, String[] selectionArgs)
     {
-        if(mDataBaseHelper!=null)
-        {
-            try(Cursor cursor = mDataBaseHelper.getDatabase().query(table, columns, selection, selectionArgs,null,null,null,null)){
-                return toDataSet(cursor);
-            } catch (Exception e) {
-                LogUtil.exception(e);
+        synchronized (lock){
+            if(mDataBaseHelper!=null)
+            {
+                try(Cursor cursor = mDataBaseHelper.getDatabase().query(table, columns, selection, selectionArgs,null,null,null,null)){
+                    return toDataSet(cursor);
+                } catch (Exception e) {
+                    LogUtil.exception(e);
+                }
             }
+            return null;
         }
-        return null;
     }
 
     public static List<DataSet> rawQuery(String sql, String[] selectionArgs)
     {
-        if(mDataBaseHelper!=null)
-        {
-            try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, selectionArgs)) {
-                return toDataSet(cursor);
-            } catch (Exception e) {
-                LogUtil.exception(e);
+        synchronized (lock){
+            if(mDataBaseHelper!=null)
+            {
+                try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, selectionArgs)) {
+                    return toDataSet(cursor);
+                } catch (Exception e) {
+                    LogUtil.exception(e);
+                }
             }
+            return null;
         }
-        return null;
     }
 
     public static List<DataSet> rawQuery(String sql)
     {
-        if(mDataBaseHelper!=null)
-        {
-            try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, null)) {
-                return toDataSet(cursor);
-            } catch (Exception e) {
-                LogUtil.exception(e);
+        synchronized (lock){
+            if(mDataBaseHelper!=null)
+            {
+                try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, null)) {
+                    return toDataSet(cursor);
+                } catch (Exception e) {
+                    LogUtil.exception(e);
+                }
             }
+            return null;
         }
-        return null;
     }
 
     public static int update(String table, ContentValues values, String whereClause, String[] whereArgs) {

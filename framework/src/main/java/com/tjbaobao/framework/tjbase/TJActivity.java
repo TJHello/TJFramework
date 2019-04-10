@@ -22,6 +22,7 @@ import com.tjbaobao.framework.utils.Tools;
 public abstract class TJActivity extends BaseActivity implements BaseTitleBar.OnTitleBarClickListener{
 
     protected BaseTitleBar titleBar ;
+    protected boolean isAutoDestroyDB = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,9 @@ public abstract class TJActivity extends BaseActivity implements BaseTitleBar.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TJDataBaseHelper.destroy();
+        if(isAutoDestroyDB){
+            TJDataBaseHelper.destroy();
+        }
     }
 
     //region ***************双击退出应用开始*************
