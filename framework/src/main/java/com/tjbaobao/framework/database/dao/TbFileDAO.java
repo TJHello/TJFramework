@@ -87,7 +87,7 @@ public class TbFileDAO extends TbBaseDAO {
 
     public static TbFileObj getFileByUrl(String url)
     {
-        Cursor cursor = query(tbName,null,"url=?",new String[]{url});
+        Cursor cursor = queryCursor(tbName,null,"url=?",new String[]{url});
         if(cursor!=null)
         {
             if(cursor.moveToNext())
