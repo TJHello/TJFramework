@@ -38,12 +38,12 @@ public class TbBaseDAO {
         return mDataBaseHelper;
     }
 
-    protected static Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
+    protected static Cursor queryCursor(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
     {
         return TJDataBaseHelper.queryCursor(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
-    public static Cursor query(String table, String[] columns, String selection, String[] selectionArgs)
+    public static Cursor queryCursor(String table, String[] columns, String selection, String[] selectionArgs)
     {
         return TJDataBaseHelper.queryCursor(table, columns, selection, selectionArgs,null,null,null,null);
     }
@@ -82,6 +82,15 @@ public class TbBaseDAO {
         return TJDataBaseHelper.rawQuery(sql, null);
     }
 
+    protected static List<DataSet> query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
+    {
+        return TJDataBaseHelper.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+    }
+
+    public static List<DataSet> query(String table, String[] columns, String selection, String[] selectionArgs)
+    {
+        return TJDataBaseHelper.query(table, columns, selection, selectionArgs,null,null,null,null);
+    }
 
     protected static long delete(String table, String whereClause, String[] whereArgs)
     {

@@ -40,7 +40,7 @@ public class DataSet {
     public int getInt(String key){
         Object value =  map.get(key);
         if(value!=null){
-            return (int) value;
+            return Integer.valueOf(String.valueOf(value)) ;
         }
         return 0;
     }
@@ -52,7 +52,7 @@ public class DataSet {
     public float getFloat(String key){
         Object value =  map.get(key);
         if(value!=null){
-            return (float) value;
+            return Float.valueOf(String.valueOf(value)) ;
         }
         return 0f;
     }
@@ -60,7 +60,7 @@ public class DataSet {
     public double getDouble(String key){
         Object value =  map.get(key);
         if(value!=null){
-            return (double) value;
+            return Double.valueOf(String.valueOf(value)) ;
         }
         return 0;
     }
@@ -68,7 +68,7 @@ public class DataSet {
     public long getLong(String key){
         Object value =  map.get(key);
         if(value!=null){
-            return (long) value;
+            return Long.valueOf(String.valueOf(value)) ;
         }
         return 0;
     }
@@ -77,7 +77,7 @@ public class DataSet {
     public byte[] getBytes(String key){
         Object value = map.get(key);
         if(value!=null){
-            return (byte[]) value;
+            return String.valueOf(value).getBytes();
         }
         return null;
     }
