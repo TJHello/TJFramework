@@ -61,4 +61,6 @@ dependencies {
     //内存泄漏检测
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+
+    implementation 'com.aliyun.dpa:oss-android-sdk:2.9.2'
 }

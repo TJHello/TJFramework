@@ -1,6 +1,7 @@
 package com.tjbaobao.tjframework.activity
 
 import android.os.Bundle
+import com.alibaba.sdk.android.oss.model.PutObjectRequest
 import com.tjbaobao.framework.base.BaseRecyclerAdapter
 import com.tjbaobao.framework.ui.BaseTitleBar
 import com.tjbaobao.framework.utils.*
@@ -30,6 +31,12 @@ class MainActivity : AppActivity() {
         recyclerView.addGridAverageCenterDecoration(Tools.dpToPx(8),Tools.dpToPx(8))
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(OnItemClickListener())
+        RxJavaUtil.runOnIOThread<Any> {
+            val text = "abcdefghijklnmopqrstuvwxyz"
+            val path = ConstantUtil.getCachePath()+"test.txt"
+            val put = PutObjectRequest("","","")
+
+        }
     }
 
     override fun onLoadData() {
