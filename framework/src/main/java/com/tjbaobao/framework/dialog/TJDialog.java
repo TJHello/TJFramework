@@ -40,10 +40,21 @@ import com.tjbaobao.framework.utils.LogUtil;
  * {@link #getViewWinBtClose()} 设置关闭按钮id(点击监听{@link #onBtCloseClick(View)})
  *
  * 2、继承使用
- * XXTJDialog xxTJDialog = new XXTJDialog(context,R.layout.dialog_layout){
+ * 需要自己创建一个AppDialog继承TJDialog，并且实现特定的抽象方法。然后创建弹窗的时候只需要继承AppDialog就行了
  *
- * };
- * xxTJDialog.show();
+ * XXDialog xxDialog = null ;
+ *
+ * xxDialog = new XXDialog(context,R.layout.dialog_layout);//不建议通过{***}重写方法的方式来接收回调事件
+ * xxDialog.setOnTJDialogListener()；//通过这个监听器，就可以处理任何事件的回调，而且不会有任何内存泄漏的风险
+ * xxDialog.show();
+ *
+ * 3、回收内存
+ *
+ * @Override
+ * protected void onDestroy() {
+ *    super.onDestroy();
+ *    xxDialog.destroy();
+ * }
  *
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
@@ -179,23 +190,17 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
             baseView.setVisibility(View.VISIBLE);
             if(winBgView!=null&&isShowWinBgAnim)
             {
-                if(animationWinBgEnter==null)
-                {
+                if(animationWinBgEnter==null) {
                     animationWinBgEnter = AnimationUtils.loadAnimation(getContext(), windowAnimEnterId);
-                }
-                else
-                {
+                } else {
                     animationWinBgEnter.reset();
                 }
                 winBgView.startAnimation(animationWinBgEnter);
             }
             if (winBoxView != null&&isShowWinBoxAnim) {
-                if(animationWinBoxEnter==null)
-                {
+                if(animationWinBoxEnter==null) {
                     animationWinBoxEnter = AnimationUtils.loadAnimation(getContext(), contentAnimEnterId);
-                }
-                else
-                {
+                } else {
                     animationWinBoxEnter.reset();
                 }
                 winBoxView.startAnimation(animationWinBoxEnter);
@@ -227,24 +232,18 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
             isShow = false;
             if(winBoxView!=null&&isShowWinBoxAnim)
             {
-                if(animationWinBoxExit==null)
-                {
+                if(animationWinBoxExit==null) {
                     animationWinBoxExit = AnimationUtils.loadAnimation(getContext(), contentAnimExitId);
-                }
-                else
-                {
+                } else {
                     animationWinBoxExit.reset();
                 }
                 winBoxView.startAnimation(animationWinBoxExit);
             }
             if(winBgView!=null)
             {
-                if(animationWinBgExit==null)
-                {
+                if(animationWinBgExit==null) {
                     animationWinBgExit = AnimationUtils.loadAnimation(getContext(), windowAnimExitId);
-                }
-                else
-                {
+                } else {
                     animationWinBgExit.reset();
                 }
                 winBgView.startAnimation(animationWinBgExit);
