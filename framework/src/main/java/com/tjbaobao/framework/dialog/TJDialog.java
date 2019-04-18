@@ -125,22 +125,18 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     private void initView()
     {
         super.setOnShowListener(dialog -> {
-            if(onShowListener!=null)
-            {
+            if(onShowListener!=null) {
                 onShowListener.onShow(dialog);
             }
-            if(onTJDialogListener!=null)
-            {
+            if(onTJDialogListener!=null) {
                 onTJDialogListener.onShow(dialog,state);
             }
         });
         super.setOnDismissListener(dialog -> {
-            if(onDismissListener!=null)
-            {
+            if(onDismissListener!=null) {
                 onDismissListener.onDismiss(dialog);
             }
-            if(onTJDialogListener!=null)
-            {
+            if(onTJDialogListener!=null) {
                 onTJDialogListener.onDismiss(dialog,state);
             }
         });
@@ -282,6 +278,10 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
         setOnDismissListener(null);
         setOnShowListener(null);
         setOnTJDialogListener(null);
+        super.setOnDismissListener(null);
+        super.setOnShowListener(null);
+        onShowListener = null;
+        onDismissListener = null;
         baseHandler.removeMessages(DISMISS);
         baseHandler.removeCallbacksAndMessages(null);
         baseView = null;
