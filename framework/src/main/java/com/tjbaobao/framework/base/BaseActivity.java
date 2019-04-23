@@ -29,7 +29,7 @@ import java.lang.ref.WeakReference;
  */
 @SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener,ActivityToolsImp,HandlerToolsImp {
-	private BaseActivity activity ;
+	protected BaseActivity activity ;
 	private boolean isDestroy = false;
 
 	@Override
