@@ -135,22 +135,6 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     private void initView()
     {
-        super.setOnShowListener(dialog -> {
-            if(onShowListener!=null) {
-                onShowListener.onShow(dialog);
-            }
-            if(onTJDialogListener!=null) {
-                onTJDialogListener.onShow(dialog,state);
-            }
-        });
-        super.setOnDismissListener(dialog -> {
-            if(onDismissListener!=null) {
-                onDismissListener.onDismiss(dialog);
-            }
-            if(onTJDialogListener!=null) {
-                onTJDialogListener.onDismiss(dialog,state);
-            }
-        });
         winBgView = baseView.findViewById(VIEW_WIN_BG_ID);
         winBoxView = baseView.findViewById(VIEW_WIN_BOX_ID);
         winTitleView = baseView.findViewById(VIEW_WIN_TITLE_ID);
@@ -187,6 +171,15 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     public void show() {
         if(!isShow)
         {
+            super.setOnShowListener(dialog -> {
+                super.setOnShowListener(null);
+                if(onShowListener!=null) {
+                    onShowListener.onShow(dialog);
+                }
+                if(onTJDialogListener!=null) {
+                    onTJDialogListener.onShow(dialog,state);
+                }
+            });
             baseView.setVisibility(View.VISIBLE);
             if(winBgView!=null&&isShowWinBgAnim)
             {
@@ -229,6 +222,15 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     public void dismiss() {
         if(isShow)
         {
+            super.setOnDismissListener(dialog -> {
+                super.setOnDismissListener(null);
+                if(onDismissListener!=null) {
+                    onDismissListener.onDismiss(dialog);
+                }
+                if(onTJDialogListener!=null) {
+                    onTJDialogListener.onDismiss(dialog,state);
+                }
+            });
             isShow = false;
             if(winBoxView!=null&&isShowWinBoxAnim)
             {
