@@ -293,6 +293,13 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
     }
 
     @Override
+    public void isCantClose() {
+        canOutsideClose = false;
+        setCanceledOnTouchOutside(false);
+        setCancelable(false);
+    }
+
+    @Override
     public void onClick(@NonNull View v) {
         int id = v.getId();
         if(id==VIEW_WIN_BG_ID)

@@ -25,6 +25,8 @@ public interface TJDialogImp {
 
     void destroy();
 
+    void isCantClose();
+
     @IdRes
     int getViewWinBgId();
 
