@@ -29,13 +29,13 @@ import java.lang.ref.WeakReference;
  */
 @SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener,ActivityToolsImp,HandlerToolsImp {
-	protected BaseActivity activity ;
+	protected BaseActivity context ;
 	private boolean isDestroy = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        activity = this;
+		context = this;
 	}
 
 	protected BaseHandler handler = new BaseHandler(new HandlerCallback());
@@ -53,7 +53,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 
 	public BaseActivity getActivity(){
-		return activity;
+		return context;
 	}
 
 	@Override
