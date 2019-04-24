@@ -88,9 +88,9 @@ public class ImageDownloader {
     }
 
     @Nullable
-    public BitmapConfig load(String url,ImageView imageView)
+    public void load(String url,ImageView imageView)
     {
-        return load(url,imageView,null);
+        load(url,imageView,null);
     }
 
     /**
@@ -101,9 +101,9 @@ public class ImageDownloader {
      * @return 没有什么用了
      */
     @Nullable
-    public BitmapConfig load(String url, ImageView imageView, OnProgressListener onProgressListener)
+    public void load(String url, ImageView imageView, OnProgressListener onProgressListener)
     {
-        if(url==null)  return null;
+        if(url==null)  return;
         isStop = false;
         Image image = findImage(imageView);
         image.setUrl(url);
@@ -111,33 +111,24 @@ public class ImageDownloader {
         image.setViewWeakReference(imageView);
         if(isHttp(url))
         {
-            return loadHttpImage(url,onProgressListener);
+            loadHttpImage(url,onProgressListener);
         }
         else
         {
-            return loadLocalImage(url,onProgressListener);
+            loadLocalImage(url,onProgressListener);
         }
     }
 
     @NonNull
-    private BitmapConfig loadLocalImage(@NonNull String path,@Nullable OnProgressListener onProgressListener)
+    private void loadLocalImage(@NonNull String path,@Nullable OnProgressListener onProgressListener)
     {
         startLoadThread(path,onProgressListener);
-        BitmapConfig config = ImageUtil.getBitmapConfig(path);
-        return config;
     }
 
     @Nullable
-    private BitmapConfig loadHttpImage(@NonNull String url,@Nullable OnProgressListener onProgressListener)
+    private void loadHttpImage(@NonNull String url,@Nullable OnProgressListener onProgressListener)
     {
         startLoadThread(url,onProgressListener);
-        String path = FileDownloader.getFilePath(url);
-        if(path!=null&&!path.equals(""))
-        {
-            BitmapConfig config = ImageUtil.getBitmapConfig(path);
-            return config;
-        }
-        return null;
     }
 
     private boolean isHttp(@NonNull String url)
@@ -537,8 +528,6 @@ public class ImageDownloader {
                     FileUtil.delFileIfExists(tempSizeBitmapPath);
                 }
                 return null;
-            }else{
-                ImageUtil.saveBitmap(bitmap,tempSizeBitmapPath);
             }
             return bitmap;
         }
