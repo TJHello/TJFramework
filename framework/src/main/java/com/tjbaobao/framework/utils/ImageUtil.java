@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 
+import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.entity.BitmapConfig;
 import com.tjbaobao.framework.entity.FileType;
 
@@ -166,6 +167,33 @@ public class ImageUtil {
 	public static Bitmap compressImageRGB(String path,int showWidth,int showHeight)
 	{
 		return compressImage(path,showWidth,showHeight,Config.RGB_565);
+	}
+
+	public static Bitmap compressImageRGB(int resId,int showWidth,int showHeight){
+		return compressImage(resId,showWidth,showHeight,Config.RGB_565);
+	}
+
+	public static Bitmap compressImage(int resId,int showWidth,int showHeight){
+		return compressImage(resId,showWidth,showHeight,Config.ARGB_8888);
+	}
+
+	public static Bitmap compressImage(int resId,int showWidth,int showHeight,Config config)
+	{
+		BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+		bmpFactoryOptions.inJustDecodeBounds = true;
+		BitmapFactory.decodeResource(BaseApplication.getContext().getResources(),resId,bmpFactoryOptions);
+		int bmpPotionWidth = bmpFactoryOptions.outWidth;
+		int bmpPotionHeight = bmpFactoryOptions.outHeight;
+		bmpFactoryOptions.inPreferredConfig =config;
+		float outWidthRatio = (float)bmpPotionWidth / (float)showWidth;
+		float outHeightRatio = (float)bmpPotionHeight / (float)showHeight;
+		float outRatio =0.5f+(outWidthRatio > outHeightRatio ? outWidthRatio : outHeightRatio);
+		if (outRatio < 1) {
+			outRatio = 1;
+		}
+		bmpFactoryOptions.inJustDecodeBounds = false;
+		bmpFactoryOptions.inSampleSize = (int) outRatio;
+		return BitmapFactory.decodeResource(BaseApplication.getContext().getResources(),resId,bmpFactoryOptions);
 	}
 
 	public static Bitmap compressImage(String path,int showWidth,int showHeight,Config config)

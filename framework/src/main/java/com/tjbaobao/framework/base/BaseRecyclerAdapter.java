@@ -97,8 +97,8 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
             }
             if(holder.itemView!=null)
             {
-                holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info,position));
-                holder.itemView.setOnLongClickListener(new ItemOnLongClickListener(holder,info,position));
+                holder.itemView.setOnClickListener(new ItemOnClickListener(holder,info));
+                holder.itemView.setOnLongClickListener(new ItemOnLongClickListener(holder,info));
             }
             if(info instanceof BaseListInfo)
             {
@@ -230,19 +230,17 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
     {
         private Holder mHolder ;
         private Info info ;
-        private int position;
 
-        ItemOnClickListener(@NonNull Holder holder, @NonNull Info info, int position) {
+        ItemOnClickListener(@NonNull Holder holder, @NonNull Info info) {
             mHolder = holder;
             this.info = info;
-            this.position = position;
         }
 
         @Override
         public void onClick(View v) {
             if(mOnItemClickListener!=null)
             {
-                mOnItemClickListener.onItemClick(mHolder,info,position);
+                mOnItemClickListener.onItemClick(mHolder,info,mHolder.getAdapterPosition());
             }
         }
     }
@@ -251,20 +249,18 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
 
         private Holder mHolder ;
         private Info info ;
-        private int position;
 
-        ItemOnLongClickListener(@NonNull Holder holder, @NonNull Info info, int position)
+        ItemOnLongClickListener(@NonNull Holder holder, @NonNull Info info)
         {
             mHolder = holder;
             this.info = info;
-            this.position = position;
         }
 
         @Override
         public boolean onLongClick(View v) {
             if(mOnItemLongClickListener!=null)
             {
-                mOnItemLongClickListener.onItemLongClick(mHolder,info,position);
+                mOnItemLongClickListener.onItemLongClick(mHolder,info,mHolder.getAdapterPosition());
             }
             return true;
         }

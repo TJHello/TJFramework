@@ -82,7 +82,8 @@ public class TJActivityExample2Adapter extends BaseRecyclerAdapter<BaseRecyclerV
                     Object info = infoBase.getInfo();
                     if(info instanceof TJActivityExample1Info)
                     {
-                        imageDownloader.load(((TJActivityExample1Info)info).imageUrl,holderItem.ivImage);
+                        imageDownloader.load(R.drawable.ic_animation_sdvanced,holderItem.ivImage);
+//                        imageDownloader.load(((TJActivityExample1Info)info).imageUrl,holderItem.ivImage);
                     }
                 }
             }

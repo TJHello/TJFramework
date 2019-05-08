@@ -1,11 +1,13 @@
 package com.tjbaobao.framework.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import com.tjbaobao.framework.base.BaseApplication;
 import com.tjbaobao.framework.entity.BitmapConfig;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
@@ -87,7 +89,6 @@ public class ImageDownloader {
         return new ImageDownloader();
     }
 
-    @Nullable
     public void load(String url,ImageView imageView)
     {
         load(url,imageView,null);
@@ -100,7 +101,6 @@ public class ImageDownloader {
      * @param onProgressListener 进度监听器
      * @return 没有什么用了
      */
-    @Nullable
     public void load(String url, ImageView imageView, OnProgressListener onProgressListener)
     {
         if(url==null)  return;
@@ -119,6 +119,20 @@ public class ImageDownloader {
         }
     }
 
+    public void load(int resId,ImageView imageView){
+        load(resId,imageView,null);
+    }
+
+    public void load(int resId,ImageView imageView,@Nullable OnProgressListener onProgressListener){
+        isStop = false;
+        Image image = findImage(imageView);
+        image.setUrl(""+resId);
+        image.setTag(""+resId);
+        image.setViewWeakReference(imageView);
+        loadResImage(resId,onProgressListener);
+    }
+
+
     @NonNull
     private void loadLocalImage(@NonNull String path,@Nullable OnProgressListener onProgressListener)
     {
@@ -129,6 +143,10 @@ public class ImageDownloader {
     private void loadHttpImage(@NonNull String url,@Nullable OnProgressListener onProgressListener)
     {
         startLoadThread(url,onProgressListener);
+    }
+
+    private void loadResImage(int resId,@Nullable OnProgressListener onProgressListener){
+        startLoadThread(resId,onProgressListener);
     }
 
     private boolean isHttp(@NonNull String url)
@@ -152,6 +170,26 @@ public class ImageDownloader {
                     path = url;
                 }
                 utilRes(url,path,imageWidth,imageHeight,onProgressListener);
+            }
+            else
+            {
+                onSuccess(url,null,bitmapCache);
+                if(onProgressListener!=null)
+                {
+                    onProgressListener.onProgress(1f,true);
+                }
+            }
+        });
+    }
+
+    private void startLoadThread(@NonNull final int resId,@Nullable final OnProgressListener onProgressListener)
+    {
+        localThreadPool.execute(() -> {
+            String url = ""+resId;
+            final Bitmap bitmapCache = getCacheImage(url);//从缓存中获取
+            if(!ImageUtil.isOk(bitmapCache))
+            {
+                utilRes(url,resId,imageWidth,imageHeight,onProgressListener);
             }
             else
             {
@@ -533,6 +571,16 @@ public class ImageDownloader {
         }
     }
 
+    @Nullable
+    private Bitmap loadResImage(int resId,int width,int height){
+        Bitmap bitmap = imageResolver.onResolver(""+resId,resId,width,height);
+        if(bitmap==null||bitmap.isRecycled())
+        {
+            return null;
+        }
+        return bitmap;
+    }
+
     private void utilRes(@NonNull String url,@Nullable String path,int width,int height,@Nullable OnProgressListener onProgressListener)
     {
         Bitmap bitmap = loadLocalImage(url,path,width,height);
@@ -544,6 +592,24 @@ public class ImageDownloader {
         else
         {
             onSuccess(url,path,bitmap);
+            if(onProgressListener!=null)
+            {
+                onProgressListener.onProgress(1f,true);
+            }
+        }
+    }
+
+    private void utilRes(@NonNull String url,int resId,int width,int height,@Nullable OnProgressListener onProgressListener)
+    {
+        Bitmap bitmap = loadResImage(resId,width,height);
+        if(!ImageUtil.isOk(bitmap))
+        {
+            //本地图片读取出错
+            onFail(url);
+        }
+        else
+        {
+            onSuccess(url,null,bitmap);
             if(onProgressListener!=null)
             {
                 onProgressListener.onProgress(1f,true);
@@ -867,7 +933,13 @@ public class ImageDownloader {
 
     public interface ImageResolver{
 
+        @Nullable
         Bitmap onResolver(@NonNull String url,@Nullable String path,int width,int height);
+
+        @Nullable
+        default Bitmap onResolver(@NonNull String url,int resId,int width,int height){
+            return null;
+        }
     }
 
     private class TJImageResolver implements ImageResolver{
@@ -911,6 +983,41 @@ public class ImageDownloader {
             else
             {
                 bitmap = ImageUtil.getBitmap(path);
+            }
+            return bitmap;
+        }
+
+        @Override
+        public Bitmap onResolver(@NonNull String url,int resId,int width,int height){
+            Bitmap bitmap = null;
+            if(width>0&&height>0)
+            {
+                if(isSizeStrictMode)
+                {
+                    bitmap = BitmapFactory.decodeResource(BaseApplication.getContext().getResources(),resId);
+                    if(ImageUtil.isOk(bitmap))
+                    {
+                        float widthTemp = (float)width;
+                        float heightTemp = widthTemp*(float)bitmap.getHeight()/(float)bitmap.getWidth();
+                        if((widthTemp<bitmap.getWidth()||heightTemp<bitmap.getHeight())&&widthTemp!=0&&heightTemp!=0)
+                        {
+                            Bitmap bitmap2 = ImageUtil.matrixBitmapRGB(bitmap,widthTemp,heightTemp);
+                            if(!bitmap.equals(bitmap2))
+                            {
+                                ImageUtil.recycled(bitmap);
+                            }
+                            bitmap = bitmap2;
+                        }
+                    }
+                }
+                else
+                {
+                    bitmap = ImageUtil.compressImage(resId,width,height);
+                }
+            }
+            else
+            {
+                bitmap = BitmapFactory.decodeResource(BaseApplication.getContext().getResources(),resId);
             }
             return bitmap;
         }

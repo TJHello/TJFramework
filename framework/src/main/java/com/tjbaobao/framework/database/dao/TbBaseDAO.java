@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.tjbaobao.framework.base.BaseApplication;
-import com.tjbaobao.framework.database.DataBaseHelper;
 import com.tjbaobao.framework.database.DataSet;
 import com.tjbaobao.framework.database.TJDataBaseHelper;
 import com.tjbaobao.framework.utils.LogUtil;
