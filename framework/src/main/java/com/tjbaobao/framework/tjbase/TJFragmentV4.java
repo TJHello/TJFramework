@@ -54,6 +54,10 @@ public abstract class TJFragmentV4 extends BaseV4Fragment implements BaseTitleBa
 
     protected abstract void onLoadData();
 
+    public void callLoadData(){
+        onLoadData();
+    }
+
     @Override
     public <V extends TitleBarInfo.BaseView> void onTitleBarClick(int layoutType, int position, V info) {
 

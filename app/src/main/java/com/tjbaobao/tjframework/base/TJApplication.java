@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.tjbaobao.framework.base.BaseApplication;
-import com.tjbaobao.framework.database.DataBaseHelper;
 import com.tjbaobao.framework.database.TJDataBaseHelper;
 import com.tjbaobao.framework.imp.DataBaseImp;
 import com.tjbaobao.framework.utils.ImageDownloader;

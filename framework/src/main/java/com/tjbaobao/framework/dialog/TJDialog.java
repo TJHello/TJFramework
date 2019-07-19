@@ -2,7 +2,6 @@ package com.tjbaobao.framework.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.AnimRes;
 import android.support.annotation.LayoutRes;
@@ -372,10 +371,12 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     @Override
     public void onBtCancelClick(@NonNull View view) {
+        dismiss();
     }
 
     @Override
     public void onBtCloseClick(@NonNull View view) {
+        dismiss();
     }
 
     @Override

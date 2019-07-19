@@ -218,7 +218,7 @@ public class TJDataBaseHelper extends SQLiteOpenHelper {
         return 0;
     }
 
-    public static void insertTransaction(@Nullable String tbName, @Nullable String nullColumnHack, @NonNull List<ContentValues> cValueList)
+    public static void insertTransaction(@NonNull String tbName, @Nullable String nullColumnHack, @NonNull List<ContentValues> cValueList)
     {
         if(mDataBaseHelper!=null)
         {
