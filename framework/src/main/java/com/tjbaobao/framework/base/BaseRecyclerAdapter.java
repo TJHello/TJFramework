@@ -124,12 +124,11 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
         int childCount = viewGroup.getChildCount();
         for(int i=0;i<childCount;i++){
             View view = viewGroup.getChildAt(i);
+            if(holderItemIdList.size()==0||holderItemIdList.contains(view.getId())){
+                view.setOnClickListener(new HolderItemClickListener(info,position));
+            }
             if(view instanceof ViewGroup){
                 setAllViewClickListener((ViewGroup) view,info,position);
-            }else{
-                if(holderItemIdList.size()==0||holderItemIdList.contains(view.getId())){
-                    view.setOnClickListener(new HolderItemClickListener(info,position));
-                }
             }
         }
     }

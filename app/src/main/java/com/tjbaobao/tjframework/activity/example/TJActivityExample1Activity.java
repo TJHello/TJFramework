@@ -10,6 +10,7 @@ import com.tjbaobao.framework.ui.BaseRecyclerView;
 import com.tjbaobao.framework.ui.BaseTitleBar;
 import com.tjbaobao.framework.utils.Tools;
 import com.tjbaobao.tjframework.R;
+import com.tjbaobao.tjframework.activity.MainActivity;
 import com.tjbaobao.tjframework.adapter.activity.TJActivityExample1Adapter;
 import com.tjbaobao.tjframework.base.AppActivity;
 import com.tjbaobao.tjframework.model.TJActivityExample1Info;
@@ -61,6 +62,7 @@ public class TJActivityExample1Activity extends AppActivity {
         adapter.setOnItemLongClickListener((holder, tjActivityExample1Info, position) -> {
             Tools.showToast("OnItemLongClickListener");
         });
+
     }
 
     @Override
