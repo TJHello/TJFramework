@@ -168,6 +168,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     @Override
     public void show() {
+        if(baseView==null) return;
         if(!isShow)
         {
             super.setOnShowListener(dialog -> {
@@ -219,6 +220,7 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
 
     @Override
     public void dismiss() {
+        if(baseView==null) return;
         if(isShow)
         {
             super.setOnDismissListener(dialog -> {
