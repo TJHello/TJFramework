@@ -12,6 +12,7 @@ import com.tjbaobao.framework.entity.ui.TitleBarInfo;
 import com.tjbaobao.framework.ui.BaseRecyclerView;
 import com.tjbaobao.framework.ui.BaseTitleBar;
 import com.tjbaobao.framework.utils.FileUtil;
+import com.tjbaobao.framework.utils.RxJavaUtil;
 import com.tjbaobao.framework.utils.Tools;
 import com.tjbaobao.tjframework.R;
 import com.tjbaobao.tjframework.adapter.activity.DataBaseExampleAdapter;
@@ -82,34 +83,40 @@ public class DataBaseExampleActivity extends AppActivity {
     }
 
     private void inset1000(){
-        List<TbEventObj> tbEventObjList = new ArrayList<>();
-        for(int i=0;i<1000;i++){
-            TbEventObj eventObj = new TbEventObj();
-            eventObj.setCode(UUID.randomUUID().toString());
-            eventObj.setName("Test");
-            eventObj.setEvent(TbEventObj.EVENT_TEST);
-            eventObj.setPath("Test");
-            tbEventObjList.add(eventObj);
-        }
-        FileUtil.CurrentTime.begin();
-        TbEventDAO.addTransaction(tbEventObjList);
-        long time = FileUtil.CurrentTime.stop("addTransaction1000");
-        tvResult.setText("插入1000调数据耗时:"+time);
+        RxJavaUtil.runOnIOThread(() -> {
+            List<TbEventObj> tbEventObjList = new ArrayList<>();
+            for(int i=0;i<1000;i++){
+                TbEventObj eventObj = new TbEventObj();
+                eventObj.setCode(UUID.randomUUID().toString());
+                eventObj.setName("Test");
+                eventObj.setEvent(TbEventObj.EVENT_TEST);
+                eventObj.setPath("Test");
+                tbEventObjList.add(eventObj);
+            }
+            FileUtil.CurrentTime.begin();
+            TbEventDAO.addTransaction(tbEventObjList);
+            long time = FileUtil.CurrentTime.stop("addTransaction1000");
+            handler.post(() -> tvResult.setText("插入1000调数据耗时:"+time));
+        });
     }
 
     private void selectAll(){
-        FileUtil.CurrentTime.begin();
-        List<TbEventObj> list1 = TbEventDAO.getDataList();
-        long time1 = FileUtil.CurrentTime.stop("selectAll_Old");
+        RxJavaUtil.runOnIOThread(() -> {
+            FileUtil.CurrentTime.begin();
+            List<TbEventObj> list1 = TbEventDAO.getDataList();
+            long time1 = FileUtil.CurrentTime.stop("selectAll_Old");
 
-        FileUtil.CurrentTime.begin();
-        List<TbEventObj> list2 = TbEventDAO.getDataListNew();
-        long time2 = FileUtil.CurrentTime.stop("selectAll_New");
-        if(list1!=null&&list2!=null){
-            tvResult.setText("旧的方法:数据数:"+list1.size()+",耗时:"+time1+"\n新方法：数据数:"+list2.size()+",耗时:"+time2);
-        }else{
-            tvResult.setText("获取失败");
-        }
+            FileUtil.CurrentTime.begin();
+            List<TbEventObj> list2 = TbEventDAO.getDataListNew();
+            long time2 = FileUtil.CurrentTime.stop("selectAll_New");
+            handler.post(() -> {
+                if(list1!=null&&list2!=null){
+                    tvResult.setText("旧的方法:数据数:"+list1.size()+",耗时:"+time1+"\n新方法：数据数:"+list2.size()+",耗时:"+time2);
+                }else{
+                    tvResult.setText("获取失败");
+                }
+            });
+        });
     }
 
     private void cleanAll(){

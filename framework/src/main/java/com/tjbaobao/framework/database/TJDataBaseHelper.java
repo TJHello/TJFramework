@@ -16,6 +16,9 @@ import com.tjbaobao.framework.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 作者:TJbaobao
@@ -28,6 +31,7 @@ public class TJDataBaseHelper extends SQLiteOpenHelper {
 
     private static DataBaseImp dataBaseImp ;
     private static TJDataBaseHelper mDataBaseHelper = null ;
+    private static Lock lock = new ReentrantLock();
 
     public TJDataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -107,62 +111,78 @@ public class TJDataBaseHelper extends SQLiteOpenHelper {
 
     public static List<DataSet> query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)
     {
-        synchronized (lock){
-            if(mDataBaseHelper!=null) {
-                try (Cursor cursor = mDataBaseHelper.getDatabase()
-                        .query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)) {
-                    return toDataSet(cursor);
-                } catch (Exception e) {
-                    LogUtil.exception(e);
-                }
+        if(mDataBaseHelper!=null) {
+            try (Cursor cursor = mDataBaseHelper.getDatabase()
+                    .query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)) {
+                return toDataSet(cursor);
+            } catch (Exception e) {
+                LogUtil.exception(e);
             }
-            return null;
         }
+        return null;
     }
 
     public static List<DataSet> query(String table, String[] columns, String selection, String[] selectionArgs)
     {
-        synchronized (lock){
-            if(mDataBaseHelper!=null)
-            {
-                try(Cursor cursor = mDataBaseHelper.getDatabase().query(table, columns, selection, selectionArgs,null,null,null,null)){
-                    return toDataSet(cursor);
-                } catch (Exception e) {
-                    LogUtil.exception(e);
+        try {
+            if(lock.tryLock(1L, TimeUnit.SECONDS)){
+                if(mDataBaseHelper!=null)
+                {
+                    try(Cursor cursor = mDataBaseHelper.getDatabase().query(table, columns, selection, selectionArgs,null,null,null,null)){
+                        return toDataSet(cursor);
+                    } catch (Exception e) {
+                        LogUtil.exception(e);
+                    }
                 }
             }
-            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
         }
+        return null;
     }
 
     public static List<DataSet> rawQuery(String sql, String[] selectionArgs)
     {
-        synchronized (lock){
-            if(mDataBaseHelper!=null)
-            {
-                try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, selectionArgs)) {
-                    return toDataSet(cursor);
-                } catch (Exception e) {
-                    LogUtil.exception(e);
+        try {
+            if(lock.tryLock(1L, TimeUnit.SECONDS)){
+                if(mDataBaseHelper!=null)
+                {
+                    try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, selectionArgs)) {
+                        return toDataSet(cursor);
+                    } catch (Exception e) {
+                        LogUtil.exception(e);
+                    }
                 }
             }
-            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
         }
+        return null;
     }
 
     public static List<DataSet> rawQuery(String sql)
     {
-        synchronized (lock){
-            if(mDataBaseHelper!=null)
-            {
-                try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, null)) {
-                    return toDataSet(cursor);
-                } catch (Exception e) {
-                    LogUtil.exception(e);
+        try {
+            if(lock.tryLock(1L, TimeUnit.SECONDS)) {
+                if(mDataBaseHelper!=null)
+                {
+                    try(Cursor cursor = mDataBaseHelper.getDatabase().rawQuery(sql, null)) {
+                        return toDataSet(cursor);
+                    } catch (Exception e) {
+                        LogUtil.exception(e);
+                    }
                 }
             }
-            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
         }
+        return null;
     }
 
     public static int update(String table, ContentValues values, String whereClause, String[] whereArgs) {
@@ -274,12 +294,9 @@ public class TJDataBaseHelper extends SQLiteOpenHelper {
         return dataSetList;
     }
 
-    private static final byte[] lock = new byte[0];
 
     public SQLiteDatabase getDatabase(){
-        synchronized (lock){
-            return getWritableDatabase();
-        }
+        return getWritableDatabase();
     }
 
     public static void setDataBaseImp(DataBaseImp dataBaseImp) {
@@ -287,10 +304,16 @@ public class TJDataBaseHelper extends SQLiteOpenHelper {
     }
 
     public static void destroy(){
-        synchronized (lock){
-            if(mDataBaseHelper!=null){
-                mDataBaseHelper.getWritableDatabase().close();
+        try {
+            if(lock.tryLock(1L,TimeUnit.SECONDS)){
+                if(mDataBaseHelper!=null){
+                    mDataBaseHelper.getWritableDatabase().close();
+                }
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
         }
     }
 
