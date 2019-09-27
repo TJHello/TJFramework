@@ -259,7 +259,9 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         TJDialog.super.dismiss();
-                        baseView.setVisibility(View.INVISIBLE);
+                        if(baseView!=null){
+                            baseView.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override
