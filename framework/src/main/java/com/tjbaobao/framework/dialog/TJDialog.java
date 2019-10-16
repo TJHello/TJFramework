@@ -3,11 +3,6 @@ package com.tjbaobao.framework.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Message;
-import android.support.annotation.AnimRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +11,12 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+
+import androidx.annotation.AnimRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
 
 import com.tjbaobao.framework.R;
 import com.tjbaobao.framework.imp.HandlerToolsImp;

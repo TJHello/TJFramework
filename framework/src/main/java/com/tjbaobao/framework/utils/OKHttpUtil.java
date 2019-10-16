@@ -1,7 +1,7 @@
 package com.tjbaobao.framework.utils;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tjbaobao.framework.listener.OnProgressListener;
 

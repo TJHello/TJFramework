@@ -1,12 +1,13 @@
 package com.tjbaobao.tjframework.adapter.activity;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tjbaobao.framework.base.BaseItemDecoration;
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
@@ -82,8 +83,7 @@ public class TJActivityExample2Adapter extends BaseRecyclerAdapter<BaseRecyclerV
                     Object info = infoBase.getInfo();
                     if(info instanceof TJActivityExample1Info)
                     {
-                        imageDownloader.load(R.drawable.ic_animation_sdvanced,holderItem.ivImage);
-//                        imageDownloader.load(((TJActivityExample1Info)info).imageUrl,holderItem.ivImage);
+                        imageDownloader.load(((TJActivityExample1Info)info).imageUrl,holderItem.ivImage);
                     }
                 }
             }

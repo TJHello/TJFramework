@@ -3,24 +3,18 @@ package com.tjbaobao.framework.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.tjbaobao.framework.imp.ActivityToolsImp;
 import com.tjbaobao.framework.imp.HandlerToolsImp;
 import com.tjbaobao.framework.utils.ActivityTools;
 import com.tjbaobao.framework.utils.BaseHandler;
-
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  *

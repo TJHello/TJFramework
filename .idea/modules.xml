@@ -3,13 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TJFramework.iml" filepath="$PROJECT_DIR$/TJFramework.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Test/TJFramework-Test.iml" filepath="$PROJECT_DIR$/Test/TJFramework-Test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/TJFramework-app.iml" filepath="$PROJECT_DIR$/app/TJFramework-app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/framework/TJFramework-framework.iml" filepath="$PROJECT_DIR$/framework/TJFramework-framework.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Test/Test.iml" filepath="$PROJECT_DIR$/Test/Test.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/framework/framework.iml" filepath="$PROJECT_DIR$/framework/framework.iml" />
-      <module fileurl="file://$PROJECT_DIR$/workSpace-TJFramework.iml" filepath="$PROJECT_DIR$/workSpace-TJFramework.iml" />
     </modules>
   </component>
 </project>

@@ -1,17 +1,15 @@
 package com.tjbaobao.framework.base;
 
-import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tjbaobao.framework.entity.base.BaseListInfo;
 import com.tjbaobao.framework.imp.HandlerToolsImp;
@@ -34,7 +32,7 @@ import java.util.Map;
  */
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends Adapter<Holder> implements HandlerToolsImp {
+public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseViewHolder,Info> extends RecyclerView.Adapter<Holder> implements HandlerToolsImp {
 
     protected BaseHandler handler = new BaseHandler(message -> {
         onHandleMessage(message,message.what,message.obj);
@@ -102,7 +100,7 @@ public abstract class BaseRecyclerAdapter<Holder extends BaseRecyclerView.BaseVi
             }
             if(info instanceof BaseListInfo)
             {
-                Adapter adapter = ((BaseListInfo) info).getAdapter();
+                RecyclerView.Adapter adapter = ((BaseListInfo) info).getAdapter();
                 if(adapter!=null)
                 {
                     holder.onInitAdapter(adapter,position);

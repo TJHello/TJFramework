@@ -1,8 +1,9 @@
 package com.tjbaobao.tjframework.activity.example;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
 import com.tjbaobao.framework.entity.ui.TitleBarInfo;
@@ -10,7 +11,6 @@ import com.tjbaobao.framework.ui.BaseRecyclerView;
 import com.tjbaobao.framework.ui.BaseTitleBar;
 import com.tjbaobao.framework.utils.Tools;
 import com.tjbaobao.tjframework.R;
-import com.tjbaobao.tjframework.activity.MainActivity;
 import com.tjbaobao.tjframework.adapter.activity.TJActivityExample1Adapter;
 import com.tjbaobao.tjframework.base.AppActivity;
 import com.tjbaobao.tjframework.model.TJActivityExample1Info;

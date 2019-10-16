@@ -1,6 +1,7 @@
 package com.tjbaobao.tjframework.model;
 
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tjbaobao.framework.entity.base.BaseListInfo;
 
@@ -31,7 +32,7 @@ public class TJActivityExample2Info extends BaseListInfo {
         setSpanSize(spanSize);
     }
 
-    public TJActivityExample2Info(RecyclerView.Adapter adapter,int spanSize) {
+    public TJActivityExample2Info(RecyclerView.Adapter adapter, int spanSize) {
         setAdapter(adapter);
         setSpanSize(spanSize);
         setType(TYPE_LIST);

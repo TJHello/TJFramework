@@ -2,8 +2,8 @@ package com.tjbaobao.framework.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.LruCache;
 import android.widget.ImageView;
 

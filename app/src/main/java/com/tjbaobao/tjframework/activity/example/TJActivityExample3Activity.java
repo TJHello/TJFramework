@@ -1,12 +1,12 @@
 package com.tjbaobao.tjframework.activity.example;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Switch;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
 import com.tjbaobao.framework.entity.ui.TitleBarInfo;
 import com.tjbaobao.framework.listener.OnTJHolderItemClickListener;
@@ -24,6 +24,9 @@ import com.tjbaobao.tjframework.utils.AliyunOOSUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 作者:TJbaobao

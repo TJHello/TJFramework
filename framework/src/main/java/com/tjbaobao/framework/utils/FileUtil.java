@@ -1,9 +1,9 @@
 package com.tjbaobao.framework.utils;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.tjbaobao.framework.listener.OnProgressListener;
 
 import java.io.*;

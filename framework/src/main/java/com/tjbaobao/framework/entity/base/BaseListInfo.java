@@ -1,7 +1,7 @@
 package com.tjbaobao.framework.entity.base;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 作者:TJbaobao

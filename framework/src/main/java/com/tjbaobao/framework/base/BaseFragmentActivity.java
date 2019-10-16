@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.WindowManager;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.tjbaobao.framework.imp.ActivityToolsImp;
 import com.tjbaobao.framework.imp.HandlerToolsImp;

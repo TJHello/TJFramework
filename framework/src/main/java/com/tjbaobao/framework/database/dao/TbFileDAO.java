@@ -2,7 +2,7 @@ package com.tjbaobao.framework.database.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tjbaobao.framework.database.obj.TbFileObj;
 import com.tjbaobao.framework.utils.DateTimeUtil;

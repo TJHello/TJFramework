@@ -1,7 +1,8 @@
 package com.tjbaobao.framework.listener;
 
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 /**
  * 作者:TJbaobao

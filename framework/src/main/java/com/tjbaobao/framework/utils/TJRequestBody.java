@@ -1,6 +1,6 @@
 package com.tjbaobao.framework.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 
 import com.tjbaobao.framework.listener.OnProgressListener;

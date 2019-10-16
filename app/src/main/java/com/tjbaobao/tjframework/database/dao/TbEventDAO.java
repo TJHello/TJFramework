@@ -2,7 +2,7 @@ package com.tjbaobao.tjframework.database.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tjbaobao.framework.database.DataSet;
 import com.tjbaobao.framework.database.dao.TbBaseDAO;

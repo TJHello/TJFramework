@@ -55,7 +55,7 @@ public class LogUtil {
             return ;
         }
         int length = msg.length();
-        int max = 1024;
+        int max = 1024*16;
         if(length>max)
         {
             for(int i=0;i<length;)

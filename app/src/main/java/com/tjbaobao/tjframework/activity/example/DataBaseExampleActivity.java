@@ -1,12 +1,12 @@
 package com.tjbaobao.tjframework.activity.example;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.tjbaobao.framework.base.BaseRecyclerAdapter;
 import com.tjbaobao.framework.entity.ui.TitleBarInfo;
 import com.tjbaobao.framework.ui.BaseRecyclerView;

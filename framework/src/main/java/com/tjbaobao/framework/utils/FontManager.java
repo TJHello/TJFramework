@@ -3,20 +3,17 @@ package com.tjbaobao.framework.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.tjbaobao.framework.base.BaseApplication;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.tjbaobao.framework.base.BaseApplication.context;
 
 /**
  * 字体管理器

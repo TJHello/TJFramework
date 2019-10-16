@@ -1,12 +1,9 @@
 package com.tjbaobao.tjframework.utils;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.tjbaobao.framework.utils.FileDownloader;
-import com.tjbaobao.framework.utils.FileUtil;
-import com.tjbaobao.framework.utils.ImageDownloader;
+import com.tjbaobao.framework.utils.LogUtil;
 import com.tjbaobao.framework.utils.OKHttpUtil;
 import com.tjbaobao.framework.utils.RxJavaUtil;
 import com.tjbaobao.framework.utils.Tools;
@@ -84,6 +81,7 @@ public class AliyunOOSUtil {
             {
                 String httpUrl = ServerUrl+"?bucketName="+BucketName+"&objectName="+ObjectNameHome+"/"+name;
                 String imageUrl = OKHttpUtil.doGet(httpUrl);
+                LogUtil.i(httpUrl);
                 if(imageUrl!=null)
                 {
                     if(mapUrl.containsKey(name))

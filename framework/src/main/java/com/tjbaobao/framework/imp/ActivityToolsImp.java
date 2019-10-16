@@ -2,8 +2,9 @@ package com.tjbaobao.framework.imp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.StringRes;
 
 /**
  * Activity常用工具接口规范
