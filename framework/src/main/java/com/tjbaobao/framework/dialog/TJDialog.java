@@ -210,12 +210,16 @@ public abstract class TJDialog extends Dialog  implements View.OnClickListener,H
             }catch (Exception e){
                 LogUtil.exception(e);
             }
-            WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-            if (layoutParams != null) {
-                layoutParams.width = width;
-                layoutParams.height = height;
+            try{
+                WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+                if (layoutParams != null) {
+                    layoutParams.width = width;
+                    layoutParams.height = height;
+                }
+                this.getWindow().setAttributes(layoutParams);
+            }catch (Exception e){
+                LogUtil.exception(e);
             }
-            this.getWindow().setAttributes(layoutParams);
         }
     }
 
