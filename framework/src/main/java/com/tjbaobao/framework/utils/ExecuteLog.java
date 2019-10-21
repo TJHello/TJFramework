@@ -26,6 +26,7 @@ public class ExecuteLog {
 			FileUtil.Writer.writeFileAtEnd(jsonObj.toString()+"\n", filePath);
 
 			String appPath = ConstantUtil.getMyAppPath()+ File.separator+"log"+File.separator+ date+".log";
+			FileUtil.createFolder(ConstantUtil.getMyAppPath()+ File.separator+"log"+File.separator);
 			FileUtil.copyFile(filePath, appPath);
 		} catch (JSONException e) {
 			e.printStackTrace();
