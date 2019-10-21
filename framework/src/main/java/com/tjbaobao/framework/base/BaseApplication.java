@@ -5,11 +5,15 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.tjbaobao.framework.utils.ConstantUtil;
+import com.tjbaobao.framework.utils.DateTimeUtil;
 import com.tjbaobao.framework.utils.ExecuteLog;
+import com.tjbaobao.framework.utils.FileUtil;
 import com.tjbaobao.framework.utils.LogUtil;
 import com.tjbaobao.framework.utils.Tools;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
@@ -23,6 +27,7 @@ public class BaseApplication extends Application {
 	private static UncaughtExceptionHandler defHandler ;
 	public static String dexPage = null;
 	private static boolean isAutoHandlerException = true;
+	protected static boolean isAutoCreateLogOnLocal = false;
 
 	/**
 	 * 初始化框架
@@ -139,15 +144,23 @@ public class BaseApplication extends Application {
 				byte[] data = bos.toByteArray();
 				String sLog = "程序出错："+new String(data);
 				LogUtil.e(sLog);
-				ExecuteLog.writeErrorException(sLog);
 				ps.close();
 				bos.close();
+				handlerAppException(sLog);
 			}
 			catch (Exception e) {
 				LogUtil.exception(e);
 			}
 			//让默认未捕获异常处理器来处理未捕获异常
 			defHandler.uncaughtException(thread, ex);
+		}
+	}
+
+	protected static void handlerAppException(String log){
+		if(isAutoCreateLogOnLocal){
+			ExecuteLog.writeErrorException(log);
+			FileUtil.Writer.writeFile(log,
+					ConstantUtil.getMyAppPath()+ File.separator+"log"+File.separator+ DateTimeUtil.getNowDate()+".log");
 		}
 	}
 
