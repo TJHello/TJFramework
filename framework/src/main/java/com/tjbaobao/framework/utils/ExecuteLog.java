@@ -3,6 +3,8 @@ package com.tjbaobao.framework.utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 /**
  * 日志本地存储工具类
  */
@@ -22,6 +24,9 @@ public class ExecuteLog {
 			jsonObj.put("date", DateTimeUtil.getNowTime());
 			jsonObj.put("log", log);
 			FileUtil.Writer.writeFileAtEnd(jsonObj.toString()+"\n", filePath);
+
+			String appPath = ConstantUtil.getMyAppPath()+ File.separator+"log"+File.separator+ date+".log";
+			FileUtil.copyFile(filePath, appPath);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -5,15 +5,11 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.tjbaobao.framework.utils.ConstantUtil;
-import com.tjbaobao.framework.utils.DateTimeUtil;
 import com.tjbaobao.framework.utils.ExecuteLog;
-import com.tjbaobao.framework.utils.FileUtil;
 import com.tjbaobao.framework.utils.LogUtil;
 import com.tjbaobao.framework.utils.Tools;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
@@ -159,8 +155,6 @@ public class BaseApplication extends Application {
 	protected static void handlerAppException(String log){
 		if(isAutoCreateLogOnLocal){
 			ExecuteLog.writeErrorException(log);
-			FileUtil.Writer.writeFile(log,
-					ConstantUtil.getMyAppPath()+ File.separator+"log"+File.separator+ DateTimeUtil.getNowDate()+".log");
 		}
 	}
 
