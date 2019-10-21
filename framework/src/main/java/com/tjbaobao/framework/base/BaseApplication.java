@@ -27,7 +27,7 @@ public class BaseApplication extends Application {
 	private static UncaughtExceptionHandler defHandler ;
 	public static String dexPage = null;
 	private static boolean isAutoHandlerException = true;
-	protected static boolean isAutoCreateLogOnLocal = false;
+	private static boolean isAutoCreateLogOnLocal = false;
 
 	/**
 	 * 初始化框架
@@ -172,4 +172,8 @@ public class BaseApplication extends Application {
 	public static void setIsAutoHandlerException(boolean isAuto){
 		isAutoHandlerException = isAuto;
 	}
+
+    public static void setIsAutoCreateLogOnLocal(boolean isAuto){
+        isAutoCreateLogOnLocal = isAuto;
+    }
 }
