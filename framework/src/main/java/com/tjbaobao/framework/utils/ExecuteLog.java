@@ -23,7 +23,7 @@ public class ExecuteLog {
 			jsonObj.put("type", type);
 			jsonObj.put("date", DateTimeUtil.getNowTime());
 			jsonObj.put("log", log);
-			FileUtil.Writer.writeFileAtEnd(jsonObj.toString()+"\n", filePath);
+			FileUtil.Writer.writeFileAtEnd(jsonObj.toString()+"\n", filePath,"UTF-8");
 
 			String appPath = ConstantUtil.getMyAppPath()+ File.separator+"log"+File.separator+ date+".log";
 			FileUtil.createFolder(ConstantUtil.getMyAppPath()+ File.separator+"log"+File.separator);
