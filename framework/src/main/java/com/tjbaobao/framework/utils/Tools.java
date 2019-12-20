@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -32,11 +31,11 @@ import com.tjbaobao.framework.base.BaseApplication;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 
 @SuppressWarnings("ALL")
-public class Tools {
+public class
+Tools {
 	private static Toast toast;
 	private static Context context = null;
 	private static SharedPreferences pref ;
@@ -352,16 +351,16 @@ public class Tools {
 		return  bitmap;
 	}
 
-	public static boolean feedback(Context context,String email,String content){
+	public static boolean feedback(Context context,String email,String subject,String content){
 		if(context==null) return false;
-		Intent intent=new Intent(Intent.ACTION_SENDTO);
-		intent.setData(Uri.parse("mailto:"+email));
-		List<ResolveInfo> resInfos = context.getPackageManager().queryIntentActivities(intent, 0);
-		if(!resInfos.isEmpty()){
-			intent.putExtra(Intent.EXTRA_SUBJECT, content);
+		Intent intent = new Intent(Intent.ACTION_SENDTO);
+		intent.setType("message/rfc822");
+		String uriText = String.format("mailto:%s?subject=%s&body=%s", email, subject, content);
+		intent.setData(Uri.parse(uriText));
+		if (intent.resolveActivity(context.getPackageManager()) != null) {
 			context.startActivity(intent);
 			return true;
-		}else {
+		}else{
 			return false;
 		}
 	}
