@@ -380,7 +380,7 @@ Tools {
 	}
 
 	private static long lastClickTime=0 ;
-	private static final long CAN_ONCLICK_TIME = 550L;
+	public static long CAN_ONCLICK_TIME = 550L;
 	public static boolean cantOnclik() {
 		return cantOnclik(CAN_ONCLICK_TIME);
 	}

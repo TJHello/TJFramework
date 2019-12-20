@@ -17,7 +17,6 @@ import java.util.*
 
 class MainActivity : AppActivity() {
 
-
     private val infoList = mutableListOf<MainActivityInfo>()
     private var adapter = MainActivityAdapter(infoList,R.layout.main_activity_item_layout)
 
