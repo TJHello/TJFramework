@@ -31,7 +31,7 @@ public class OKHttpUtil {
     private static OkHttpClient.Builder builder = new OkHttpClient.Builder();
     private static final OkHttpClient mOkHttpClient = builder
             .cookieJar(new TJCookieJar())
-            .connectTimeout(3,TimeUnit.SECONDS)//设置连接超时时间
+            .connectTimeout(10,TimeUnit.SECONDS)//设置连接超时时间
             .build();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static final String CACHE_SUFFIX = ".cache";
