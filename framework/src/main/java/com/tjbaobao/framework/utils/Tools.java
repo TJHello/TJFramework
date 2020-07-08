@@ -169,7 +169,7 @@ Tools {
 		{
 			editor.putBoolean(key, (Boolean) value);
 		}
-		editor.commit();
+		editor.apply();
 	}
 	/**
 	 * 将dip数值转化为px数值
