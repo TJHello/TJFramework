@@ -31,6 +31,8 @@ import com.tjbaobao.framework.base.BaseApplication;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @SuppressWarnings("ALL")
@@ -146,30 +148,37 @@ Tools {
 		return null;
 	}
 
+	private static ExecutorService threadPool = Executors.newFixedThreadPool(2);
+
 	public static void setSharedPreferencesValue(String key,Object value)
 	{
-		SharedPreferences.Editor editor = pref.edit();
-		if(value==null||value instanceof String)
-		{
-			editor.putString(key, (String) value);
-		}
-		else if(value instanceof Integer)
-		{
-			editor.putInt(key, (Integer) value);
-		}
-		else if(value instanceof Float)
-		{
-			editor.putFloat(key, (Float) value);
-		}
-		else if(value instanceof Long)
-		{
-			editor.putLong(key, (Long) value);
-		}
-		else if(value instanceof Boolean)
-		{
-			editor.putBoolean(key, (Boolean) value);
-		}
-		editor.apply();
+		threadPool.submit(new Runnable() {
+			@Override
+			public void run() {
+				SharedPreferences.Editor editor = pref.edit();
+				if(value==null||value instanceof String)
+				{
+					editor.putString(key, (String) value);
+				}
+				else if(value instanceof Integer)
+				{
+					editor.putInt(key, (Integer) value);
+				}
+				else if(value instanceof Float)
+				{
+					editor.putFloat(key, (Float) value);
+				}
+				else if(value instanceof Long)
+				{
+					editor.putLong(key, (Long) value);
+				}
+				else if(value instanceof Boolean)
+				{
+					editor.putBoolean(key, (Boolean) value);
+				}
+				editor.commit();
+			}
+		});
 	}
 	/**
 	 * 将dip数值转化为px数值
