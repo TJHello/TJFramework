@@ -1,10 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven'
 
-ext.ver = '1.0.062'
-ext.verCode = 10062
+ext.ver = '1.0.065'
+ext.verCode = 10065
 ext.GROUP_ID = 'com.TJHello'
 ext.POM_ARTIFACT_ID = 'TJFramework'
 

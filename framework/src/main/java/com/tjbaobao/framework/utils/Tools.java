@@ -38,7 +38,6 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("ALL")
 public class
 Tools {
-	private static Toast toast;
 	private static Context context = null;
 	private static SharedPreferences pref ;
 	static{
@@ -111,15 +110,7 @@ Tools {
 	public static void showToast(String text,int duration)
 	{
 		if(context==null) return;
-		if(toast==null)
-		{
-			toast = Toast.makeText(context, text, duration);
-		}
-		else
-		{
-			toast.setText(text);
-		}
-		toast.show();
+		Toast.makeText(context, text, duration).show();
 	}
 
 	@Nullable
