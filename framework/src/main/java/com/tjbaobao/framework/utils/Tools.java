@@ -38,16 +38,9 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("ALL")
 public class
 Tools {
-	private static Toast toast;
 	private static Context context = null;
-	private static SharedPreferences pref ;
 	static{
 		context = BaseApplication.getContext();
-		if(context!=null) {
-			pref = context.getSharedPreferences("app", 0);
-		} else {
-			LogUtil.e("请调用BaseApplication.init()初始化框架！");
-		}
 
 	}
 	/**
@@ -111,75 +104,9 @@ Tools {
 	public static void showToast(String text,int duration)
 	{
 		if(context==null) return;
-		if(toast==null)
-		{
-			toast = Toast.makeText(context, text, duration);
-		}
-		else
-		{
-			toast.setText(text);
-		}
-		toast.show();
+		Toast.makeText(context, text, duration).show();
 	}
 
-	@Nullable
-	public static Object getSharedPreferencesValue(String key,Object defValue)
-	{
-		if(defValue==null||defValue instanceof String)
-		{
-			return pref.getString(key, (String) defValue);
-		}
-		else if(defValue instanceof Integer)
-		{
-			return pref.getInt(key, (Integer) defValue);
-		}
-		else if(defValue instanceof Float)
-		{
-			return pref.getFloat(key, (Float) defValue);
-		}
-		else if(defValue instanceof Long)
-		{
-			return pref.getLong(key, (Long) defValue);
-		}
-		else if(defValue instanceof Boolean)
-		{
-			return pref.getBoolean(key, (Boolean) defValue);
-		}
-		return null;
-	}
-
-	private static ExecutorService threadPool = Executors.newFixedThreadPool(2);
-
-	public static void setSharedPreferencesValue(String key,Object value)
-	{
-		threadPool.submit(new Runnable() {
-			@Override
-			public void run() {
-				SharedPreferences.Editor editor = pref.edit();
-				if(value==null||value instanceof String)
-				{
-					editor.putString(key, (String) value);
-				}
-				else if(value instanceof Integer)
-				{
-					editor.putInt(key, (Integer) value);
-				}
-				else if(value instanceof Float)
-				{
-					editor.putFloat(key, (Float) value);
-				}
-				else if(value instanceof Long)
-				{
-					editor.putLong(key, (Long) value);
-				}
-				else if(value instanceof Boolean)
-				{
-					editor.putBoolean(key, (Boolean) value);
-				}
-				editor.commit();
-			}
-		});
-	}
 	/**
 	 * 将dip数值转化为px数值
 	 * @param dip

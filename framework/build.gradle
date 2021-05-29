@@ -1,10 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven'
 
-ext.ver = '1.0.062'
-ext.verCode = 10062
+ext.ver = '1.0.071'
+ext.verCode = 10071
 ext.GROUP_ID = 'com.TJHello'
 ext.POM_ARTIFACT_ID = 'TJFramework'
 
@@ -51,7 +51,7 @@ dependencies {
 
     api "io.reactivex.rxjava2:rxjava:2.2.11"
     api "io.reactivex.rxjava2:rxandroid:2.1.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     implementation 'com.google.code.gson:gson:2.8.6'
 
@@ -80,8 +80,13 @@ repositories {
 
 uploadArchives {
     repositories {
-        mavenDeployer {
-            repository(url: uri("C:\\Android\\unityWorkSpace\\ADEasyLib\\repo"))
+        mavenDeployer {Properties prop = System.getProperties()
+            String os = prop.getProperty("os.name")
+            if(os.contains("Windows")){
+                repository(url: uri("C:\\Android\\unityWorkSpace\\ADEasyLib\\repo"))
+            }else{
+                repository(url: uri("/Users/TJHello/TJRepository"))
+            }
             pom.groupId = GROUP_ID
             pom.artifactId = POM_ARTIFACT_ID
             pom.version = ver

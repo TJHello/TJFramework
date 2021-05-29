@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.tjbaobao.framework.utils.ExecuteLog;
 import com.tjbaobao.framework.utils.LogUtil;
+import com.tjbaobao.framework.utils.SharedPreferencesHelper;
 import com.tjbaobao.framework.utils.Tools;
 
 import java.io.ByteArrayOutputStream;
@@ -44,6 +45,7 @@ public class BaseApplication extends Application {
 		{
 			LogUtil.setDebug(isDebug);
 		}
+		SharedPreferencesHelper.init(application);
 	}
 
 	@Override
